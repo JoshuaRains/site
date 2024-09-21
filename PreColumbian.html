@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wheel of Fortune</title>
+    <title>Pre-Columbian Civilizations</title>
     <style>
 body, html {
     height: 100%; /* Make sure the parent has a defined height */
@@ -17,14 +17,14 @@ body, html {
 body {
      background-image: url('./assets/background.jpeg'); /* Replace 'path_to_your_image.jpg' with the actual path to your image file */
     background-size: cover; /* This ensures the background image covers the entire area of the body */
-    background-position: center; /* This centers the background image */
+    background-position: center; /* This centers the background image */ 
     background-repeat: no-repeat;
 }
 
 /* Window container */
 .window {
-	width: 80%;
-    min-width: 1300px;
+	width: 100%;
+    min-width: 800px;
 	border: 2px solid #80808070; /* Dark gray border */
 	border-radius: 10px;
 	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* Shadow for the raised effect */
@@ -69,16 +69,11 @@ body {
 
 /* Window body */
 .window-body {
-    padding: 10px;
+	padding: 10px;
 	border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     
     background-color: #ffffff; /* The content area should be white */
-}
-.lessonsContainer{
-    display: flex;
-    flex-wrap: wrap;
-	padding: 10px;
 }
 .rotatable {
     display: block; /* Changes the image from inline to block-level element */
@@ -115,6 +110,17 @@ body {
     margin-bottom: 10px; /* Space between the title and the image */
 }
 
+/* Scroll container within the window body */
+.scroll-container {
+	max-height: 500px; /* Limit the height of the scrollable area */
+	width: 100%; /* Take full width of the window body */
+	overflow-y: scroll; /* Native vertical scroll bar */
+}
+
+/* Content area */
+.content {
+	padding: 10px;
+}
 
 
     </style>
@@ -124,7 +130,7 @@ body {
 
 <div class="window">
 	<div class="title-bar">
-		<div class="title-bar-text">Home</div>
+		<div class="title-bar-text">Lesson</div>
         
 		<div class="title-bar-controls">
 			<button onclick="location.href='./index.html'" type="button">
@@ -134,25 +140,39 @@ body {
 		</div>
 	</div>
 	<div class="window-body">
-        <h1>Welcome to Class</h1>
-        <div class="lessonsContainer">
-        
-            <div class="click-activity" onclick="location.href='./wheel.html'" type="button">
-                <h3>Rueda de la Fortuna:</h3>
-                <img src="./assets/wheel.png" class="rotatable">
-            </div>
+        <div class="scroll-container">
+            <div class="content">
+                <h1>Pre-Columbian Civilizations</h1>
+                <h2>Resources:</h2>
+               <h3>Aztecs:</h3>
+               <p><a target="_self" href="./PreColumbian/Tenochtitlan.html">Tenochtitlán</a></p>
+               <p><a target="_self" href="./PreColumbian/Chinampas.html">Chinampas</a></p>
+               <p><a target="_self" href="./PreColumbian/Nahuatl.html">Náhuatl</a></p>
+               <p><a target="_self" href="./PreColumbian/Codices.html">Códices</a></p>
+               
 
-            <div class="click-activity" onclick="location.href='./PreColumbian.html'" type="button">
-                <h3>Pre-Columbian Civilizations Lesson</h3>
-                <img src="./assets/PreColumbianStone.png" class="rotatable">
-            </div>
+               <p><a target="_blank" href="https://www.youtube.com/watch?v=W2STq1qa1Nc">Ciudad de México Video (do not watch the whole thing)</a></p>
+               <p><a target="_blank" href="https://tenochtitlan.thomaskole.nl/ ">Tenochtitlan Visualization</a></p>
+               <h3>Incas:</h3>
+               <p><a target="_self" href="./PreColumbian/Quechua.html">Quechua</a></p>
+               <p><a target="_self" href="./PreColumbian/Quipu.html">Quipu</a></p>
+               <p><a target="_self" href="./PreColumbian/CaminosInca.html">Caminos</a></p>
+               <p><a target="_self" href="./PreColumbian/MachuPicchu.html">Macchu Picchu</a></p>
+               <p><a target="_self" href="./PreColumbian/IntiRaymi.html">Inti Raymi</a></p>
+               
+               
 
+
+                <!-- More content here to demonstrate scrolling -->
+            </div>
+            <div class="scroll-bar"></div>
         </div>
-	</div>
+    </div>
+    
 </div>
 
 
-<!-- ... (existing HTML code) ... -->
+
 
   
 </body>

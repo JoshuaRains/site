@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="en" class="doc">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wheel of Fortune</title>
+    <title>Pre-Columbian Civilizations</title>
     <style>
 body, html {
     height: 100%; /* Make sure the parent has a defined height */
@@ -15,7 +14,7 @@ body, html {
 }
 
 body {
-     background-image: url('./assets/background.jpeg'); /* Replace 'path_to_your_image.jpg' with the actual path to your image file */
+     background-image: url('../assets/background.jpeg'); /* Replace 'path_to_your_image.jpg' with the actual path to your image file */
     background-size: cover; /* This ensures the background image covers the entire area of the body */
     background-position: center; /* This centers the background image */
     background-repeat: no-repeat;
@@ -24,9 +23,10 @@ body {
 /* Window container */
 .window {
 	width: 80%;
-    min-width: 1300px;
+    min-width: 800px;
 	border: 2px solid #80808070; /* Dark gray border */
 	border-radius: 10px;
+    font-size: 20px;
 	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* Shadow for the raised effect */
 	background-color: #d4d0c800; /* Classic XP window background color */
 }
@@ -69,16 +69,11 @@ body {
 
 /* Window body */
 .window-body {
-    padding: 10px;
+	padding: 10px;
 	border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     
     background-color: #ffffff; /* The content area should be white */
-}
-.lessonsContainer{
-    display: flex;
-    flex-wrap: wrap;
-	padding: 10px;
 }
 .rotatable {
     display: block; /* Changes the image from inline to block-level element */
@@ -115,6 +110,30 @@ body {
     margin-bottom: 10px; /* Space between the title and the image */
 }
 
+/* Scroll container within the window body */
+.scroll-container {
+	max-height: 500px; /* Limit the height of the scrollable area */
+	width: 100%; /* Take full width of the window body */
+	overflow-y: scroll; /* Native vertical scroll bar */
+}
+
+/* Content area */
+.content {
+	padding: 10px;
+}
+sup {
+            font-size: 15px;
+        }
+        .definitions p {
+            padding-left: 20px;
+        }
+        .definitions {
+            display: flex;
+            
+            font-size: 15px;
+            margin-top: 20px;
+            
+        }
 
 
     </style>
@@ -124,35 +143,46 @@ body {
 
 <div class="window">
 	<div class="title-bar">
-		<div class="title-bar-text">Home</div>
+		<div class="title-bar-text">Lesson</div>
         
 		<div class="title-bar-controls">
-			<button onclick="location.href='./index.html'" type="button">
+			<button onclick="location.href='../PreColumbian.html'" type="button">
                 ←</button>
-			<button aria-label="Maximize">x</button>
-			<button aria-label="Close">y</button>
+			<button onclick="location.href='../PreColumbian.html'" aria-label="Maximize">x</button>
+			
 		</div>
 	</div>
 	<div class="window-body">
-        <h1>Welcome to Class</h1>
-        <div class="lessonsContainer">
-        
-            <div class="click-activity" onclick="location.href='./wheel.html'" type="button">
-                <h3>Rueda de la Fortuna:</h3>
-                <img src="./assets/wheel.png" class="rotatable">
-            </div>
+        <div class="scroll-container">
+            <div class="content">
+                <p>
+                    Náhuatl es la lengua que <strong>hablaban</strong><sup>1</sup> los aztecas, el <strong>pueblo</strong><sup>2</sup> que <strong>fundó</strong><sup>3</sup> la gran ciudad de Tenochtitlán. Durante el imperio azteca, el náhuatl era muy importante y se hablaba en muchas partes de lo que hoy es México. Los aztecas usaban el náhuatl para el <strong>gobierno</strong><sup>4</sup>, la religión y el comercio. A través de las conquistas y el comercio, la lengua se fue extendiendo a diferentes regiones, convirtiéndose en la lengua principal de muchos pueblos bajo el control azteca.
+                </p>
+                <p>
+                    Hoy en día, el náhuatl sigue siendo hablado por muchas personas en México, especialmente en zonas rurales. Aunque el español es el idioma más común, algunas comunidades indígenas todavía usan el náhuatl en su vida <strong>diaria</strong><sup>5</sup>. Además, muchas palabras en español como "tomate", "chocolate" y "aguacate" provienen del náhuatl. El gobierno y varias organizaciones trabajan para preservarla, <strong>enseñándola</strong><sup>6</sup> en escuelas y promoviendo su uso en medios como la radio y la televisión.
+                </p>
+                <div class="definitions">
+                    <p><sup>1</sup> spoke</p>
+                    <p><sup>2</sup> people</p>
+                    <p><sup>3</sup> founded</p>
+                    <p><sup>4</sup> government</p>
+                    <p><sup>5</sup> daily</p>
+                    <p><sup>6</sup> teaching it</p>
+                </div>
+                
+                
 
-            <div class="click-activity" onclick="location.href='./PreColumbian.html'" type="button">
-                <h3>Pre-Columbian Civilizations Lesson</h3>
-                <img src="./assets/PreColumbianStone.png" class="rotatable">
-            </div>
 
+                <!-- More content here to demonstrate scrolling -->
+            </div>
+            <div class="scroll-bar"></div>
         </div>
-	</div>
+    </div>
+    
 </div>
 
 
-<!-- ... (existing HTML code) ... -->
+
 
   
 </body>

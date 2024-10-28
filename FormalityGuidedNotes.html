@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Verbs Quiz</title>
+    <style>
+        body {
+            font-family: system-ui, 'Segoe UI Emoji', 'Apple Color Emoji', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            font-size: 13px;
+        }
+
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .header-info {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info input[type="text"] {
+            border: none;
+            border-bottom: 1px solid #333;
+            font-size: 18px;
+        }
+
+        .question {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .question small {
+            font-size: 11px;
+        }
+
+        .match-list {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .verbs, .meanings {
+            width: 45%;
+        }
+
+        .verbs ul, .meanings ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .verbs li, .meanings li {
+            margin-bottom: 5px;
+        }
+
+        textarea {
+            border: none;
+            border-bottom: 1px solid #000000;
+            font-size: 14px;
+            width: 100%;
+            resize: none;
+            margin: 2px;
+            padding: 0px;
+            overflow-y: hidden;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+        .conjugation-chart {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 320px;
+        }
+        .conjugation-chart td {
+            padding: 1px; /* Adjust padding as needed */
+            text-align: center;
+        }
+        .conjugation-chart textarea {
+            width: 98%;
+            height: 22px;
+            border: none;
+            resize: none;
+            overflow: hidden;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Internal borders for the chart */
+        .conjugation-chart td {
+            border-bottom: 1px solid #333;
+            border-right: 1px solid #333;
+        }
+
+        /* Remove the bottom border for the last row */
+        .conjugation-chart tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Remove the right border for the last column */
+        .conjugation-chart td:last-child {
+            border-right: none;
+        }
+        .chart-title {
+            border: none;
+            border-bottom: 1px solid #333;
+            font-size: 16px;
+            width: 100px; /* Match the width of the conjugation chart */
+            margin: 0 auto; /* Center the input within its container */
+            display: block; /* Ensure it's treated as a block-level element */
+            padding: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .charts-wrapper {
+    display: flex;
+    justify-content: space-between; /* Space charts evenly */
+    align-items: flex-start;
+}
+
+.conjugation-chart-container {
+    width: fit-content;
+    margin: 10px;
+}
+
+
+        .guided-notes {
+            margin-top: 20px;
+            line-height: 2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Formal Language Guided Notes</h1>
+        <div class="header-info">
+            <p class="bilingual">Name: ___________________________</p>
+            <p class="bilingual">Date: ______________</p>
+            <p class="bilingual">Block: ______</p>
+        </div>
+        
+
+        <div class="guided-notes">
+            <p><b>Standard:</b> 
+            <i>ML.C4.1.NR.c</i> Compare formal and informal speech in one’s own and target language. </p>
+            
+            <p>Write at least 2 differences between the different pictures on the screen.</p>
+            <br>
+            <br>
+            <p>Most european languages have 2 or more ways to say "you." There are formal and ____________ versions. </p>
+            <p> In Early modern English ______ was the informal version to say "you."</p>
+        
+            <p>In Spanish we use ____ to talk to someone informally and _____________ to talk to someone formally.</p>
+            <p>The formal ending for verbs will always be the same as the ending for ________________.</p>
+            <br>
+            <h1>Adjectives</h1>
+            <p>Adjectives in Spanish come _______ the nouns unlike in English.</p>
+            <p>Adjectives must match their nouns in <b>both</b> gender and number.</p>
+            <ul style="display: flex; flex-wrap: wrap; list-style-type: none; padding: 0;">
+
+            <li style="width: 50%;">La casa bonit___</li>
+            <li style="width: 50%;">El libro bonit___</li>
+            </ul>
+            <ul style="display: flex; flex-wrap: wrap; list-style-type: none; padding: 0;">
+                <li style="width: 50%;"><strong>bonito/a</strong> - pretty, nice</li>
+                <li style="width: 50%;"><strong>grande</strong> - big, large</li>
+                <li style="width: 50%;"><strong>pequeño/a</strong> - small, little</li>
+                <li style="width: 50%;"><strong>bueno/a</strong> - good</li>
+                <li style="width: 50%;"><strong>malo/a</strong> - bad</li>
+                <li style="width: 50%;"><strong>fácil</strong> - easy</li>
+                <li style="width: 50%;"><strong>difícil</strong> - difficult</li>
+                <li style="width: 50%;"><strong>rápido/a</strong> - fast, quick</li>
+                <li style="width: 50%;"><strong>lento/a</strong> - slow</li>
+                <li style="width: 50%;"><strong>nuevo/a</strong> - new</li>
+                <li style="width: 50%;"><strong>viejo/a</strong> - old</li>
+                <li style="width: 50%;"><strong>caro/a</strong> - expensive</li>
+                <li style="width: 50%;"><strong>alto/a</strong> - tall, high</li>
+                <li style="width: 50%;"><strong>bajo/a</strong> - short, low</li>
+                <li style="width: 50%;"><strong>joven</strong> - young</li>
+                <li style="width: 50%;"><strong>viejo/a</strong> - old</li>
+            </ul>
+            
+            
+        </div>
+        
+    </div>
+
+</body>
+
+</html>

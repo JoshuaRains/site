@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Verbs Quiz</title>
+    <style>
+        body {
+            font-family: system-ui, 'Segoe UI Emoji', 'Apple Color Emoji', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .container {
+            width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            font-size: 12px;
+        }
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 15px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        textarea {
+            border: none;
+            border-bottom: 1px solid #333;
+            font-size: 14px;
+            width: 100%;
+            resize: none;
+            margin: 2px;
+            padding: 0px;
+            overflow-y: hidden;
+        }
+        .conjugation-chart {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 450px;
+        }
+        .conjugation-chart td {
+            padding: 1px; /* Adjust padding as needed */
+            text-align: center;
+        }
+        .conjugation-chart textarea {
+            width: 98%;
+            height: 22px;
+            border: none;
+            resize: none;
+            overflow: hidden;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Internal borders for the chart */
+        .conjugation-chart td {
+            border-bottom: 1px solid #333;
+            border-right: 1px solid #333;
+        }
+
+        /* Remove the bottom border for the last row */
+        .conjugation-chart tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Remove the right border for the last column */
+        .conjugation-chart td:last-child {
+            border-right: none;
+        }
+        .chart-title {
+            border: none;
+            border-bottom: 1px solid #333;
+            font-size: 16px;
+            width: 150px; /* Match the width of the conjugation chart */
+            margin: 0 auto; /* Center the input within its container */
+            display: block; /* Ensure it's treated as a block-level element */
+            padding: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .charts-wrapper {
+    display: flex;
+    justify-content: space-between; /* Space charts evenly */
+    align-items: flex-start;
+}
+
+.conjugation-chart-container {
+    width: fit-content;
+    margin: 10px;
+}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>AR Verbs Quiz</h1>
+
+        <p><strong>Part 1: Definitions</strong> (Match each verb to its definition by writing the letter in the blank)</p>
+        <ul>
+            <li>1. Hablar ________</li>
+            <li>2. Sacar ________</li>
+            <li>3. Usar ________</li>
+            <li>4. Caminar ________</li>
+            <li>5. Buscar ________</li>
+            <li>6. Mirar ________</li>
+            <li>7. Tocar ________</li>
+        </ul>
+        <p><strong>Options:</strong></p>
+        <p>A) to talk/speak &nbsp; B) to take out &nbsp; C) to use &nbsp; D) to walk &nbsp; E) to search for &nbsp; F) to look at/watch &nbsp; G) to touch/play (an instrument)</p>
+
+        <p><strong>Part 2: Conjugation Endings</strong> (give the correct AR verb <b>ending</b> for each of the following pronouns)</p>
+        <div class="conjugation-chart-container">
+            <input type="text" class="chart-title" value="AR">
+            <table class="conjugation-chart">
+                <tr>
+                    <td><textarea spellcheck="false" placeholder="yo ___"></textarea></td>
+                    <td><textarea spellcheck="false" placeholder="nosotros _____"></textarea></td>
+                </tr>
+                <tr>
+                    <td><textarea spellcheck="false" placeholder="tú ___"></textarea></td>
+                    <td><textarea spellcheck="false"></textarea></td>
+                </tr>
+                <tr>
+                    <td><textarea spellcheck="false" placeholder="él/ella/usted ___"></textarea></td>
+                    <td><textarea spellcheck="false" placeholder="ellos/ellas/ustedes ___"></textarea></td>
+                </tr>
+            </table>
+        </div>
+
+        <p><strong>Part 3: Application</strong></p>
+        <p>Conjugate each verb in the sentence for the subject provided.</p>
+        <ul>
+            <li>1. Nosotros (caminar) ______________ al parque.</li>
+            <li>2. Yo (hablar) ______________ en clase.</li>
+            <li>3. Tú (usar) ______________ un lápiz para escribir.</li>
+            <li>4. Ellos (mirar) ______________ la televisión.</li>
+            <li>5. Ella (buscar) ______________ su mochila.</li>
+            <li>6. Usted (tocar) ______________ la guitarra.</li>
+            <li>7. Yo (sacar) ______________ la basura.</li>
+            <li>8. Ustedes (caminar) ______________ a la tienda.</li>
+            <li>9. Tú (mirar) ______________ la pizarra.</li>
+            <li>10. Ellas (hablar) ______________ por teléfono.</li>
+            
+        </ul>
+    </div>
+
+</body>
+</html>

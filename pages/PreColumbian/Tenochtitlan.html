@@ -1,4 +1,4 @@
-<html lang="en" class="doc">
+<html lang="en" class="doc" translate="no"></html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,15 +14,14 @@ body, html {
 }
 
 body {
-     background-image: url('../assets/background.jpeg'); /* Replace 'path_to_your_image.jpg' with the actual path to your image file */
-    background-size: cover; /* This ensures the background image covers the entire area of the body */
-    background-position: center; /* This centers the background image */
-    background-repeat: no-repeat;
-}
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
+      min-height: 100vh;
+    }
 
 /* Window container */
 .window {
-	width: 80%;
+	width: 90%;
     min-width: 800px;
 	border: 2px solid #80808070; /* Dark gray border */
 	border-radius: 10px;
@@ -112,7 +111,7 @@ body {
 
 /* Scroll container within the window body */
 .scroll-container {
-	max-height: 500px; /* Limit the height of the scrollable area */
+	
 	width: 100%; /* Take full width of the window body */
 	overflow-y: scroll; /* Native vertical scroll bar */
 }
@@ -145,12 +144,7 @@ sup {
 	<div class="title-bar">
 		<div class="title-bar-text">Lesson</div>
         
-		<div class="title-bar-controls">
-			<button onclick="location.href='../PreColumbian.html'" type="button">
-                ←</button>
-			<button onclick="location.href='../PreColumbian.html'" aria-label="Maximize">x</button>
-			
-		</div>
+		
 	</div>
 	<div class="window-body">
         <div class="scroll-container">

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Guerra Civil Española</title>
+    <style>
+        body {
+            font-family: system-ui, 'Segoe UI Emoji', 'Apple Color Emoji', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .header-info {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info input[type="text"] {
+            border: none;
+            border-bottom: 1px solid #333;
+            font-size: 18px;
+        }
+
+        .guided-notes {
+            margin-top: 20px;
+            line-height: 2;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+        .conjugation-chart {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 320px;
+        }
+        .conjugation-chart td {
+            padding: 1px; /* Adjust padding as needed */
+            text-align: center;
+        }
+        .conjugation-chart textarea {
+            width: 98%;
+            height: 22px;
+            border: none;
+            resize: none;
+            overflow: hidden;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Internal borders for the chart */
+        .conjugation-chart td {
+            border-bottom: 1px solid #333;
+            border-right: 1px solid #333;
+        }
+
+        /* Remove the bottom border for the last row */
+        .conjugation-chart tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Remove the right border for the last column */
+        .conjugation-chart td:last-child {
+            border-right: none;
+        }
+        .chart-title {
+            border: none;
+            border-bottom: 1px solid #333;
+            font-size: 16px;
+            width: 100px; /* Match the width of the conjugation chart */
+            margin: 0 auto; /* Center the input within its container */
+            display: block; /* Ensure it's treated as a block-level element */
+            padding: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .charts-wrapper {
+    display: flex;
+    justify-content: space-between; /* Space charts evenly */
+    align-items: flex-start;
+}
+
+.conjugation-chart-container {
+    width: fit-content;
+    margin: 10px;
+}
+
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>La Guerra Civil Española</h1>
+        <div class="header-info">
+            <p>Nombre: <input type="text" id="nombre"></p>
+            <p>Fecha: <input type="text" id="fecha"></p>
+        </div>
+        <div class="charts-wrapper">
+            <div class="conjugation-chart-container">
+                <input type="text" class="chart-title" value="ar">
+    
+                <table class="conjugation-chart">
+                    <tr>
+                        <td><textarea spellcheck="false">Yo </textarea></td>
+                        <td><textarea spellcheck="false">Nosotros</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><textarea spellcheck="false">tú </textarea></td>
+                        <td><textarea spellcheck="false"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><textarea spellcheck="false">él/ella </textarea></td>
+                        <td><textarea spellcheck="false">ellos/ellas </textarea></td>
+                    </tr>
+                </table>
+            </div>
+        
+            <div class="conjugation-chart-container">
+                <input type="text" class="chart-title" value="er / ir">
+    
+                <table class="conjugation-chart">
+                    <tr>
+                        <td><textarea spellcheck="false">Yo </textarea></td>
+                        <td><textarea spellcheck="false">Nosotros</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><textarea spellcheck="false">tú </textarea></td>
+                        <td><textarea spellcheck="false"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><textarea spellcheck="false">él/ella </textarea></td>
+                        <td><textarea spellcheck="false">ellos/ellas </textarea></td>
+                    </tr>
+                </table>
+            </div>
+        
+        </div>
+        <div class="guided-notes">
+            <p><b>Las ideas políticas de los republicanos:</b></p>
+            <p>Los republicanos defendieron una España democrática. Ellos apoyaron reformas sociales y políticas para mejorar las condiciones de los trabajadores y campesinos. Antes de la guerra, propusieron la redistribución de tierras y la educación pública para todos. Creyeron en la igualdad de derechos para las mujeres y los grupos minoritarios. Durante la guerra, los republicanos lucharon por mantener la Segunda República. Querían una sociedad sin grandes diferencias de clases y defendieron la libertad de expresión y la justicia social. Sin embargo, sus divisiones internas y la falta de apoyo unificado complicaron sus esfuerzos.</p>
+            <br>
+            <br>
+            <br>
+            <p><b>Las ideas políticas de los nacionalistas:</b></p>
+            <p>Por otro lado, los nacionalistas apoyaron una visión más conservadora y autoritaria de España. Francisco Franco, el líder de los nacionalistas, prometió restaurar el orden y la estabilidad. Ellos rechazaron las ideas de la República y creyeron que la Iglesia Católica debía tener un papel central en la sociedad. Los nacionalistas se opusieron a las reformas sociales y querían una España unida bajo un gobierno fuerte. Durante la guerra, ellos justificaron su lucha como una cruzada contra el comunismo y la anarquía. En 1939, lograron imponer su visión autoritaria y centralizada del país.</p>
+            <br>
+            <br>
+            <br>
+            <p><b>La vida de los trabajadores durante la guerra:</b></p>
+            <p>Durante la guerra, la vida de los trabajadores cambió drásticamente. Muchas fábricas y campos fueron destruidos o cerrados. Las familias no encontraron trabajo, y la comida se volvió escasa. Los precios subieron, y muchas personas hicieron largas filas para conseguir pan o aceite. En las ciudades, los bombardeos crearon miedo y caos. Los trabajadores sufrieron tanto por la guerra como por las divisiones políticas. A pesar de todo, algunos obreros organizaron comités para controlar fábricas y tierras en las zonas republicanas. Sin embargo, la falta de recursos y la destrucción hicieron la vida muy difícil para la clase trabajadora.</p>
+            <br>
+            <br>
+            <br>
+            <p><b>La vida de un soldado: George Orwell en la guerra:</b></p>
+            <p>George Orwell, un escritor británico, se unió a las fuerzas republicanas y luchó en Cataluña. En su libro Homage to Catalonia, él describió las dificultades que enfrentaron los soldados. Orwell contó cómo los soldados vivieron en condiciones duras, con poco alimento y armas insuficientes. En las trincheras, los combatientes sufrieron por el frío y la suciedad. Orwell escribió sobre la camaradería entre los soldados, pero también notó la falta de organización y los conflictos internos. Durante la guerra, Orwell fue herido por un disparo, y él relató cómo lo llevaron a un hospital con recursos limitados. A pesar de las dificultades, Orwell sintió una gran lealtad hacia sus compañeros de batalla.</p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p><b>Las brigadas internacionales:</b></p>
+            <p>Miles de voluntarios extranjeros participaron en la Guerra Civil Española. Estas personas formaron las Brigadas Internacionales y lucharon del lado de los republicanos. Los brigadistas vinieron de países como Francia, Estados Unidos, y el Reino Unido. Ellos creyeron que la guerra era una lucha contra el fascismo y viajaron a España para defender la causa republicana. Muchos de estos voluntarios no tenían entrenamiento militar, pero participaron en importantes batallas. En 1938, las Brigadas Internacionales se retiraron después de sufrir grandes pérdidas. Aunque no ganaron la guerra, los brigadistas mostraron un fuerte compromiso con sus ideales.</p>
+            <br>
+            <br>
+            <br>
+            <p><b>El impacto de los bombardeos en la población civil:</b></p>
+            <p>Los bombardeos aéreos causaron mucho sufrimiento entre la población civil durante la Guerra Civil Española. Uno de los ataques más famosos ocurrió en la ciudad de Guernica en 1937, cuando aviones alemanes e italianos, apoyando a los nacionalistas, destruyeron la ciudad. Miles de personas murieron en el ataque. Los civiles vivieron con miedo constante a los bombardeos en ciudades como Madrid y Barcelona. Muchas familias escaparon al campo para evitar los ataques, pero aun así, la guerra afectó a todos. Los edificios, escuelas y hospitales fueron destruidos, lo que dejó a la población en una situación desesperada.</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

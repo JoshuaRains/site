@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Music Video Activity</title>
+  </head>
+  <body>
+    <h1>Music Video Activity</h1>
+
+    <iframe
+      id="youtube-video"
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/EirqJRMxL1M?si=nPvDjiaIDFezSoqg&controls=0&enablejsapi=1"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+
+    <p>
+      Jump to:
+      <a href="javascript:void(0);" onclick="seekTo(30)">0:30</a> |
+      <a href="javascript:void(0);" onclick="seekTo(60)">1:00</a> |
+      <a href="javascript:void(0);" onclick="seekTo(90)">1:30</a> |
+      <a href="javascript:void(0);" onclick="seekTo(120)">2:00</a>
+    </p>
+
+    <!-- Place this script *after* your iframe in the body -->
+    <script>
+      function seekTo(seconds) {
+        const iframe = document.getElementById('youtube-video');
+        iframe.contentWindow.postMessage(
+          JSON.stringify({
+            event: 'command',
+            func: 'seekTo',
+            args: [seconds, true]
+          }),
+          '*'
+        );
+      }
+    </script>
+  </body>
+</html>

@@ -1,42 +1,139 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Music Video Activity</title>
-  </head>
-  <body>
-    <h1>Music Video Activity</h1>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Short with Questions</title>
+  <style>
+    /* Page styling */
+    body {
+      margin: 0;
+      padding: 0;
+      /* A typical gradient background */
+      background: linear-gradient(135deg, #e96443, #904e95);
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
 
-    <iframe
-      id="youtube-video"
-      width="560"
-      height="315"
-      src="https://www.youtube.com/embed/EirqJRMxL1M?si=nPvDjiaIDFezSoqg&controls=0&enablejsapi=1"
-      frameborder="0"
-      allowfullscreen
-    ></iframe>
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      text-align: center;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
 
-    <p>
-      Jump to:
-      <a href="javascript:void(0);" onclick="seekTo(30)">0:30</a> |
-      <a href="javascript:void(0);" onclick="seekTo(60)">1:00</a> |
-      <a href="javascript:void(0);" onclick="seekTo(90)">1:30</a> |
-      <a href="javascript:void(0);" onclick="seekTo(120)">2:00</a>
-    </p>
+    h1 {
+      margin-bottom: 30px;
+    }
 
-    <!-- Place this script *after* your iframe in the body -->
-    <script>
-      function seekTo(seconds) {
-        const iframe = document.getElementById('youtube-video');
-        iframe.contentWindow.postMessage(
-          JSON.stringify({
-            event: 'command',
-            func: 'seekTo',
-            args: [seconds, true]
-          }),
-          '*'
-        );
+    /* The player container */
+    #videoFrame {
+      width: 315px;    /* 9:16 ratio for Shorts */
+      height: 560px;
+      margin: 0 auto 20px auto;
+      border-radius: 8px;
+      overflow: hidden;  /* so the corners are nicely rounded */
+    }
+
+    .questions {
+      list-style: none;
+      padding: 0;
+    }
+
+    .questions li {
+      margin: 15px 0;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+    .questions a {
+      color: #ffd700;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer; /* emphasize it's clickable */
+    }
+    .questions a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>YouTube Short Questions</h1>
+  
+  <!-- The placeholder for our video. The API will replace this with the YouTube player. -->
+  <div id="videoFrame"></div>
+  
+  <!-- Questions list with jump links (using the jumpTo() JS function) -->
+  <ul class="questions">
+    <li>
+      <strong>Question 1:</strong>
+      <p>
+        How does the short open?<br/>
+        <a onclick="jumpTo(0)">Go to 0:00</a>
+      </p>
+    </li>
+    <li>
+      <strong>Question 2:</strong>
+      <p>
+        What is happening around 0:08?<br/>
+        <a onclick="jumpTo(8)">Go to 0:08</a>
+      </p>
+    </li>
+    <li>
+      <strong>Question 3:</strong>
+      <p>
+        What do you notice at 0:18?<br/>
+        <a onclick="jumpTo(18)">Go to 0:18</a>
+      </p>
+    </li>
+    <li>
+      <strong>Question 4:</strong>
+      <p>
+        What stands out near the end (0:30)?<br/>
+        <a onclick="jumpTo(30)">Go to 0:30</a>
+      </p>
+    </li>
+  </ul>
+</div>
+
+<!-- 1. Load the YouTube IFrame Player API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+  let player;
+  let playerReady = false;
+
+  // 2. Called automatically by the API once it is downloaded
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('videoFrame', {
+      videoId: 'ydypIRdWpqg', // Only the video ID, not the full URL
+      playerVars: {
+        playsinline: 1 // For mobile-friendly inline playback
+      },
+      events: {
+        onReady: onPlayerReady
       }
-    </script>
-  </body>
+    });
+  }
+
+  // 3. Called when the player is ready
+  function onPlayerReady(event) {
+    playerReady = true;
+  }
+
+  // 4. Jump to a given timestamp -- only if player is ready
+  function jumpTo(seconds) {
+    if (!playerReady) {
+      console.warn('Player not ready yet, please wait a moment.');
+      return;
+    }
+    player.seekTo(seconds, true);
+    player.playVideo();
+  }
+</script>
+</body>
 </html>

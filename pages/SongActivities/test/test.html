@@ -182,10 +182,10 @@
         }
   */
   const slidesData = [
-    {
-      videoId: "ydypIRdWpqg",  // Example short (~37s)
-      questions: [
-          {
+  {
+    videoId: "ydypIRdWpqg",  // Example short (~37s)
+    questions: [
+      {
         text: "¿Cómo describe las patatas fritas?",
         answers: ["Como 'esenciales'", "Como 'normales'", "Como 'simples'", "Como 'aburridas'"],
         correctIndex: 0,
@@ -194,37 +194,38 @@
         timeEnd: 2
       },
       {
-    text: "¿Por qué son las patatas fritas especiales?",
-    answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
-    correctIndex: 1,
-    selectedIndex: null,
-    timeStart: 21,
-    timeEnd: 31
+        text: "¿Por qué son las patatas fritas especiales?",
+        answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
+        correctIndex: 1,
+        selectedIndex: null,
+        timeStart: 21,
+        timeEnd: 31
+      }
+    ]
+  },
+  {
+    videoId: "E_ol3DzVxKg",  // Removed "?si=MgoWnD6WorhE1RgK"
+    questions: [
+      {
+        text: "What shape is his shell described as ",
+        answers: ["plano", "esférico", "cilíndrico"],
+        correctIndex: 1,
+        selectedIndex: null,
+        timeStart: 0,
+        timeEnd: 15
+      },
+      {
+        text: "Where does he live?",
+        answers: ["América del Sur", "Júpiter", "América del Norte", "Asia"],
+        correctIndex: 0,
+        selectedIndex: null,
+        timeStart: 0,
+        timeEnd: 15
+      }
+    ]
   }
-      ]
-    },
-    {
-      videoId: "E_ol3DzVxKg?si=MgoWnD6WorhE1RgK",
-      questions: [
-        {
-          text: "What shape is his shell described as ",
-          answers: ["plano", "esférico", "cilíndrico"],
-          correctIndex: 1,
-          selectedIndex: null,
-          timeStart: 0,
-          timeEnd: 15
-        },
-        {
-          text: "Where does he live?",
-          answers: ["América del Sur", "Júpiter", "América del Norte", "Asia"],
-          correctIndex: 0,
-          selectedIndex: null,
-          timeStart: 0,
-          timeEnd: 15
-        },
-      ]
-    }
-  ];
+];
+
 
   // We'll store a YT.Player instance for each slide
   let players = [];
@@ -235,49 +236,62 @@
 
   // Current index of the displayed slide
   let currentSlide = 0;
+    buildSlides(); // build the slides (once)
 
   // Called by the YT API once it's ready
   function onYouTubeIframeAPIReady() {
-    initPlayers(); // create YT.Player instances
-    buildSlides(); // build the slides (once)
-
-    // Start a periodic check to see if a video reached its end time
+  if (typeof YT === "undefined" || typeof YT.Player === "undefined") {
+    // Poll for the API to be ready before initializing players
+    let apiReadyCheck = setInterval(() => {
+      if (typeof YT !== "undefined" && typeof YT.Player !== "undefined") {
+        clearInterval(apiReadyCheck);
+        initPlayers();
+        setInterval(checkPauseConditions, 200);
+      }
+    }, 100);
+  } else {
+    initPlayers();
     setInterval(checkPauseConditions, 200);
   }
+}
+
 
   // 1) Build all slides (DOM) exactly once
   function buildSlides() {
-    const slidesEl = document.getElementById("slides");
-    slidesEl.innerHTML = ""; // clear existing
+  const slidesEl = document.getElementById("slides");
+  slidesEl.innerHTML = ""; // Clear existing slides
 
-    slidesData.forEach((slide, slideIdx) => {
-      // Slide container
-      const slideDiv = document.createElement("div");
-      slideDiv.className = "slide";
-      slideDiv.id = `slide-${slideIdx}`;
+  slidesData.forEach((slide, slideIdx) => {
+    // Slide container
+    const slideDiv = document.createElement("div");
+    slideDiv.className = "slide";
+    slideDiv.id = `slide-${slideIdx}`;
 
-      // Build the video area (placeholder div for the API)
-      const videoDiv = document.createElement("div");
-      videoDiv.className = "videoWrapper";
-      videoDiv.innerHTML = `<div id="player${slideIdx}"></div>`;
+    // Build the video area (placeholder div for the API)
+    const videoDiv = document.createElement("div");
+    videoDiv.className = "videoWrapper";
+    videoDiv.innerHTML = `<div id="player${slideIdx}"></div>`;
 
-      // Build the questions container
-      const questionsContainer = document.createElement("div");
-      questionsContainer.className = "questionsContainer";
-      // We'll fill it by calling a helper function
-      questionsContainer.innerHTML = renderSlideQuestionsHTML(slideIdx);
+    // Build the questions container
+    const questionsContainer = document.createElement("div");
+    questionsContainer.className = "questionsContainer";
+    questionsContainer.innerHTML = renderSlideQuestionsHTML(slideIdx);
 
-      // Add both to the slide
-      slideDiv.appendChild(videoDiv);
-      slideDiv.appendChild(questionsContainer);
+    // Add both to the slide
+    slideDiv.appendChild(videoDiv);
+    slideDiv.appendChild(questionsContainer);
 
-      // Append the slide to the track
-      slidesEl.appendChild(slideDiv);
-    });
+    // Append the slide to the track
+    slidesEl.appendChild(slideDiv);
+  });
 
-    // Position the slides in a row
-    updateSlidesPosition();
-  }
+  // Position the slides in a row
+  updateSlidesPosition();
+
+  // Initialize players after slides are built
+  initPlayers();
+}
+
 
   // 2) Initialize each YT.Player once
   function initPlayers() {

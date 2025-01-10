@@ -235,11 +235,11 @@
 
   // Current index of the displayed slide
   let currentSlide = 0;
-    buildSlides(); // build the slides (once)
 
   // Called by the YT API once it's ready
   function onYouTubeIframeAPIReady() {
     initPlayers(); // create YT.Player instances
+    buildSlides(); // build the slides (once)
 
     // Start a periodic check to see if a video reached its end time
     setInterval(checkPauseConditions, 200);

@@ -2,137 +2,412 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>YouTube Short with Questions</title>
+  <title>Slides with Timestamps & Questions (Pause at Clip, But Allow Continue)</title>
+  <!-- Google Material Icons (for arrow_back, arrow_forward) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <style>
-    /* Page styling */
+    /* Gradient background */
     body {
       margin: 0;
       padding: 0;
-      /* A typical gradient background */
       background: linear-gradient(135deg, #e96443, #904e95);
       font-family: Arial, sans-serif;
       color: #fff;
     }
 
     .container {
-      max-width: 600px;
-      margin: 50px auto;
-      text-align: center;
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: rgba(255,255,255,0.1);
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
     }
 
     h1 {
-      margin-bottom: 30px;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    /* The player container */
-    #videoFrame {
-      width: 315px;    /* 9:16 ratio for Shorts */
+    /* Arrow & Slides layout (center the arrows vertically) */
+    .slidesRow {
+      display: flex;
+      align-items: center; /* center arrows and slide vertically */
+      position: relative;
+      min-height: 560px; /* matches video height (optional) */
+    }
+
+    /* Arrows on the left and right */
+    .arrow {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      padding: 8px;
+      margin: 0 10px;
+    }
+    .arrow:hover {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .material-icons {
+      color: #fff;
+      font-size: 36px;
+      line-height: 36px;
+    }
+
+    /* The “viewport” for our slides */
+    #slidesContainer {
+      flex: 1; /* take remaining horizontal space between arrows */
+      overflow: hidden; /* hide slides that move off the left/right edges */
+    }
+
+    /* The horizontal “track” that holds all slides side by side */
+    #slides {
+      display: flex;
+      transition: transform 0.5s ease;
+      will-change: transform; /* performance optimization */
+    }
+
+    /* Each slide is a full “view width” in the carousel */
+    .slide {
+      min-width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-around; /* video & questions side by side */
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    /* Video container (for 9:16 ratio) */
+    .videoWrapper {
+      width: 315px;  /* typical Shorts ratio: 9:16 => 315×560 */
       height: 560px;
-      margin: 0 auto 20px auto;
+      background: #000;
       border-radius: 8px;
-      overflow: hidden;  /* so the corners are nicely rounded */
+      overflow: hidden;
+      position: relative;
+    }
+    /* The iframe itself (YouTube video) */
+    .videoWrapper iframe {
+      width: 315px;
+      height: 560px;
+      border: none;
     }
 
-    .questions {
+    /* Questions container */
+    .questionsContainer {
+      width: 500px;  /* adjust as needed */
+      margin-left: 20px;
+    }
+
+    .question-block {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+    }
+    .question-block h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    /* Timestamps link style */
+    .timestamp {
+      color: #ffd700;
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .timestamp:hover {
+      text-decoration: underline;
+    }
+
+    .answers {
       list-style: none;
+      margin: 8px 0 0 0;
       padding: 0;
     }
-
-    .questions li {
-      margin: 15px 0;
-      background-color: rgba(255, 255, 255, 0.2);
-      padding: 15px;
-      border-radius: 6px;
+    .answers li {
+      margin: 6px 0;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 5px;
     }
-
-    .questions a {
-      color: #ffd700;
+    .answers li.selected {
+      background-color: #ffd700; 
+      color: #444;
       font-weight: bold;
-      text-decoration: none;
-      cursor: pointer; /* emphasize it's clickable */
-    }
-    .questions a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>YouTube Short Questions</h1>
-  
-  <!-- The placeholder for our video. The API will replace this with the YouTube player. -->
-  <div id="videoFrame"></div>
-  
-  <!-- Questions list with jump links (using the jumpTo() JS function) -->
-  <ul class="questions">
-    <li>
-      <strong>Question 1:</strong>
-      <p>
-        How does the short open?<br/>
-        <a onclick="jumpTo(0)">Go to 0:00</a>
-      </p>
-    </li>
-    <li>
-      <strong>Question 2:</strong>
-      <p>
-        What is happening around 0:08?<br/>
-        <a onclick="jumpTo(8)">Go to 0:08</a>
-      </p>
-    </li>
-    <li>
-      <strong>Question 3:</strong>
-      <p>
-        What do you notice at 0:18?<br/>
-        <a onclick="jumpTo(18)">Go to 0:18</a>
-      </p>
-    </li>
-    <li>
-      <strong>Question 4:</strong>
-      <p>
-        What stands out near the end (0:30)?<br/>
-        <a onclick="jumpTo(30)">Go to 0:30</a>
-      </p>
-    </li>
-  </ul>
+  <h1>Slides with Timestamps & Questions</h1>
+
+  <div class="slidesRow">
+    <!-- Left arrow -->
+    <div class="arrow" onclick="prevSlide()">
+      <span class="material-icons">arrow_back</span>
+    </div>
+
+    <!-- The slides "viewport" -->
+    <div id="slidesContainer">
+      <div id="slides"><!-- Slides are built in JS --></div>
+    </div>
+
+    <!-- Right arrow -->
+    <div class="arrow" onclick="nextSlide()">
+      <span class="material-icons">arrow_forward</span>
+    </div>
+  </div>
 </div>
 
-<!-- 1. Load the YouTube IFrame Player API -->
+<!-- 1. Load the YouTube IFrame Player API so we can seek times on the same player -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-  let player;
-  let playerReady = false;
+  /*
+    Each slide has:
+      - videoId
+      - questions: array of { 
+          text:        string question,
+          answers:     string[] possible answers,
+          correctIndex number   which answer is correct,
+          selectedIndex number|null  user’s choice,
+          timeStart:   number   (seconds) start time
+          timeEnd:     number   (seconds) end time
+        }
+  */
+  const slidesData = [
+    {
+      videoId: "ydypIRdWpqg",  // Example short (~37s)
+      questions: [
+        {
+          text: "What color is the sky?",
+          answers: ["Green", "Orange", "Blue", "Black"],
+          correctIndex: 2,
+          selectedIndex: null,
+          timeStart: 0,
+          timeEnd: 8
+        },
+        {
+          text: "What is 2 + 2?",
+          answers: ["3", "4", "5", "22"],
+          correctIndex: 1,
+          selectedIndex: null,
+          timeStart: 8,
+          timeEnd: 15
+        },
+      ]
+    },
+    {
+      videoId: "ydypIRdWpqg",
+      questions: [
+        {
+          text: "Which one is a fruit?",
+          answers: ["Apple", "Dog", "House", "Table"],
+          correctIndex: 0,
+          selectedIndex: null,
+          timeStart: 15,
+          timeEnd: 25
+        },
+        {
+          text: "Which planet do we live on?",
+          answers: ["Mars", "Jupiter", "Earth", "Saturn"],
+          correctIndex: 2,
+          selectedIndex: null,
+          timeStart: 25,
+          timeEnd: 37
+        },
+      ]
+    }
+  ];
 
-  // 2. Called automatically by the API once it is downloaded
+  // We'll store a YT.Player instance for each slide
+  let players = [];
+
+  // We want to know the “active end time” for each slide’s current question
+  // so we can pause at that time automatically, but then let them continue.
+  let activeEndTimes = new Array(slidesData.length).fill(null);
+
+  // Current index of the displayed slide
+  let currentSlide = 0;
+
+  // Called by the YT API once it's ready
   function onYouTubeIframeAPIReady() {
-    player = new YT.Player('videoFrame', {
-      videoId: 'ydypIRdWpqg', // Only the video ID, not the full URL
-      playerVars: {
-        playsinline: 1 // For mobile-friendly inline playback
-      },
-      events: {
-        onReady: onPlayerReady
+    buildSlides(); // build the slides (once)
+    initPlayers(); // create YT.Player instances
+
+    // Start a periodic check to see if a video reached its end time
+    setInterval(checkPauseConditions, 200);
+  }
+
+  // 1) Build all slides (DOM) exactly once
+  function buildSlides() {
+    const slidesEl = document.getElementById("slides");
+    slidesEl.innerHTML = ""; // clear existing
+
+    slidesData.forEach((slide, slideIdx) => {
+      // Slide container
+      const slideDiv = document.createElement("div");
+      slideDiv.className = "slide";
+      slideDiv.id = `slide-${slideIdx}`;
+
+      // Build the video area (placeholder div for the API)
+      const videoDiv = document.createElement("div");
+      videoDiv.className = "videoWrapper";
+      videoDiv.innerHTML = `<div id="player${slideIdx}"></div>`;
+
+      // Build the questions container
+      const questionsContainer = document.createElement("div");
+      questionsContainer.className = "questionsContainer";
+      // We'll fill it by calling a helper function
+      questionsContainer.innerHTML = renderSlideQuestionsHTML(slideIdx);
+
+      // Add both to the slide
+      slideDiv.appendChild(videoDiv);
+      slideDiv.appendChild(questionsContainer);
+
+      // Append the slide to the track
+      slidesEl.appendChild(slideDiv);
+    });
+
+    // Position the slides in a row
+    updateSlidesPosition();
+  }
+
+  // 2) Initialize each YT.Player once
+  function initPlayers() {
+    slidesData.forEach((slide, i) => {
+      players[i] = new YT.Player(`player${i}`, {
+        videoId: slide.videoId,
+        playerVars: {
+          playsinline: 1
+        }
+        // You could add events here if needed
+      });
+    });
+  }
+
+  // Helper function: Return the HTML for the questions portion of a slide
+  function renderSlideQuestionsHTML(slideIdx) {
+    const slide = slidesData[slideIdx];
+    let html = "";
+
+    slide.questions.forEach((q, qIdx) => {
+      const tStart = formatTime(q.timeStart);
+      const tEnd   = formatTime(q.timeEnd);
+      html += `
+        <div class="question-block">
+          <h3>
+            ${q.text}
+            <span 
+              class="timestamp"
+              onclick="seekToTime(${slideIdx}, ${qIdx})"
+            >
+              (${tStart} - ${tEnd})
+            </span>
+          </h3>
+          <ul class="answers">
+            ${q.answers.map((answer, aIdx) => {
+              const isSelected = (q.selectedIndex === aIdx) ? "selected" : "";
+              return `
+                <li 
+                  class="${isSelected}"
+                  onclick="selectAnswer(${slideIdx}, ${qIdx}, ${aIdx})"
+                >
+                  ${answer}
+                </li>
+              `;
+            }).join("")}
+          </ul>
+        </div>
+      `;
+    });
+    return html;
+  }
+
+  // Called whenever user selects an answer
+  // => update data, then re-render the questions portion only
+  function selectAnswer(slideIdx, qIdx, answerIdx) {
+    slidesData[slideIdx].questions[qIdx].selectedIndex = answerIdx;
+
+    // Re-render *only* that slide’s questions container
+    const slideEl = document.getElementById(`slide-${slideIdx}`);
+    const questionsContainer = slideEl.querySelector(".questionsContainer");
+    questionsContainer.innerHTML = renderSlideQuestionsHTML(slideIdx);
+  }
+
+  // Seek to a certain time in the current slide’s video
+  // Also record the “timeEnd” so we can pause automatically
+  function seekToTime(slideIdx, questionIdx) {
+    const question = slidesData[slideIdx].questions[questionIdx];
+    if (players[slideIdx]) {
+      players[slideIdx].seekTo(question.timeStart, true);
+      players[slideIdx].playVideo();
+
+      // We'll pause the video automatically once it reaches question.timeEnd
+      activeEndTimes[slideIdx] = question.timeEnd;
+    }
+  }
+
+  // Periodically check if any currently playing video has reached its activeEndTime
+  function checkPauseConditions() {
+    players.forEach((player, i) => {
+      if (!player) return;
+
+      // If the player is currently playing, compare currentTime to activeEndTimes[i]
+      if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+        const currentTime = player.getCurrentTime();
+        const limit = activeEndTimes[i];
+
+        // If we have a limit set, and we've passed that limit, pause the video
+        // and clear the limit so they can continue playing if they wish
+        if (typeof limit === "number" && currentTime >= limit) {
+          player.pauseVideo();
+          activeEndTimes[i] = null;  // clear so user can unpause and watch further
+        }
       }
     });
   }
 
-  // 3. Called when the player is ready
-  function onPlayerReady(event) {
-    playerReady = true;
+  // Move the slides track based on currentSlide
+  function updateSlidesPosition() {
+    const slidesEl = document.getElementById("slides");
+    slidesEl.style.transform = `translateX(-${currentSlide * 100}%)`;
   }
 
-  // 4. Jump to a given timestamp -- only if player is ready
-  function jumpTo(seconds) {
-    if (!playerReady) {
-      console.warn('Player not ready yet, please wait a moment.');
-      return;
+  // Navigation
+  function prevSlide() {
+    if (currentSlide > 0) {
+      // Pause outgoing slide's video
+      if (players[currentSlide]) {
+        players[currentSlide].pauseVideo();
+      }
+      currentSlide--;
+      updateSlidesPosition();
     }
-    player.seekTo(seconds, true);
-    player.playVideo();
+  }
+
+  function nextSlide() {
+    if (currentSlide < slidesData.length - 1) {
+      // Pause outgoing slide's video
+      if (players[currentSlide]) {
+        players[currentSlide].pauseVideo();
+      }
+      currentSlide++;
+      updateSlidesPosition();
+    }
+  }
+
+  // Utility: format seconds as M:SS
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
   }
 </script>
 </body>

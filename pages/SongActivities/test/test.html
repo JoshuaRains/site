@@ -8,13 +8,21 @@
 
   <style>
     /* Gradient background */
+    html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+    }
+
     body {
-      margin: 0;
-      padding: 0;
       background: linear-gradient(135deg, #e96443, #904e95);
       font-family: Arial, sans-serif;
       color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Ensure it covers the full viewport height */
     }
+
 
     .container {
       max-width: 900px;

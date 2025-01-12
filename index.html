@@ -10,8 +10,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=package_2" />
 <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Doto:wght@100..900&family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Google Material Icons for the new Activities section -->
+  
+<!-- Google Material Icons for the new Activities section -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <style>
@@ -180,13 +182,34 @@
       align-items: center;   /* center text vertically */
     }
 
+    .activity-icon.dropbox {
+      background-color: #007bff;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;   /* center the icon vertically */
+      justify-content: center; /* center the icon horizontally */
+      min-width: 50px;       /* ensures some width for the icon area */
+    }
+
+    
+
     /* Hover effect: change both sub-divs to a subtle color */
     .activity-item:hover .activity-icon {
       background-color: #c3c0c0; 
       cursor: pointer;
     }
+    .activity-item:hover .activity-icon.dropbox {
+      background-color: #0056b3;
+      cursor: pointer;
+    }
     .activity-item:hover .activity-text {
       background-color: #f0f0f0; 
+      cursor: pointer;
+    }
+    .activity-item:hover .activity-text.dropbox {
+      background-color: #0056b3;
       cursor: pointer;
     }
     .activities-header {
@@ -206,6 +229,20 @@
     .activity-subtopic{
       font-size: 14px;
       margin-left: 10px;
+    }
+    #download-button {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+        margin-right: 20px;
+    }
+
+    #download-button:hover {
+      background-color: #0056b3;
     }
 
   </style>
@@ -253,11 +290,24 @@
 
    
     <div class="activities">
-      
+
+      <button class="activity-button" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSd93KBw1PWfN_5VdvvNGluo4dOofDvIZHo3qTE8JlUB-fYCZA/viewform?usp=header', '_blank')">
+        <div class="activity-item">
+            <div class="activity-icon dropbox">
+                <span class="material-symbols-outlined">
+                    package_2
+                </span>
+            </div>
+            <div class="activity-text">My Dropbox</div>
+        </div>
+    </button>
+    
+
         <p class="activities-header">Actividades</p>
 
       <!-- Add section for greetings next semester -->
       
+
       <p class = "activity-topic">Nouns</p>
 
       <button class = "activity-button" onclick="location.href='pages/PreColumbian/index.html'">

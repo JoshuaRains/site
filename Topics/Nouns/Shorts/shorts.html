@@ -323,20 +323,12 @@
     videoId: "N7Qak6kka_U",  // Example short (~37s)
     questions: [
       {
-        text: "¿Cómo describe las patatas fritas?",
-        answers: ["Como 'esenciales'", "Como 'normales'", "Como 'simples'", "Como 'aburridas'"],
+        text: "Which of the following endings are not associated with feminine nouns?",
+        answers: ["-ción", "-n", "-dad", "-tad", "-a"],
         correctIndex: 0,
         selectedIndex: null,
         timeStart: 0,
-        timeEnd: 2
-      },
-      {
-        text: "¿Por qué son las patatas fritas especiales?",
-        answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
-        correctIndex: 1,
-        selectedIndex: null,
-        timeStart: 21,
-        timeEnd: 31
+        timeEnd: 30
       }
     ]
   },
@@ -345,20 +337,20 @@
     videoId: "9WurQmKLB0E",  
     questions: [
       {
-        text: "¿Cómo describe las patatas fritas?",
-        answers: ["Como 'esenciales'", "Como 'normales'", "Como 'simples'", "Como 'aburridas'"],
+        text: "¿Is 'coliflor' masculine or feminine?",
+        answers: ["masculine", "depends on the country", "feminine"],
         correctIndex: 0,
         selectedIndex: null,
-        timeStart: 0,
-        timeEnd: 2
+        timeStart: 4,
+        timeEnd: 15
       },
       {
-        text: "¿Por qué son las patatas fritas especiales?",
-        answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
+        text: "¿'Kiwi' es masculino o feminino?",
+        answers: ["masculino", "feminino"],
         correctIndex: 1,
         selectedIndex: null,
-        timeStart: 21,
-        timeEnd: 31
+        timeStart: 27,
+        timeEnd: 29
       }
     ]
   },
@@ -367,20 +359,20 @@
     videoId: "cOIl0siJTpk",  
     questions: [
       {
-        text: "¿Cómo describe las patatas fritas?",
-        answers: ["Como 'esenciales'", "Como 'normales'", "Como 'simples'", "Como 'aburridas'"],
+        text: "¿'El dentista' es masculino o feminino?",
+        answers: ["masculino", "feminino"],
         correctIndex: 0,
         selectedIndex: null,
-        timeStart: 0,
-        timeEnd: 2
+        timeStart: 27,
+        timeEnd: 100
       },
       {
-        text: "¿Por qué son las patatas fritas especiales?",
-        answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
+        text: "¿'La cantante' es masculino o feminino?",
+        answers: ["masculino", "feminino"],
         correctIndex: 1,
         selectedIndex: null,
-        timeStart: 21,
-        timeEnd: 31
+        timeStart: 104,
+        timeEnd: 122
       }
     ]
   },
@@ -388,83 +380,20 @@
     videoId: "R0w1iy_Gb8U",  
     questions: [
       {
-        text: "¿Cómo describe las patatas fritas?",
-        answers: ["Como 'esenciales'", "Como 'normales'", "Como 'simples'", "Como 'aburridas'"],
+        text: "Which word means 'ship?'",
+        answers: ["barca", "barco"],
         correctIndex: 0,
         selectedIndex: null,
-        timeStart: 0,
-        timeEnd: 2
+        timeStart: 18,
+        timeEnd: 21
       },
       {
-        text: "¿Por qué son las patatas fritas especiales?",
-        answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
+        text: "which word means 'apple tree?'",
+        answers: ["naranja", "manzana", "naranjo", "manzano"],
         correctIndex: 1,
         selectedIndex: null,
         timeStart: 21,
-        timeEnd: 31
-      }
-    ]
-  },
-  {
-    videoId: "CP5WMp_uqBY",  
-    questions: [
-      {
-        text: "¿Cómo describe las patatas fritas?",
-        answers: ["Como 'esenciales'", "Como 'normales'", "Como 'simples'", "Como 'aburridas'"],
-        correctIndex: 0,
-        selectedIndex: null,
-        timeStart: 0,
-        timeEnd: 2
-      },
-      {
-        text: "¿Por qué son las patatas fritas especiales?",
-        answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
-        correctIndex: 1,
-        selectedIndex: null,
-        timeStart: 21,
-        timeEnd: 31
-      }
-    ]
-  },
-  {
-    videoId: "ydypIRdWpqg",  // Example short (~37s)
-    questions: [
-      {
-        text: "¿Cómo describe las patatas fritas?",
-        answers: ["Como 'esenciales'", "Como 'normales'", "Como 'simples'", "Como 'aburridas'"],
-        correctIndex: 0,
-        selectedIndex: null,
-        timeStart: 0,
-        timeEnd: 2
-      },
-      {
-        text: "¿Por qué son las patatas fritas especiales?",
-        answers: ["Porque son fáciles de hacer", "Por la salsa secreta", "Porque son grandes"],
-        correctIndex: 1,
-        selectedIndex: null,
-        timeStart: 21,
-        timeEnd: 31
-      }
-    ]
-  },
-  {
-    videoId: "E_ol3DzVxKg",  // Removed "?si=MgoWnD6WorhE1RgK"
-    questions: [
-      {
-        text: "What shape is his shell described as ",
-        answers: ["plano", "esférico", "cilíndrico"],
-        correctIndex: 1,
-        selectedIndex: null,
-        timeStart: 0,
-        timeEnd: 15
-      },
-      {
-        text: "Where does he live?",
-        answers: ["América del Sur", "Júpiter", "América del Norte", "Asia"],
-        correctIndex: 0,
-        selectedIndex: null,
-        timeStart: 0,
-        timeEnd: 15
+        timeEnd: 34
       }
     ]
   }
@@ -758,8 +687,10 @@ function nextSlide() {
     yOffset += 10;
 
     slide.questions.forEach((q, qIdx) => {
+  // Add the question text in black
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0); // Ensure question text is always black
   doc.text(`${qIdx + 1}. ${q.text}`, 10, yOffset);
   yOffset += 6;
 
@@ -767,16 +698,24 @@ function nextSlide() {
     const isSelected = q.selectedIndex === aIdx;
 
     if (isSelected) {
-      // Set fill color to light green
+      // Set fill color to light green and draw a rectangle behind the text
       doc.setFillColor(204, 255, 204); // RGB for light green
-      doc.rect(10, yOffset - 4, 190, 5, "F"); // Draw rectangle with fill ("F")
+      const textWidth = doc.getTextWidth(`- ${answer}`); // Get width of the text
+      doc.rect(15, yOffset - 4, textWidth + 2, 6, "F"); // Rectangle fits the text width
+
+      // Highlight selected answer text in green
+      doc.setTextColor(0, 128, 0); // Green text for the selected answer
+    } else {
+      // Non-selected answers in black
+      doc.setTextColor(0, 0, 0);
     }
 
-    doc.setTextColor(isSelected ? 0 : 0, isSelected ? 128 : 0, isSelected ? 0 : 0); // Green for selected, black for others
+    // Add the answer text
     doc.text(`- ${answer}`, 15, yOffset);
     yOffset += 6;
   });
 
+  // Add spacing after each question
   yOffset += 4;
 
   // Check if we need to add a new page
@@ -788,6 +727,11 @@ function nextSlide() {
     addHeader(currentPage, totalPages);
   }
 });
+
+// Reset fill and text colors after processing all answers
+doc.setFillColor(255, 255, 255); // Reset fill color to white
+doc.setTextColor(0, 0, 0); // Reset text color to black
+
 
   });
 

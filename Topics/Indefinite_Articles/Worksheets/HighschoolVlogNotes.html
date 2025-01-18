@@ -332,99 +332,74 @@
 </head>
 <body>
 	
-    <div class="page-container">
-        <div class="page-title">Video Comprehension Worksheet</div>
-        <div class="header">
-            <div class="header-section nombre">
-                <label for="nombre">Nombre:</label><input type="text" spellcheck="false" id="nombre" class="input-line">
-            </div>
-            <div class="header-section fecha">
-                <label for="fecha">Fecha:</label><input type="text" spellcheck="false" id="fecha" class="input-line">
-            </div>
-            <div class="header-section clase">
-                <label for="clase">Clase:</label><input type="text" spellcheck="false" id="clase" class="input-line">
-            </div>
-        </div>
-        <div class="divider-line"></div>
-        <p>
-            <b>Instructions:</b> Watch the video and answer the questions below. Pay attention to the order of events and the vocabulary related to school life and classrooms. Remember, the section about gym class has been removed.
-        </p>
-    
-        <!-- Questions -->
-        <div class="question">
-            <p><b>1.</b> What is the first class mentioned in the video? Write the name of the subject.</p>
-            <div class="short-response">
-                <input type="text" class="input-line" spellcheck="false">
-            </div>
-        </div>
-    
-        <div class="question">
-            <p><b>2.</b> What activity is the student doing at the beginning of the video during the first class?</p>
-            <div class="short-response">
-                <input type="text" class="input-line" spellcheck="false">
-            </div>
-        </div>
-    
-        <div class="question">
-            <p><b>3.</b> After leaving the first class, what is described about the weather outside? Use details mentioned in the video.</p>
-            <div class="short-response">
-                <input type="text" class="input-line" spellcheck="false">
-            </div>
-        </div>
-    
-        <div class="question">
-            <p><b>4.</b> What is the second class shown in the video? Write the name of the subject.</p>
-            <div class="short-response">
-                <input type="text" class="input-line" spellcheck="false">
-            </div>
-        </div>
-    
-        <div class="question">
-            <p><b>5.</b> In the second class, what is the student doing or observing? Provide a short description.</p>
-            <div class="short-response">
-                <input type="text" class="input-line" spellcheck="false">
-            </div>
-        </div>
-    
-        <div class="question">
-            <p><b>6.</b> What is the final class mentioned in the video? Write the name of the subject.</p>
-            <div class="short-response">
-                <input type="text" class="input-line" spellcheck="false">
-            </div>
-        </div>
-    
-        <div class="question">
-            <p><b>7.</b> Describe how the student feels at the end of the day. Use clues from the video.</p>
-            <div class="short-response">
-                <input type="text" class="input-line" spellcheck="false">
-            </div>
-        </div>
-    
-        <!-- Vocabulary Section -->
-        <p>
-            <b>Vocabulary Focus:</b> Match the Spanish words from the video with their English meanings.
-        </p>
-        <div class="chart">
-            <div class="chart-table">
-                <input type="text" spellcheck="false" value="Spanish Word:" disabled="true">
-                <input type="text" spellcheck="false" value="English Meaning:" disabled="true">
-                <input type="text" spellcheck="false" value="clase" disabled="true">
-                <input type="text" spellcheck="false">
-                <input type="text" spellcheck="false" value="profesor" disabled="true">
-                <input type="text" spellcheck="false">
-                <input type="text" spellcheck="false" value="historia" disabled="true">
-                <input type="text" spellcheck="false">
-                <input type="text" spellcheck="false" value="arte" disabled="true">
-                <input type="text" spellcheck="false">
-                <input type="text" spellcheck="false" value="escribir" disabled="true">
-                <input type="text" spellcheck="false">
-                <input type="text" spellcheck="false" value="estudiante" disabled="true">
-                <input type="text" spellcheck="false">
-                <input type="text" spellcheck="false" value="escuela" disabled="true">
-                <input type="text" spellcheck="false">
-            </div>
-        </div>
-    </div>
+	<div class="page-container">
+		<div class="page-title">Video Comprehension Worksheet</div>
+		<div class="header">
+			<div class="header-section nombre">
+				<label for="nombre">Nombre:</label><input type="text" spellcheck="false" id="nombre" class="input-line">
+			</div>
+			<div class="header-section fecha">
+				<label for="fecha">Fecha:</label><input type="text" spellcheck="false" id="fecha" class="input-line">
+			</div>
+			<div class="header-section clase">
+				<label for="clase">Clase:</label><input type="text" spellcheck="false" id="clase" class="input-line">
+			</div>
+		</div>
+		<div class="divider-line"></div>
+		<p><b>Instructions:</b> Watch the video and answer the questions below. The questions are in the same order as the events in the video. Pay special attention to vocabulary related to classrooms and school life. The section on gym has been removed.</p>
+	
+		<!-- Multiple Choice Question 1 -->
+		<div class="question multiple-choice">
+			<p><strong>1. What is the first class shown in the video?</strong></p>
+			<label><input type="radio" name="question1"> A. Historia</label><br>
+			<label><input type="radio" name="question1"> B. Química</label><br>
+			<label><input type="radio" name="question1"> C. Arte</label><br>
+		</div>
+	
+		<!-- Fill-in-the-blank Question -->
+		<div class="question">
+			<p><strong>2. What does the student describe about the weather after the first class? Fill in the blank:</strong></p>
+			<p>After class, the student mentioned seeing _________ outside.</p>
+			<div class="short-response">
+				<input type="text" class="input-line" spellcheck="false">
+			</div>
+		</div>
+	
+		<!-- True or False Question -->
+		<div class="question multiple-choice">
+			<p><strong>3. True or False: The student described their next class as "Historia del Mundo."</strong></p>
+			<label><input type="radio" name="question3"> True</label><br>
+			<label><input type="radio" name="question3"> False</label><br>
+		</div>
+	
+		<!-- Multiple Choice Question 4 -->
+		<div class="question multiple-choice">
+			<p><strong>4. What did the student mention about the final class in the video?</strong></p>
+			<label><input type="radio" name="question4"> A. It was art class.</label><br>
+			<label><input type="radio" name="question4"> B. It was science class.</label><br>
+			<label><input type="radio" name="question4"> C. It was math class.</label><br>
+		</div>
+	
+		<!-- Vocabulary Matching Chart -->
+		<p><b>Vocabulary Focus:</b> Match the Spanish words from the video with their English meanings.</p>
+		<div class="chart">
+			<div class="chart-table">
+				<input type="text" spellcheck="false" value="Spanish Word:" disabled="true">
+				<input type="text" spellcheck="false" value="English Meaning:" disabled="true">
+				<input type="text" spellcheck="false" value="clase" disabled="true">
+				<input type="text" spellcheck="false">
+				<input type="text" spellcheck="false" value="profesor" disabled="true">
+				<input type="text" spellcheck="false">
+				<input type="text" spellcheck="false" value="historia" disabled="true">
+				<input type="text" spellcheck="false">
+				<input type="text" spellcheck="false" value="arte" disabled="true">
+				<input type="text" spellcheck="false">
+				<input type="text" spellcheck="false" value="escuela" disabled="true">
+				<input type="text" spellcheck="false">
+			</div>
+		</div>
+	</div>
+	
     
     
 	

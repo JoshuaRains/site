@@ -26,7 +26,11 @@
     
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
+
+      background: #517860; /* Deep blue-grey gradient */
+      color: #ecefec; /* Light text color for contrast */
+
+
       min-height: 100vh;
     }
 
@@ -38,20 +42,19 @@
 
     /* Header (Juegos) */
     .header {
-      background-color: rgb(222, 219, 219); 
+      background-color: #79b791; 
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
       padding: 2px;
       text-align: center;       
       margin-bottom: 0;         
-      color: #fff;
       border-bottom: 3px solid; 
       border-image: linear-gradient(to bottom, #000000, rgb(222, 219, 219)) 1;
       border-image-slice: 5; 
     }
 
     .games {
-      background-color: rgb(245, 242, 242);
+      background-color: #abd1b5;
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
       padding: 20px;
@@ -64,21 +67,22 @@
     }
 
     .game-item {
-      background-color: #ffffff;
+      background-color: #abd1b5;
       border-radius: 10px;
       border: none;
       text-align: center;
       width: 150px; 
       flex: 0 0 auto;
       padding: 10px;
-      transition: background-color 0.3s ease; 
+      transition: transform 0.3s ease, background-color 0.3s ease;
     }
 
+   
     .game-item:hover {
-      background-color: #c3c0c0;
-      cursor: pointer;
-    }
-
+    filter: brightness(0.9); 
+	transform: scale(1.05); /* Slight zoom */
+	cursor: pointer;
+  }
     .game-item img {
       width: 100%;
       height: auto;
@@ -160,7 +164,7 @@
 
     /* Icon container on the left */
     .activity-icon {
-      background-color: rgb(222, 219, 219); /* same color as header */
+      background-color: #EDF4ED; /* same color as header */
       border-top-left-radius: 10px;
       border-bottom-left-radius: 10px;
       padding: 10px;
@@ -173,7 +177,7 @@
     /* Text container on the right */
     .activity-text {
       
-      background-color: #ffffff; /* same background as game-item */
+      background-color: #abd1b5; /* same background as game-item */
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
       padding: 10px;
@@ -182,36 +186,47 @@
       align-items: center;   /* center text vertically */
     }
 
-    .activity-icon.dropbox {
-      background-color: #007bff;
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      padding: 10px;
-      display: flex;
-      align-items: center;   /* center the icon vertically */
-      justify-content: center; /* center the icon horizontally */
-      min-width: 50px;       /* ensures some width for the icon area */
+    
+    .activity-icon.package_2 {
+      background: linear-gradient(to right, #00C6FF, #0072FF); /* Bright blue gradient for "notifications" */
     }
+
+.activity-icon.notifications {
+	background: linear-gradient(to right, #00C6FF, #0072FF); /* Bright blue gradient for "notifications" */
+}
+
+.activity-icon.sports_esports {
+	background: linear-gradient(to right, #FF7EB3, #FF758C); /* Pink to soft red for "esports" */
+}
+
+.activity-icon.description {
+  background: linear-gradient(to right, #42E695, #3BB2B8); /* Vibrant teal gradient for "training" */
+
+}
+
+.activity-icon.model_training {
+  background: linear-gradient(to right, #FFD700, #FFA500); /* Golden to orange for "package" */
+
+}
+
+.activity-icon.smart_display {
+	background: linear-gradient(to right, #FF512F, #DD2476); /* Warm sunset gradient for "display" */
+}
+
 
     
 
     /* Hover effect: change both sub-divs to a subtle color */
     .activity-item:hover .activity-icon {
-      background-color: #c3c0c0; 
+      filter: brightness(0.9); /* Makes the color 20% darker */
       cursor: pointer;
     }
-    .activity-item:hover .activity-icon.dropbox {
-      background-color: #0056b3;
-      cursor: pointer;
-    }
+    
     .activity-item:hover .activity-text {
-      background-color: #f0f0f0; 
+      filter: brightness(0.9); /* Makes the color 20% darker */
       cursor: pointer;
     }
-    .activity-item:hover .activity-text.dropbox {
-      background-color: #0056b3;
-      cursor: pointer;
-    }
+    
     .activities-header {
         font-size: 30px;
         text-align: center;
@@ -293,221 +308,248 @@
 
       <button class="activity-button" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSd93KBw1PWfN_5VdvvNGluo4dOofDvIZHo3qTE8JlUB-fYCZA/viewform?usp=header', '_blank')">
         <div class="activity-item">
-            <div class="activity-icon dropbox">
-                <span class="material-symbols-outlined">
-                    package_2
-                </span>
-            </div>
-            <div class="activity-text">My Dropbox</div>
-        </div>
-    </button>
-    
-
-        <p class="activities-header">Actividades</p>
-
-      
-        <p class = "activity-topic">Greetings and Goodbyes</p>
-
-        <button class = "activity-button" onclick="location.href='Topics/Greetings/Games/GreetingsGoodbyes_1.html'">
-          <div class="activity-item">
-            <div class="activity-icon">
-              <span class="material-icons">model_training</span>
-            </div>
-            <div class="activity-text">Practice Game</div>
+          <div class="activity-icon package_2">
+            <span class="material-symbols-outlined">package_2</span>
           </div>
-        </button>
-
-      <p class = "activity-topic">Nouns</p>
-
+          <div class="activity-text">My Dropbox</div>
+        </div>
+      </button>
       
-
-      <button class = "activity-button" onclick="location.href='Topics/Nouns/Worksheets/GrammarNotes.html'">
+      <p class="activities-header">Actividades</p>
+      
+      <p class="activity-topic">Greetings and Goodbyes</p>
+      
+      <button class="activity-button" onclick="location.href='Topics/Greetings/Games/GreetingsGoodbyes_1.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon model_training">
+            <span class="material-icons">model_training</span>
+          </div>
+          <div class="activity-text">Practice Game</div>
+        </div>
+      </button>
+      
+      <p class="activity-topic">Nouns</p>
+      
+      <button class="activity-button" onclick="location.href='Topics/Nouns/Worksheets/GrammarNotes.html'">
+        <div class="activity-item">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">Noun Basics</div>
         </div>
       </button>
-
+      
       <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
         <div class="activity-item">
-          <div class="activity-icon">
-            <span class="material-icons">
-              sports_esports
-              </span>
+          <div class="activity-icon sports_esports">
+            <span class="material-icons">sports_esports</span>
           </div>
           <div class="activity-text">Practice Noun Basics</div>
         </div>
       </button>
-
-      <button class = "activity-button" onclick="location.href='Topics/Nouns/Worksheets/GrammarNotes2.html'">
+      
+      <button class="activity-button" onclick="location.href='Topics/Nouns/Worksheets/GrammarNotes2.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">More Noun Rules</div>
         </div>
       </button>
-
+      
       <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
         <div class="activity-item">
-          <div class="activity-icon">
-            <span class="material-icons">
-              sports_esports
-              </span>
+          <div class="activity-icon sports_esports">
+            <span class="material-icons">sports_esports</span>
           </div>
           <div class="activity-text">Practice More Noun Rules</div>
         </div>
       </button>
-
-
-      <p class = "activity-topic">Defininite Articles</p>
-
-      <button class = "activity-button" onclick="location.href='Topics/Definite_Articles/Worksheets/GrammarNotes.html'">
+      
+      <p class="activity-topic">Defininite Articles</p>
+      
+      <button class="activity-button" onclick="location.href='Topics/Definite_Articles/Worksheets/GrammarNotes.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">Articles</div>
         </div>
       </button>
-
+      
       <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
         <div class="activity-item">
-          <div class="activity-icon">
-            <span class="material-icons">
-              sports_esports
-              </span>
+          <div class="activity-icon sports_esports">
+            <span class="material-icons">sports_esports</span>
           </div>
           <div class="activity-text">Practice Articles</div>
         </div>
       </button>
       
-      <button class = "activity-button" onclick="location.href='Topics/Definite_Articles/Worksheets/GrammarNotes2.html'">
+      <button class="activity-button" onclick="location.href='Topics/Definite_Articles/Worksheets/GrammarNotes2.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">Vocabulary with Articles</div>
         </div>
       </button>
-
-
-      <button class = "activity-button" onclick="location.href='Topics/Nouns/Games/Nouns_1.html'">
+      
+      <button class="activity-button" onclick="location.href='Topics/Nouns/Games/Nouns_1.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon model_training">
             <span class="material-icons">model_training</span>
           </div>
           <div class="activity-text">Practice Vocabulary</div>
         </div>
       </button>
-
-      <button class = "activity-button" onclick="location.href='Topics/Nouns/Shorts/shorts.html'">
+      
+      <button class="activity-button" onclick="location.href='Topics/Nouns/Shorts/shorts.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon smart_display">
             <span class="material-icons">smart_display</span>
           </div>
           <div class="activity-text">Noun Tips</div>
         </div>
       </button>
-
-      <p class = "activity-topic">Indefininite Articles</p>
-
-      <button class = "activity-button" onclick="location.href='Topics/Indefinite_Articles/Worksheets/GrammarNotes.html'">
+      
+      <p class="activity-topic">Indefininite Articles</p>
+      
+      <button class="activity-button" onclick="location.href='Topics/Indefinite_Articles/Worksheets/GrammarNotes.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">Articles</div>
         </div>
       </button>
-
-
-      <p class = "activity-topic">Numbers 0-30</p>
-
-      <button class = "activity-button" onclick="location.href=''">
+      
+      <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon sports_esports">
+            <span class="material-icons">sports_esports</span>
+          </div>
+          <div class="activity-text">Practice</div>
+        </div>
+      </button>
+      
+      <p class="activity-topic">Numbers 0-30</p>
+      
+      <button class="activity-button" onclick="location.href=''">
+        <div class="activity-item">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">Guided Notes</div>
         </div>
       </button>
-
-      <button class = "activity-button" onclick="location.href='pages/NumberGame/numbergame30.html'">
+      
+      <button class="activity-button" onclick="location.href='pages/NumberGame/numbergame30.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon model_training">
             <span class="material-icons">model_training</span>
           </div>
           <div class="activity-text">Practice Game</div>
         </div>
       </button>
-
-      <p class = "activity-topic">Ser</p>
-
-      <p class = "activity-topic">Telling time</p>
-
-      <button class = "activity-button" onclick="location.href=''">
+      
+      <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
         <div class="activity-item">
-          <div class="activity-icon">
-            <span class="material-icons">description</span>
+          <div class="activity-icon sports_esports">
+            <span class="material-icons">sports_esports</span>
           </div>
-          <div class="activity-text">Guided Notes</div>
+          <div class="activity-text">Practice Game</div>
         </div>
       </button>
+      
+      <p class="activity-topic">Ser</p>
 
-      <button class = "activity-button" onclick="location.href='Topics/Time/Worksheets/ExploreClock.html'">
+      <p class="activity-topic">Telling Time</p>
+      
+      <button class="activity-button" onclick="location.href=''">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon notifications">
+            <span class="material-icons">notifications</span>
+          </div>
+          <div class="activity-text">Bellwork - number review</div>
+        </div>
+      </button>
+      
+      <button class="activity-button" onclick="location.href='Topics/Time/Worksheets/ExploreClock.html'">
+        <div class="activity-item">
+          <div class="activity-icon model_training">
             <span class="material-icons">model_training</span>
           </div>
           <div class="activity-text">Interactive Clock</div>
         </div>
       </button>
-
-      <button class = "activity-button" onclick="location.href='pages/TimeGame/timegame.html'">
+      
+      <button class="activity-button" onclick="location.href=''">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon description">
+            <span class="material-icons">description</span>
+          </div>
+          <div class="activity-text">Guided Notes</div>
+        </div>
+      </button>
+      
+      <button class="activity-button" onclick="location.href='pages/TimeGame/timegame.html'">
+        <div class="activity-item">
+          <div class="activity-icon model_training">
             <span class="material-icons">model_training</span>
           </div>
           <div class="activity-text">Practice Game</div>
         </div>
       </button>
-
-      <p class = "activity-topic">-AR Verbs</p>
-
-      <p class = "activity-topic">Questions</p>
-
-      <p class = "activity-topic">Estar</p>
-
-      <p class = "activity-topic">Unsorted</p>
-      <button class = "activity-button" onclick="location.href='pages/PreColumbian/index.html'">
+      
+      <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon sports_esports">
+            <span class="material-icons">sports_esports</span>
+          </div>
+          <div class="activity-text">Practice Game</div>
+        </div>
+      </button>
+
+      <p class="activity-topic">Ar verbs</p>
+
+      <p class="activity-topic">Questions</p>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      
+      <p class="activity-topic">Unsorted</p>
+      
+      <button class="activity-button" onclick="location.href='pages/PreColumbian/index.html'">
+        <div class="activity-item">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">Spanish II - Precolumbian Civilizations Activity</div>
         </div>
       </button>
-
-      <button class = "activity-button" onclick="location.href='Worksheets/WorksheetTemplate.html'">
+      
+      <button class="activity-button" onclick="location.href='Worksheets/WorksheetTemplate.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon description">
             <span class="material-icons">description</span>
           </div>
           <div class="activity-text">Worksheet template</div>
         </div>
       </button>
-    
-      <button class = "activity-button" onclick="location.href='pages/SongActivities/test/test.html'">
+      
+      <button class="activity-button" onclick="location.href='pages/SongActivities/test/test.html'">
         <div class="activity-item">
-          <div class="activity-icon">
+          <div class="activity-icon smart_display">
             <span class="material-icons">smart_display</span>
           </div>
           <div class="activity-text">Youtube shorts bellwork</div>
         </div>
       </button>
+      
 
     <div class="second-div"></div>
   </div>

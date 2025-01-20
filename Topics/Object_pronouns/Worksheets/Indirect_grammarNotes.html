@@ -11,7 +11,7 @@
 
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Worksheet</title>
+	<title>Indirect Object Pronouns</title>
 	<style>
 		body {
 		font-family: "Noto Sans", serif;
@@ -149,7 +149,7 @@
 			grid-template-columns: repeat(2, 1fr);
 			grid-template-rows: repeat(3, 1fr);
 			width: 100%;
-            max-width: 450px;
+            max-width: 750px;
 			gap: 0px;
 		}
 		.chart-table input {
@@ -307,7 +307,7 @@
         // Step 3: Render the PDF using jsPDF and html2canvas with proper scaling
         await doc.html(content, {
             callback: function (doc) {
-                doc.save('Ser_or_Estar_grammar_notes_1.pdf');
+                doc.save('Indirect_Objects_grammar_notes_1.pdf');
             },
             x: 0,
             y: 0,
@@ -332,7 +332,7 @@
 </head>
 <body>
 	<div class="page-container">
-        <div class="page-title">Present Progressive</div>
+        <div class="page-title">Indirect Object Pronouns</div>
         <div class="header">
             <div class="header-section nombre">
                 <label for="nombre">Nombre:</label>
@@ -351,98 +351,85 @@
     
         <!-- Explanation Section -->
         <p>
-            The <b>present progressive</b> (also known as the present continuous) is used to describe actions that are happening <i>right now</i>. It is formed by:
+            An <b>indirect object pronoun (IOP)</b> replaces an indirect object noun in a sentence to avoid repetition and make speech more natural. The indirect object is the person or thing that <i>receives the <u>benefit</u></i> of the action of the verb.
         </p>
-        <p>
-            <b>estar (conjugated)</b> + <b>present participle (gerund)</b>
-        </p>
-        <p><b>Example:</b> <i>Estoy hablando</i> (I am speaking right now).</p>
-        <h3>Forming the Present Participle (Gerund)</h3>
+    
+        <p><b>English Example:</b> "I give the <i>book</i> to <u>her</u>"
         <ul>
-            <li>
-                <b>-ar verbs</b> → replace <b>-ar</b> with <b>-ando</b>. 
-                <br>Ex: <i>hablar → hablando</i>
-            </li>
-            <li>
-                <b>-er / -ir verbs</b> → replace <b>-er / -ir</b> with <b>-iendo</b>.
-                <br>Ex: <i>comer → comiendo</i>, <i>vivir → viviendo</i>
-            </li>
-        </ul>
-        <p><b>Important:</b> Some verbs have <b>irregular</b> present participles:</p>
-        <ul>
-            <li><i>leer → leyendo</i></li>
-            <li><i>oír → oyendo</i></li>
-            <li><i>dormir → durmiendo</i></li>
-            <li><i>decir → diciendo</i></li>
-        </ul>
-        <p>
-            <b>Estar</b> must be conjugated to match the subject:
-            <br>yo <b>estoy</b>, tú <b>estás</b>, él/ella/Ud. <b>está</b>, nosotros <b>estamos</b>, vosotros <b>estáis</b>, ellos/ellas/Uds. <b>están</b>
-        </p>
+        <li>        In this sentence "her" is the indirect object because she is the one receiving the book. (the benefit)
+        </li>
+        <li>        "Book" is the direct object because it is the thing being given.
+        </li>
+    </ul>
+    </p>
     
-        <!-- Practice Section -->
-        <h3>Practice: Fill in the Blank</h3>
-        <ol>
-            <li>Ahora, yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (hablar) con mi amiga.</li>
-            <li>¿Qué <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) haciendo tú en este momento?</li>
-            <li>Nosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (comer) en la cafetería.</li>
-            <li>Ellas <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (vivir) en una casa nueva ahora.</li>
-            <li>Vosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (leer) un libro muy interesante.</li>
-            <li>En este momento, mi hermano <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (dormir) en su habitación.</li>
-            <li>Usted <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (decir) algo muy importante ahora.</li>
-            <li>Mis padres <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (oír) la radio mientras cocinan.</li>
-            <li>Yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estudiar) para el examen de mañana.</li>
-            <li>¿Por qué ellos <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (jugar) en la lluvia?</li>
-        </ol>
-    
-        
-        <br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-    </div>
-    
-    
-	
-		
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-	</div>
+        <h3>Spanish Indirect Object Pronouns</h3>
+        <div class="chart">
+            <div class="chart-table">
+                <input type="text" spellcheck="false" value="Singular" disabled="true">
+                <input type="text" spellcheck="false" value="Plural" disabled="true">
+                <input type="text" spellcheck="false" value="me: to/for me" disabled="true">
+                <input type="text" spellcheck="false" value="nos: to/for us" disabled="true">
+                <input type="text" spellcheck="false" value="te: to/for you (informal)" disabled="true">
+                <input type="text" spellcheck="false" value="os: to/for you all (informal)" disabled="true">
+                <input type="text" spellcheck="false" value="le: to/for him, her, it, you (formal)" disabled="true">
+                <input type="text" spellcheck="false" value="les: to/for them, you all (formal)" disabled="true">
+            </div>
+        </div>
 
-	
+        <h3>Practice Questions</h3>
+        <ol>
+            <li>
+                Yo doy <u>el libro</u> a <u>ella</u>. → 
+                <b>Yo <input type="text" style="width: 90px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> doy el libro.</b>
+            </li>
+            <li>
+                Nosotros enviamos <u>una carta</u> a <u>ellos</u>. → 
+                <b>Nosotros <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> enviamos una carta.</b>
+            </li>
+            <li>
+                ¿Quién presta <u>dinero</u> a <u>nosotros</u>? → 
+                <b>¿Quién <input type="text" style="width: 110px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> presta dinero?</b>
+            </li>
+            <li>
+                Yo no digo <u>la verdad</u> a <u>ti</u>. → 
+                <b>Yo no <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> digo la verdad.</b>
+            </li>
+            <li>
+                Ellos explican <u>la lección</u> a <u>nosotros</u>. → 
+                <b>Ellos <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> explican la lección.</b>
+            </li>
+            <li>
+                Yo compro <u>un regalo</u> a <u>mi madre</u>. → 
+                <b>Yo <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> compro un regalo.</b>
+            </li>
+            <li>
+                Usted da <u>consejos</u> a <u>los estudiantes</u>. → 
+                <b>Usted <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> da consejos.</b>
+            </li>
+            <li>
+                Vosotros contáis <u>una historia</u> a <u>nosotros</u>. → 
+                <b>Vosotros <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> contáis una historia.</b>
+            </li>
+            <li>
+                Yo leo <u>un libro</u> a <u>mi hermano</u>. → 
+                <b>Yo <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> leo un libro.</b>
+            </li>
+            <li>
+                Nosotros prestamos <u>dinero</u> a <u>vosotros</u>. → 
+                <b>Nosotros <input type="text" style="width: 110px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> prestamos dinero.</b>
+            </li>
+        </ol>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
 <div id="sticky-bar">
     <button class="accent-button" onclick="insertCharacter('á')">á</button>
     <button class="accent-button" onclick="insertCharacter('é')">é</button>

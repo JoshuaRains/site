@@ -149,7 +149,7 @@
 			grid-template-columns: repeat(2, 1fr);
 			grid-template-rows: repeat(3, 1fr);
 			width: 100%;
-            max-width: 450px;
+            max-width: 750px;
 			gap: 0px;
 		}
 		.chart-table input {
@@ -307,7 +307,7 @@
         // Step 3: Render the PDF using jsPDF and html2canvas with proper scaling
         await doc.html(content, {
             callback: function (doc) {
-                doc.save('Ser_or_Estar_grammar_notes_1.pdf');
+                doc.save('Direct_Objects_grammar_notes_1.pdf');
             },
             x: 0,
             y: 0,
@@ -332,7 +332,7 @@
 </head>
 <body>
 	<div class="page-container">
-        <div class="page-title">Present Progressive</div>
+        <div class="page-title">Direct Object Pronouns</div>
         <div class="header">
             <div class="header-section nombre">
                 <label for="nombre">Nombre:</label>
@@ -351,51 +351,77 @@
     
         <!-- Explanation Section -->
         <p>
-            The <b>present progressive</b> (also known as the present continuous) is used to describe actions that are happening <i>right now</i>. It is formed by:
+            A <b>direct object pronoun (DOP)</b> replaces a direct object noun in a sentence to avoid repetition and make speech more natural. The direct object is the person or thing that <i>receives</i> the action of the verb.
         </p>
-        <p>
-            <b>estar (conjugated)</b> + <b>present participle (gerund)</b>
-        </p>
-        <p><b>Example:</b> <i>Estoy hablando</i> (I am speaking right now).</p>
-        <h3>Forming the Present Participle (Gerund)</h3>
-        <ul>
-            <li>
-                <b>-ar verbs</b> → replace <b>-ar</b> with <b>-ando</b>. 
-                <br>Ex: <i>hablar → hablando</i>
-            </li>
-            <li>
-                <b>-er / -ir verbs</b> → replace <b>-er / -ir</b> with <b>-iendo</b>.
-                <br>Ex: <i>comer → comiendo</i>, <i>vivir → viviendo</i>
-            </li>
-        </ul>
-        <p><b>Important:</b> Some verbs have <b>irregular</b> present participles:</p>
-        <ul>
-            <li><i>leer → leyendo</i></li>
-            <li><i>oír → oyendo</i></li>
-            <li><i>dormir → durmiendo</i></li>
-            <li><i>decir → diciendo</i></li>
-        </ul>
-        <p>
-            <b>Estar</b> must be conjugated to match the subject:
-            <br>yo <b>estoy</b>, tú <b>estás</b>, él/ella/Ud. <b>está</b>, nosotros <b>estamos</b>, vosotros <b>estáis</b>, ellos/ellas/Uds. <b>están</b>
-        </p>
+    
+        <p><b>English Example:</b> "I buy the <u>book</u>" → "I buy <u>it</u>." <br>
+            Here "it" is the direct object pronoun.</p>
+
+        <p><b>English Example:</b> "I see the <u>my friends</u>" → "I see <u>them</u>." <br>
+            Here "them" is the direct object pronoun.</p>
+        
+        <p>here "it" is the direct object pronoun.</p>
+        <h3>Spanish Direct Object Pronouns</h3>
+        <div class="chart">
+            <div class="chart-table">
+                <input type="text" spellcheck="false" value="Singular" disabled="true">
+                <input type="text" spellcheck="false" value="Plural" disabled="true">
+                <input type="text" spellcheck="false" value="me: me" disabled="true">
+                <input type="text" spellcheck="false" value="nos: us" disabled="true">
+                <input type="text" spellcheck="false" value="te: you (informal)" disabled="true">
+                <input type="text" spellcheck="false" value="os: you all (informal)" disabled="true">
+                <input type="text" spellcheck="false" value="lo: him, it (masc.), you (formal masc.)" disabled="true">
+                <input type="text" spellcheck="false" value="los: them (masc.), you all (formal masc.)" disabled="true">
+                <input type="text" spellcheck="false" value="la: her, it (fem.), you (formal fem.)" disabled="true">
+                <input type="text" spellcheck="false" value="las: them (fem.), you all (formal fem.)" disabled="true">
+            </div>
+        </div>
     
         <!-- Practice Section -->
         <h3>Practice: Fill in the Blank</h3>
         <ol>
-            <li>Ahora, yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (hablar) con mi amiga.</li>
-            <li>¿Qué <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) haciendo tú en este momento?</li>
-            <li>Nosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (comer) en la cafetería.</li>
-            <li>Ellas <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (vivir) en una casa nueva ahora.</li>
-            <li>Vosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (leer) un libro muy interesante.</li>
-            <li>En este momento, mi hermano <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (dormir) en su habitación.</li>
-            <li>Usted <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (decir) algo muy importante ahora.</li>
-            <li>Mis padres <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (oír) la radio mientras cocinan.</li>
-            <li>Yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estudiar) para el examen de mañana.</li>
-            <li>¿Por qué ellos <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (jugar) en la lluvia?</li>
+            <li>
+                Yo tengo <u>la mochila</u>. → 
+                <b>Yo <input type="text" style="width: 90px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> tengo</b>.
+            </li>
+            <li>
+                Nosotros compramos <u>los libros</u>. → 
+                <b>Nosotros <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> compramos</b>.
+            </li>
+            <li>
+                ¿Quién quiere <u>ver la película</u>? → 
+                <b>¿Quién <input type="text" style="width: 110px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> quiere ver?</b>
+            </li>
+            <li>
+                Yo no conozco <u>a esos chicos</u>. → 
+                <b>Yo no <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> conozco</b>.
+            </li>
+            <li>
+                Ellos tienen <u>que buscar a María</u>. → 
+                <b>Ellos <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> tienen que buscar.</b>
+            </li>
+            <li>
+                Yo invito <u>a ti</u> a la fiesta. → 
+                <b>Yo <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> invito</b>.
+            </li>
+            <li>
+                Usted no ve <u>el problema</u>. → 
+                <b>Usted no <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> ve</b>.
+            </li>
+            <li>
+                Vosotros estáis leyendo <u>las revistas</u>. → 
+                <b>Vosotros <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> estáis leyendo</b>.
+            </li>
+            <li>
+                Yo encuentro <u>los papeles</u>. → 
+                <b>Yo <input type="text" style="width: 70px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> encuentro</b>.
+            </li>
+            <li>
+                Nosotros no invitamos <u>a vosotros</u>. → 
+                <b>Nosotros no <input type="text" style="width: 110px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> invitamos</b>.
+            </li>
         </ol>
     
-        
         <br>
 		<br>
 		<br>
@@ -409,20 +435,11 @@
 		<br>
     </div>
     
+	
     
 	
 		
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+		
 		<br>
 		<br>
 		<br>

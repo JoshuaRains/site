@@ -149,7 +149,7 @@
 			grid-template-columns: repeat(2, 1fr);
 			grid-template-rows: repeat(3, 1fr);
 			width: 100%;
-            max-width: 450px;
+            max-width: 750px;
 			gap: 0px;
 		}
 		.chart-table input {
@@ -307,7 +307,7 @@
         // Step 3: Render the PDF using jsPDF and html2canvas with proper scaling
         await doc.html(content, {
             callback: function (doc) {
-                doc.save('Ser_or_Estar_grammar_notes_1.pdf');
+                doc.save('Saber_Conocer_grammar_notes_1.pdf');
             },
             x: 0,
             y: 0,
@@ -332,7 +332,7 @@
 </head>
 <body>
 	<div class="page-container">
-        <div class="page-title">Present Progressive</div>
+        <div class="page-title">Saber vs. Conocer</div>
         <div class="header">
             <div class="header-section nombre">
                 <label for="nombre">Nombre:</label>
@@ -351,53 +351,60 @@
     
         <!-- Explanation Section -->
         <p>
-            The <b>present progressive</b> (also known as the present continuous) is used to describe actions that are happening <i>right now</i>. It is formed by:
+            Both <b>saber</b> and <b>conocer</b> mean "to know," but they’re used in different contexts. They are both irregular but only in their <b>yo</b> forms:
         </p>
-        <p>
-            <b>estar (conjugated)</b> + <b>present participle (gerund)</b>
-        </p>
-        <p><b>Example:</b> <i>Estoy hablando</i> (I am speaking right now).</p>
-        <h3>Forming the Present Participle (Gerund)</h3>
         <ul>
-            <li>
-                <b>-ar verbs</b> → replace <b>-ar</b> with <b>-ando</b>. 
-                <br>Ex: <i>hablar → hablando</i>
-            </li>
-            <li>
-                <b>-er / -ir verbs</b> → replace <b>-er / -ir</b> with <b>-iendo</b>.
-                <br>Ex: <i>comer → comiendo</i>, <i>vivir → viviendo</i>
+            <li>yo <b>sé</b> (from <i>saber</i>)</li>
+            <li>yo <b>conozco</b> (from <i>conocer</i>)</li>
+        </ul>
+    
+        <h3>1. Saber</h3>
+        <p><b>Uses:</b></p>
+        <ul>
+            <li>To express <b>knowing facts or information</b>.</li>
+            <li>To show <b>knowing how</b> to do something (often followed by an infinitive).
+                <br>Ex: <i>Sé hablar francés.</i> (I know how to speak French.)
             </li>
         </ul>
-        <p><b>Important:</b> Some verbs have <b>irregular</b> present participles:</p>
+    
+        <h3>2. Conocer</h3>
+        <p><b>Uses:</b></p>
         <ul>
-            <li><i>leer → leyendo</i></li>
-            <li><i>oír → oyendo</i></li>
-            <li><i>dormir → durmiendo</i></li>
-            <li><i>decir → diciendo</i></li>
+            <li>To express <b>being acquainted with or familiar</b> with a person, place, or thing.</li>
+            <li>Often, when talking about knowing a person, we use the personal <b>a</b>:
+                <br>Ex: <i>Conozco <b>a</b> María.</i> (I know María.)
+            </li>
         </ul>
-        <p>
-            <b>Estar</b> must be conjugated to match the subject:
-            <br>yo <b>estoy</b>, tú <b>estás</b>, él/ella/Ud. <b>está</b>, nosotros <b>estamos</b>, vosotros <b>estáis</b>, ellos/ellas/Uds. <b>están</b>
-        </p>
     
         <!-- Practice Section -->
         <h3>Practice: Fill in the Blank</h3>
         <ol>
-            <li>Ahora, yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (hablar) con mi amiga.</li>
-            <li>¿Qué <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) haciendo tú en este momento?</li>
-            <li>Nosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (comer) en la cafetería.</li>
-            <li>Ellas <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (vivir) en una casa nueva ahora.</li>
-            <li>Vosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (leer) un libro muy interesante.</li>
-            <li>En este momento, mi hermano <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (dormir) en su habitación.</li>
-            <li>Usted <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (decir) algo muy importante ahora.</li>
-            <li>Mis padres <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (oír) la radio mientras cocinan.</li>
-            <li>Yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estudiar) para el examen de mañana.</li>
-            <li>¿Por qué ellos <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (jugar) en la lluvia?</li>
+            <li>Yo <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> dónde vive ella.</li>
+            <li>¿<input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> tú la ciudad de Lima?</li>
+            <li>Nosotros <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> hablar español muy bien.</li>
+            <li>Ellos no <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> a su profesor de biología.</li>
+            <li>Mi amigo <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> las respuestas del examen.</li>
+            <li>¿Tú <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> cocinar comida italiana?</li>
+            <li>Nosotros no <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> cuántos estudiantes hay en la clase.</li>
+            <li>¿Ustedes <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> dónde está la biblioteca?</li>
+            <li>Yo <input type="text" style="width: 60px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> bien este restaurante;</li>
         </ol>
     
+        <h3>Multiple Choice</h3>
+        <div class="question multiple-choice">
+            <p>11. Which verb is used for familiarity with a place?</p>
+            <label><input type="radio" name="question1"> Saber</label><br>
+            <label><input type="radio" name="question1"> Conocer</label><br>
+        </div>
+    
+    
+       
+
+        <div class="question short-response">
+			<p>12. Briefly explain the difference between <b>sé</b> and <b>conozco</b> in one sentence:</p>
+			<textarea rows="3" class="short-response textarea" spellcheck="false" placeholder="_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________"></textarea>
+		</div>
         
-        <br>
-		<br>
 		<br>
 		<br>
 		<br>
@@ -409,20 +416,11 @@
 		<br>
     </div>
     
+	
     
 	
 		
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+		
 		<br>
 		<br>
 		<br>

@@ -149,7 +149,7 @@
 			grid-template-columns: repeat(2, 1fr);
 			grid-template-rows: repeat(3, 1fr);
 			width: 100%;
-            max-width: 450px;
+            max-width: 750px;
 			gap: 0px;
 		}
 		.chart-table input {
@@ -307,7 +307,7 @@
         // Step 3: Render the PDF using jsPDF and html2canvas with proper scaling
         await doc.html(content, {
             callback: function (doc) {
-                doc.save('Ser_or_Estar_grammar_notes_1.pdf');
+                doc.save('Preterite_grammar_notes_1.pdf');
             },
             x: 0,
             y: 0,
@@ -332,7 +332,7 @@
 </head>
 <body>
 	<div class="page-container">
-        <div class="page-title">Present Progressive</div>
+        <div class="page-title">El Pretérito (Past Tense)</div>
         <div class="header">
             <div class="header-section nombre">
                 <label for="nombre">Nombre:</label>
@@ -348,98 +348,117 @@
             </div>
         </div>
         <div class="divider-line"></div>
-    
+
         <!-- Explanation Section -->
         <p>
-            The <b>present progressive</b> (also known as the present continuous) is used to describe actions that are happening <i>right now</i>. It is formed by:
+            The <b>preterite</b> tense in Spanish describes completed actions in the past. 
+            Think of it as the equivalent to “I <i>spoke</i>,” “I <i>ate</i>,” or “I <i>ran</i>” in English 
+            when referring to events that are finished.
         </p>
-        <p>
-            <b>estar (conjugated)</b> + <b>present participle (gerund)</b>
-        </p>
-        <p><b>Example:</b> <i>Estoy hablando</i> (I am speaking right now).</p>
-        <h3>Forming the Present Participle (Gerund)</h3>
-        <ul>
-            <li>
-                <b>-ar verbs</b> → replace <b>-ar</b> with <b>-ando</b>. 
-                <br>Ex: <i>hablar → hablando</i>
-            </li>
-            <li>
-                <b>-er / -ir verbs</b> → replace <b>-er / -ir</b> with <b>-iendo</b>.
-                <br>Ex: <i>comer → comiendo</i>, <i>vivir → viviendo</i>
-            </li>
-        </ul>
-        <p><b>Important:</b> Some verbs have <b>irregular</b> present participles:</p>
-        <ul>
-            <li><i>leer → leyendo</i></li>
-            <li><i>oír → oyendo</i></li>
-            <li><i>dormir → durmiendo</i></li>
-            <li><i>decir → diciendo</i></li>
-        </ul>
-        <p>
-            <b>Estar</b> must be conjugated to match the subject:
-            <br>yo <b>estoy</b>, tú <b>estás</b>, él/ella/Ud. <b>está</b>, nosotros <b>estamos</b>, vosotros <b>estáis</b>, ellos/ellas/Uds. <b>están</b>
-        </p>
-    
+
+        <p><b>Regular Conjugations:</b></p>
+        <div class="chart-row">
+        <div class="chart">
+            <div class="chart-title">-AR Verbs (<i>hablar</i>)</div>
+            <div class="chart-table">
+                <input type="text" value="hablé" disabled="true">
+                <input type="text" value="hablamos" disabled="true">
+                <input type="text" value="hablaste" disabled="true">
+                <input type="text" value="hablasteis" disabled="true">
+                <input type="text" value="habló" disabled="true">
+                <input type="text" value="hablaron" disabled="true">
+            </div>
+        </div>
+
+        <div class="chart">
+            <div class="chart-title">-ER Verbs (<i>comer</i>)</div>
+            <div class="chart-table">
+                <input type="text" value="comí" disabled="true">
+                <input type="text" value="comimos" disabled="true">
+                <input type="text" value="comiste" disabled="true">
+                <input type="text" value="comisteis" disabled="true">
+                <input type="text" value="comió" disabled="true">
+                <input type="text" value="comieron" disabled="true">
+            </div>
+        </div>
+
+        <div class="chart">
+            <div class="chart-title">-IR Verbs (<i>vivir</i>)</div>
+            <div class="chart-table">
+                <input type="text" value="viví" disabled="true">
+                <input type="text" value="vivimos" disabled="true">
+                <input type="text" value="viviste" disabled="true">
+                <input type="text" value="vivisteis" disabled="true">
+                <input type="text" value="vivió" disabled="true">
+                <input type="text" value="vivieron" disabled="true">
+            </div>
+        </div>
+    </div>
+
+        <p><b>Note:</b> Some verbs are irregular in the pretérito (like <i>ir, ser, tener, hacer</i>). 
+        For now, let’s focus on the regular forms.</p>
+
         <!-- Practice Section -->
-        <h3>Practice: Fill in the Blank</h3>
+        <p>Practice: Look at the conjugation charts above and infer the preterite endings. Fill in the correct form of the preterite for each of the sentences below using these endings.</p>
         <ol>
-            <li>Ahora, yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (hablar) con mi amiga.</li>
-            <li>¿Qué <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) haciendo tú en este momento?</li>
-            <li>Nosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (comer) en la cafetería.</li>
-            <li>Ellas <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (vivir) en una casa nueva ahora.</li>
-            <li>Vosotros <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (leer) un libro muy interesante.</li>
-            <li>En este momento, mi hermano <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (dormir) en su habitación.</li>
-            <li>Usted <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (decir) algo muy importante ahora.</li>
-            <li>Mis padres <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (oír) la radio mientras cocinan.</li>
-            <li>Yo <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estudiar) para el examen de mañana.</li>
-            <li>¿Por qué ellos <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estar) <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (jugar) en la lluvia?</li>
+            <li>
+                Yo <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (hablar) con mi madre anoche.
+            </li>
+            <li>
+                Mis amigos <input type="text" style="width: 110px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (comer) pizza ayer.
+            </li>
+            <li>
+                Nosotros <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (vivir) en España el año pasado.
+            </li>
+            <li>
+                ¿Tú <input type="text" style="width: 90px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (estudiar) para el examen?
+            </li>
+            <li>
+                Clara <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (trabajar) en la oficina toda la semana.
+            </li>
+            <li>
+                El sábado pasado, vosotros <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (bailar) en la fiesta.
+            </li>
+            <li>
+                Mi hermano <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (comprar) un coche nuevo ayer.
+            </li>
+            <li>
+                Yo <input type="text" style="width: 90px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (comer) un sándwich de jamón esta mañana.
+            </li>
+            <li>
+                Mis amigos y yo <input type="text" style="width: 140px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (vivir) en la misma ciudad por dos años.
+            </li>
+            <li>
+                ¿Ellos <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px;"> (tomar) el autobús o un taxi?
+            </li>
         </ol>
-    
-        
+
+        <h3>Multiple Choice</h3>
+        <div class="question multiple-choice">
+            <p><b>1. Which ending corresponds to the <i>yo</i> form of an <b>-ar</b> verb in the preterite?</b></p>
+            <label><input type="radio" name="mc1"> -é</label><br>
+            <label><input type="radio" name="mc1"> -í</label><br>
+            <label><input type="radio" name="mc1"> -aste</label><br>
+        </div>
+
+        <div class="question multiple-choice">
+            <p><b>2. True or False: The <i>nosotros</i> form of an <b>-ar</b> verb in the preterite tense is the same as in the present tense.</b></p>
+            <label><input type="radio" name="mc2"> True</label><br>
+            <label><input type="radio" name="mc2"> False</label><br>
+        </div>
+
         <br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
     
-    
 	
-		
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
 	</div>
 
 	

@@ -307,7 +307,7 @@
         // Step 3: Render the PDF using jsPDF and html2canvas with proper scaling
         await doc.html(content, {
             callback: function (doc) {
-                doc.save('ER_and_IR_grammar_notes_1.pdf');
+                doc.save('Tener_and_Venir_grammar_notes_1.pdf');
             },
             x: 0,
             y: 0,
@@ -332,132 +332,134 @@
 </head>
 <body>
 	<div class="page-container">
-		<div class="page-title">-er and -ir Verbs</div>
-		<div class="header">
-			<div class="header-section nombre">
-				<label for="nombre">Nombre:</label>
-				<input type="text" spellcheck="false" id="nombre" class="input-line">
-			</div>
-			<div class="header-section fecha">
-				<label for="fecha">Fecha:</label>
-				<input type="text" spellcheck="false" id="fecha" class="input-line">
-			</div>
-			<div class="header-section clase">
-				<label for="clase">Clase:</label>
-				<input type="text" spellcheck="false" id="clase" class="input-line">
-			</div>
-		</div>
-		<div class="divider-line"></div>
-	
-		<p>
-			<b>-er</b> and <b>-ir</b> verbs work the same way as -ar verbs except they have their own unique sets of endings. To conjugate, just remove the -er or -ir ending and add the appropriate ending based on the subject.
-		</p>
-		<!-- ...existing code... -->
-        <!-- ...existing code... -->
-        <p><b>Present Tense Endings:</b></p>
+        <div class="page-title">Tener and Venir</div>
+        <div class="header">
+            <div class="header-section nombre">
+                <label for="nombre">Nombre:</label>
+                <input type="text" spellcheck="false" id="nombre" class="input-line">
+            </div>
+            <div class="header-section fecha">
+                <label for="fecha">Fecha:</label>
+                <input type="text" spellcheck="false" id="fecha" class="input-line">
+            </div>
+            <div class="header-section clase">
+                <label for="clase">Clase:</label>
+                <input type="text" spellcheck="false" id="clase" class="input-line">
+            </div>
+        </div>
+        <div class="divider-line"></div>
+    
+        <p>
+            <b>Tener</b> and <b>venir</b> are both irregular verbs. Because they are irregular, you must memorize their conjugations. We present these two verbs together because they are very similar in the way they are conjugated:
+        </p>
         <div class="chart-row">
-			<div class="question chart">
-				-er
-				<div class="chart-table">
-					<input type="text" spellcheck="false" value="singular:" disabled="true">
-					<input type="text" spellcheck="false" value="plural:" disabled="true">
-					<input type="text" spellcheck="false" disabled="true" value="yo: -o">
-					<input type="text" spellcheck="false" disabled="true" value="nosotros: -emos">
-					<input type="text" spellcheck="false" disabled="true" value="tú: -es">
-					<input type="text" spellcheck="false" disabled="true" value="vosotros: -éis">
-					<input type="text" spellcheck="false" disabled="true" value="él, ella, usted: -e">
-					<input type="text" spellcheck="false" disabled="true" value="ellos, ellas, ustedes: -en">
-					
-				</div>
-			</div>
-
-			<div class="question chart">
-				-ir
-				<div class="chart-table">
-					<input type="text" spellcheck="false" value="singular:" disabled="true">
-					<input type="text" spellcheck="false" value="plural:" disabled="true">
-					<input type="text" spellcheck="false" disabled="true" value="yo: -o">
-					<input type="text" spellcheck="false" disabled="true" value="nosotros: -imos">
-					<input type="text" spellcheck="false" disabled="true" value="tú: -es">
-					<input type="text" spellcheck="false" disabled="true" value="vosotros: -ís">
-					<input type="text" spellcheck="false" disabled="true" value="él, ella, usted: -e">
-					<input type="text" spellcheck="false" disabled="true" value="ellos, ellas, ustedes: -en">
-					
-				</div>
-			</div>
-		</div>
-        <p><b>Fill in the missing entries from the lists of common verbs:</b></p>
-        <div class="chart-row">
-			<div class="question chart">
-				-er
-				<div class="chart-table">
-					<input type="text" spellcheck="false" value="Spanish Word" disabled="true">
-					<input type="text" spellcheck="false" value="English Definition" disabled="true">
-					<input type="text" spellcheck="false" value="abrir" disabled="true">
-					<input type="text" spellcheck="false" >
-					<input type="text" spellcheck="false" value="cumplir" disabled="true">
-					<input type="text" spellcheck="false" value="to achieve" disabled="true">
-					<input type="text" spellcheck="false" value="descubrir" disabled="true">
-					<input type="text" spellcheck="false" >
-					<input type="text" spellcheck="false" value="escribir" disabled="true">
-					<input type="text" spellcheck="false" >
-					<input type="text" spellcheck="false" value="existir" disabled="true">
-					<input type="text" spellcheck="false" value="to exist" disabled="true">
-					<input type="text" spellcheck="false" value="ocurrir" disabled="true">
-					<input type="text" spellcheck="false" value="to occur/happen" disabled="true">
-					<input type="text" spellcheck="false" value="partir" disabled="true">
-					<input type="text" spellcheck="false" value="to leave" disabled="true">
-					<input type="text" spellcheck="false" value="permitir" disabled="true">
-					<input type="text" spellcheck="false" value="to permit/allow" disabled="true">
-					<input type="text" spellcheck="false" value="producir" disabled="true">
-					<input type="text" spellcheck="false" >
-					<input type="text" spellcheck="false" value="recibir" disabled="true">
-					<input type="text" spellcheck="false" >
-					<input type="text" spellcheck="false" value="vivir" disabled="true">
-					<input type="text" spellcheck="false" value="to live" disabled="true">
-					
-				</div>
-			</div>
-
-			<div class="question chart">
-                -ir
+            <div class="chart">
+                <p><b>Tener:</b></p>
                 <div class="chart-table">
-                    <input type="text" spellcheck="false" value="Spanish Word" disabled="true">
-                    <input type="text" spellcheck="false" value="English Definition" disabled="true">
-                    <input type="text" spellcheck="false" value="aprender" disabled="true">
-                    <input type="text" spellcheck="false" >
-                    <input type="text" spellcheck="false" value="comer" disabled="true">
-                    <input type="text" spellcheck="false" >
-                    <input type="text" spellcheck="false" value="comprender" disabled="true">
-                    <input type="text" spellcheck="false" value="to understand" disabled="true">
-                    <input type="text" spellcheck="false" value="correr" disabled="true">
-                    <input type="text" spellcheck="false" >
-                    <input type="text" spellcheck="false" value="deber" disabled="true">
-                    <input type="text" spellcheck="false" value="to owe" disabled="true">
-                    <input type="text" spellcheck="false" value="meter" disabled="true">
-                    <input type="text" spellcheck="false" value="to put" disabled="true">
-                    <input type="text" spellcheck="false" value="romper" disabled="true">
-                    <input type="text" spellcheck="false" >
-                    <input type="text" spellcheck="false" value="temer" disabled="true">
-                    <input type="text" spellcheck="false" value="to fear" disabled="true">
-                    <input type="text" spellcheck="false" value="vender" disabled="true">
-                    <input type="text" spellcheck="false" >
+                    <input type="text" spellcheck="false" value="Pronoun" disabled="true">
+                    <input type="text" spellcheck="false" value="Conjugation" disabled="true">
+                    <input type="text" spellcheck="false" value="yo" disabled="true">
+                    <input type="text" spellcheck="false" value="tengo" disabled="true">
+                    <input type="text" spellcheck="false" value="tú" disabled="true">
+                    <input type="text" spellcheck="false" value="tienes" disabled="true">
+                    <input type="text" spellcheck="false" value="él/ella/usted" disabled="true">
+                    <input type="text" spellcheck="false" value="tiene" disabled="true">
+                    <input type="text" spellcheck="false" value="nosotros/nosotras" disabled="true">
+                    <input type="text" spellcheck="false" value="tenemos" disabled="true">
+                    <input type="text" spellcheck="false" value="vosotros/vosotras" disabled="true">
+                    <input type="text" spellcheck="false" value="tenéis" disabled="true">
+                    <input type="text" spellcheck="false" value="ellos/ellas/ustedes" disabled="true">
+                    <input type="text" spellcheck="false" value="tienen" disabled="true">
                 </div>
             </div>
-		</div>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+            <div class="chart">
+                <p><b>Venir:</b></p>
+                <div class="chart-table">
+                    <input type="text" spellcheck="false" value="Pronoun" disabled="true">
+                    <input type="text" spellcheck="false" value="Conjugation" disabled="true">
+                    <input type="text" spellcheck="false" value="yo" disabled="true">
+                    <input type="text" spellcheck="false" value="vengo" disabled="true">
+                    <input type="text" spellcheck="false" value="tú" disabled="true">
+                    <input type="text" spellcheck="false" value="vienes" disabled="true">
+                    <input type="text" spellcheck="false" value="él/ella/usted" disabled="true">
+                    <input type="text" spellcheck="false" value="viene" disabled="true">
+                    <input type="text" spellcheck="false" value="nosotros/nosotras" disabled="true">
+                    <input type="text" spellcheck="false" value="venimos" disabled="true">
+                    <input type="text" spellcheck="false" value="vosotros/vosotras" disabled="true">
+                    <input type="text" spellcheck="false" value="venís" disabled="true">
+                    <input type="text" spellcheck="false" value="ellos/ellas/ustedes" disabled="true">
+                    <input type="text" spellcheck="false" value="vienen" disabled="true">
+                </div>
+            </div>
+        </div>
+        <p>
+            Example usage: <b>Tengo</b> un libro (I have a book). <b>Vengo</b> a la escuela (I come to school).
+        </p>
+        <h3>Practice Questions</h3>
+        <div class="question">
+            <p><b>1.</b> Yo <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 un coche nuevo. (tener)</p>
+        </div>
+        <div class="question">
+            <p><b>2.</b> Nosotros <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;"> 
+                 a la fiesta. (venir)</p>
+        </div>
+        <div class="question">
+            <p><b>3.</b> Ella <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 una casa grande. (tener)</p>
+        </div>
+        <div class="question">
+            <p><b>4.</b> Tú <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 a la escuela todos los días. (venir)</p>
+        </div>
+        <div class="question">
+            <p><b>5.</b> Ellos <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 muchos amigos. (tener)</p>
+        </div>
+        <div class="question">
+            <p><b>6.</b> Vosotros <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 a la reunión. (venir)</p>
+        </div>
+        <div class="question">
+            <p><b>7.</b> Nosotros <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 una idea. (tener)</p>
+        </div>
+        <div class="question">
+            <p><b>8.</b> Yo <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 a la tienda. (venir)</p>
+        </div>
+        <div class="question">
+            <p><b>9.</b> Él <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 una bicicleta. (tener)</p>
+        </div>
+        <div class="question">
+            <p><b>10.</b> Ellas <input type="text" style="width: 100px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                 al parque. (venir)</p>
+        </div>
+        <div class="question">
+            <p><b>11.</b> Choose the correct form of <i>tener</i> for <b>ellos</b>:</p>
+            <label><input type="radio" name="question5"> tienen</label><br>
+            <label><input type="radio" name="question5"> tiene</label><br>
+            <label><input type="radio" name="question5"> tenemos</label>
+        </div>
+        <div class="question">
+            <p><b>12.</b> Choose the correct form of <i>venir</i> for <b>tú</b>:</p>
+            <label><input type="radio" name="question6"> vienes</label><br>
+            <label><input type="radio" name="question6"> viene</label><br>
+            <label><input type="radio" name="question6"> venimos</label>
+        </div>
+        <br>
 	<br>
 	<br>
 	<br>
 	<br>
-        
-	</div>
-	
+    <br>
+	<br>
+	<br>
+	<br>
+	<br>
+    </div>
+    
       
     
 	

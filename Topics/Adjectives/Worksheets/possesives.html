@@ -146,10 +146,10 @@
 		}
 		.chart-table {
 			display: grid;
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(3, 1fr);
 			grid-template-rows: repeat(3, 1fr);
 			width: 100%;
-            max-width: 450px;
+            max-width: 550px;
 			gap: 0px;
 		}
 		.chart-table input {
@@ -333,23 +333,94 @@
 <body>
 	<div class="page-container">
 		<div class="page-title">Possessive Adjectives</div>
+		<div class="header">
+			<div class="header-section nombre">
+				<label for="nombre">Nombre:</label>
+				<input type="text" spellcheck="false" id="nombre" class="input-line">
+			</div>
+			<div class="header-section fecha">
+				<label for="fecha">Fecha:</label>
+				<input type="text" spellcheck="false" id="fecha" class="input-line">
+			</div>
+			<div class="header-section clase">
+				<label for="clase">Clase:</label>
+				<input type="text" spellcheck="false" id="clase" class="input-line">
+			</div>
+		</div>
 		<div class="divider-line"></div>
-		<p>Possessive adjectives show ownership or relationships. They agree with the noun in number (and sometimes gender).</p>
+	
+		<p>
+			Possessive adjectives show ownership or relationships. They change based on the number of the noun (singular/plural) and sometimes gender (for <b>nuestro</b> and <b>vuestro</b>).
+		</p>
 		<p><b>Forms:</b></p>
-		<ul>
-			<li><b>mi/mis</b> - my</li>
-			<li><b>tu/tus</b> - your (informal)</li>
-			<li><b>su/sus</b> - his, her, your (formal), their</li>
-			<li><b>nuestro/a, nuestros/as</b> - our</li>
-			<li><b>vuestro/a, vuestros/as</b> - your (plural, informal)</li>
-		</ul>
-		<p><b>Examples:</b></p>
-		<ul>
-			<li>Mi libro (My book)</li>
-			<li>Sus amigos (His friends)</li>
-			<li>Nuestras casas (Our houses)</li>
-		</ul>
-	</div>
+		<div class="chart">
+            <div class="chart-table">
+                <input type="text" spellcheck="false" value="Pronoun" disabled="true">
+                <input type="text" spellcheck="false" value="Possesive Singular" disabled="true">
+                <input type="text" spellcheck="false" value="Possesive Plural" disabled="true">
+                <input type="text" spellcheck="false" value="yo" disabled="true">
+                <input type="text" spellcheck="false" value="mi" disabled="true">
+                <input type="text" spellcheck="false" value="mis" disabled="true">
+                <input type="text" spellcheck="false" value="tú" disabled="true">
+                <input type="text" spellcheck="false" value="tu" disabled="true">
+                <input type="text" spellcheck="false" value="tus" disabled="true">
+                <input type="text" spellcheck="false" value="él/ella/usted" disabled="true">
+                <input type="text" spellcheck="false" value="su" disabled="true">
+                <input type="text" spellcheck="false" value="sus" disabled="true">
+                <input type="text" spellcheck="false" value="nosotros/nosotras" disabled="true">
+                <input type="text" spellcheck="false" value="nuestro/a" disabled="true">
+                <input type="text" spellcheck="false" value="nuestros/as" disabled="true">
+                <input type="text" spellcheck="false" value="vosotros/vosotras" disabled="true">
+                <input type="text" spellcheck="false" value="vuestro/a" disabled="true">
+                <input type="text" spellcheck="false" value="vuestros/as" disabled="true">
+                <input type="text" spellcheck="false" value="ellos/ellas/ustedes" disabled="true">
+                <input type="text" spellcheck="false" value="su" disabled="true">
+                <input type="text" spellcheck="false" value="sus" disabled="true">
+            </div>
+        </div>
+        <p>
+            Example: <b>Mi</b> libro (my book) vs. <b>Mis</b> libros (my books).
+            <br>
+            <b>Nuestra</b> casa (our house, feminine).
+        </p>
+        <h3>Practice Questions</h3>
+        <div class="question">
+            <p><b>1.</b> Fill in the blank with a possible possessive adjective:                 
+                <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                madre es muy simpática.
+            </p>
+        </div>
+        <div class="question">
+            <p><b>2.</b> Which is the correct possessive adjective for "their books"?</p>
+            <label><input type="radio" name="posQ2"> sus libros</label><br>
+            <label><input type="radio" name="posQ2"> su libro</label>
+        </div>
+        <div class="question">
+            <p><b>3.</b> Fill in the blank:                 
+                <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                casa es grande. (his house)
+            </p>
+        </div>
+        <div class="question">
+            <p><b>4.</b> Which is the correct possessive adjective for "our friends"?</p>
+            <label><input type="radio" name="posQ4"> nuestro amigos</label><br>
+            <label><input type="radio" name="posQ4"> nuestros amigos</label><br>
+			<label><input type="radio" name="posQ4"> mi amigos</label><br>
+            <label><input type="radio" name="posQ4"> mis amigos</label>
+        </div>
+        <div class="question">
+            <p><b>5.</b> Fill in the blank:                 
+                <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+                perro es muy bonito. (your dog, informal)
+            </p>
+        </div>
+        <div class="question">
+            <p><b>6.</b> Which is the correct possessive adjective for "our books"?</p>
+            <label><input type="radio" name="posQ6"> nuestro libros</label><br>
+            <label><input type="radio" name="posQ6"> nuestros libros</label>
+        </div>
+
+	
 	
     
 	

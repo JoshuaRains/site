@@ -307,7 +307,7 @@
         // Step 3: Render the PDF using jsPDF and html2canvas with proper scaling
         await doc.html(content, {
             callback: function (doc) {
-                doc.save('possesives_grammar_notes_1.pdf');
+                doc.save('AR_grammar_notes_1.pdf');
             },
             x: 0,
             y: 0,
@@ -332,24 +332,89 @@
 </head>
 <body>
 	<div class="page-container">
-		<div class="page-title">Possessive Adjectives</div>
+		<div class="page-title">-ar Verbs in Spanish</div>
+		<div class="header">
+			<div class="header-section nombre">
+				<label for="nombre">Nombre:</label>
+				<input type="text" spellcheck="false" id="nombre" class="input-line">
+			</div>
+			<div class="header-section fecha">
+				<label for="fecha">Fecha:</label>
+				<input type="text" spellcheck="false" id="fecha" class="input-line">
+			</div>
+			<div class="header-section clase">
+				<label for="clase">Clase:</label>
+				<input type="text" spellcheck="false" id="clase" class="input-line">
+			</div>
+		</div>
 		<div class="divider-line"></div>
-		<p>Possessive adjectives show ownership or relationships. They agree with the noun in number (and sometimes gender).</p>
-		<p><b>Forms:</b></p>
+		Verbs are words that show <input type="text" style="width: 80px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+
+		<p>
+			In Spanish, the <b>base forms</b> of verbs will always have one of 3 different endings: -ar, -er, or -ir. These base forms are called infinitives. They are the equivelent of having "to" in front of a verb in English. Here are some examples: 
+		</p>
+		<div class="spaced-examples-container">
+			<div><i>caminar</i> - <i><u>to</u> walk</i> </div>
+			<div><i>correr</i> - <i><u>to</u> run</i> </div>
+			<div><i>abrir</i> - <i><u>to</u> open</i> </div>
+		</div>
+		<p>Today we are just going to focus on how to use -ar verbs like camin<u>ar</u>. </p>
+		<p>When a subject is doing the action of the verb, we have to change the ending of the verb to match that subject. This process is called conjugation.</p>
+		<p><b>Present Tense Endings for -ar Verbs:</b></p>
+		<div class="question chart">
+			<div class="chart-table">
+				<input type="text" spellcheck="false" value="singular:" disabled="true">
+				<input type="text" spellcheck="false" value="plural:" disabled="true">
+				<input type="text" spellcheck="false" disabled="true" value="yo: -o">
+				<input type="text" spellcheck="false" disabled="true" value="nosotros: -amos">
+				<input type="text" spellcheck="false" disabled="true" value="tú: -as">
+				<input type="text" spellcheck="false" disabled="true" value="vosotros: -áis">
+				<input type="text" spellcheck="false" disabled="true" value="él, ella, usted: -a">
+				<input type="text" spellcheck="false" disabled="true" value="ellos, ellas, ustedes: -an">
+				
+			</div>
+		</div>
+		<p>
+			To conjugate, there are 2 steps:
+		</p>
 		<ul>
-			<li><b>mi/mis</b> - my</li>
-			<li><b>tu/tus</b> - your (informal)</li>
-			<li><b>su/sus</b> - his, her, your (formal), their</li>
-			<li><b>nuestro/a, nuestros/as</b> - our</li>
-			<li><b>vuestro/a, vuestros/as</b> - your (plural, informal)</li>
+			<li>remove the <b>-ar</b></li>
+			<li>add the new ending (one of the following: <b>-o, -as, -a, -amos, -áis, -an</b>)</li>
 		</ul>
-		<p><b>Examples:</b></p>
-		<ul>
-			<li>Mi libro (My book)</li>
-			<li>Sus amigos (His friends)</li>
-			<li>Nuestras casas (Our houses)</li>
-		</ul>
+		
+		<h3>Try out these steps:</h3>
+		<div class="question">
+			<p><b>1.</b> True or False: <i>Nosotros</i> form of an <b>-ar</b> verb ends in <b>-amos</b>.</p>
+			<label><input type="radio" name="arQ3"> True</label><br>
+			<label><input type="radio" name="arQ3"> False</label>
+		</div>
+		<div class="question">
+			<p><b>2.</b> The propper ending for verbs conjugated for <i>yo</i> is:</p>
+			<label><input type="radio" name="arQ3"> -as</label><br>
+			<label><input type="radio" name="arQ3"> -an</label><br>
+			<label><input type="radio" name="arQ3"> -o</label>
+		</div>
+		<div class="question">
+			<p><b>3.</b> Conjugate <b>tú</b> form of <i>trabajar</i> (to work): <b>tú</b> <input type="text" style="width: 130px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">.</p>
+		</div>
+		<div class="question">
+			<p><b>4.</b> Fill in the blank for <b>él/ella/usted</b> form of <i>estudiar</i> (to study):
+			
+			<input type="text" style="width: 130px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;"> .
+			</p>
+		</div>
+		
+		<br>
+	<br>
+	<br>
+	<br>
+	<br><br>
+	<br>
+	<br>
+	<br>
+	<br>
 	</div>
+	
 	
     
 	

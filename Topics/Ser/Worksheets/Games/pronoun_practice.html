@@ -12,7 +12,7 @@
       height: 100%;
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #517860, #5c8a6d);
+      background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
     }
     .game-container {
       text-align: center;
@@ -391,7 +391,7 @@
         );
         if (targetSubBox) {
           originalSubBoxText = targetSubBox.textContent;
-          targetSubBox.innerHTML = `<input type="text" class="fillInInput" style="width:80px;" spellcheck="false" />`;
+          targetSubBox.innerHTML = `<input type="text" class="fillInInput" style="width:80px;" />`;
           fillInBoxElement = targetSubBox;
           const inputEl = targetSubBox.querySelector('input.fillInInput');
           inputEl.focus();
@@ -537,15 +537,6 @@
     // Restart
     //-----------------------------------------------------
     restartButton.addEventListener("click", startGame);
-
-    //-----------------------------------------------------
-    // Ensure input box remains interactive
-    //-----------------------------------------------------
-    document.addEventListener('click', (e) => {
-      if (isFillInBlankMode && currentInputEl && !e.target.closest('.fillInInput')) {
-        currentInputEl.focus();
-      }
-    });
 
     // Start!
     startGame();

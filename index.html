@@ -295,10 +295,7 @@
         <p>Numbers 1000-10,000</p>
       </button>
       <!-- Additional placeholder items -->
-      <button class="game-item" onclick="location.href='pages/TimeGame/timegame.html'">
-        <img src="assets/Time.png" alt="Placeholder 5">
-        <p>Tell Time</p>
-      </button>
+      
       <button class="game-item" onclick="location.href='pages/TestChat/index.html'">
         <img src="assets/chat.png" alt="Placeholder 5">
         <p>chat</p>
@@ -541,7 +538,7 @@
 
       <p class="activity-topic">Telling Time</p>
       
-      <button class="activity-button" onclick="location.href=''">
+      <button class="activity-button" onclick="location.href='Topics/Time/Worksheets/Bellwork.html'">
         <div class="activity-item">
           <div class="activity-icon notifications">
             <span class="material-icons">notifications</span>
@@ -559,7 +556,7 @@
         </div>
       </button>
       
-      <button class="activity-button" onclick="location.href=''">
+      <button class="activity-button" onclick="location.href='Topics/Time/Worksheets/grammarNotes.html'">
         <div class="activity-item">
           <div class="activity-icon description">
             <span class="material-icons">description</span>
@@ -997,6 +994,18 @@
       greetingParagraph.textContent = phrases[dailyIndex];
     });
   </script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) { 
+      var scrollpos = localStorage.getItem('scrollpos');
+      if (scrollpos) window.scrollTo(0, scrollpos);
+  });
+
+  window.onbeforeunload = function(e) {
+      localStorage.setItem('scrollpos', window.scrollY);
+  };
+</script>
 
 
 

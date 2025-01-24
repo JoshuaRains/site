@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Spanish Definite Articles Review Game</title>
+  <title>Spanish Indefinite Articles Review Game</title>
   <style>
     body, html {
       display: flex;
@@ -161,25 +161,25 @@
     <div class="progress-bar-container">
       <div id="progressBar" class="progress-bar"></div>
     </div>
-    <h2>Spanish Definite Articles Review</h2>
+    <h2>Spanish Indefinite Articles Review</h2>
     <p id="prompt"></p>
 
     <!-- 3×2 Chart with sub-boxes for each article -->
     <table id="articleChart">
       <tr>
         <td>
-          <div class="subBox" data-slot="el" data-phrase="el">el</div>
+          <div class="subBox" data-slot="un" data-phrase="un">un</div>
         </td>
         <td>
-          <div class="subBox" data-slot="la" data-phrase="la">la</div>
+          <div class="subBox" data-slot="una" data-phrase="una">una</div>
         </td>
       </tr>
       <tr>
         <td>
-          <div class="subBox" data-slot="los" data-phrase="los">los</div>
+          <div class="subBox" data-slot="unos" data-phrase="unos">unos</div>
         </td>
         <td>
-          <div class="subBox" data-slot="las" data-phrase="las">las</div>
+          <div class="subBox" data-slot="unas" data-phrase="unas">unas</div>
         </td>
       </tr>
     </table>
@@ -211,12 +211,12 @@
     // Track whether we are in fill-in-the-blank mode
     let isFillInBlankMode = false;
 
-    // Vocabulary list for definite articles
+    // Vocabulary list for indefinite articles
     const vocabularyList = [
-      { english: "the (masculine singular)", spanish: "el",   slot: "el",   times_seen: 0, times_correct: 0 },
-      { english: "the (feminine singular)",  spanish: "la",   slot: "la",   times_seen: 0, times_correct: 0 },
-      { english: "the (masculine plural)",   spanish: "los",  slot: "los",  times_seen: 0, times_correct: 0 },
-      { english: "the (feminine plural)",    spanish: "las",  slot: "las",  times_seen: 0, times_correct: 0 }
+      { english: "a (masculine singular)", spanish: "un",   slot: "un",   times_seen: 0, times_correct: 0 },
+      { english: "a (feminine singular)",  spanish: "una",  slot: "una",  times_seen: 0, times_correct: 0 },
+      { english: "some (masculine plural)", spanish: "unos", slot: "unos", times_seen: 0, times_correct: 0 },
+      { english: "some (feminine plural)",  spanish: "unas", slot: "unas", times_seen: 0, times_correct: 0 }
     ];
 
     // DOM elements

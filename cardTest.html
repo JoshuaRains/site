@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Printable Spanish Conjugation Cards</title>
+    <style>
+        :root {
+            --card-width: 200px; /* Adjust the width of the cards here */
+            --card-height: 100px; /* Adjust the height of the cards here */
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card {
+            width: var(--card-width);
+            height: var(--card-height);
+            border: 2px solid black;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            page-break-inside: avoid; /* Prevent splitting cards across pages */
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        /* Ensure cards don't break between pages when printing */
+        @media print {
+            .card {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Optional: Add headers for different sections */
+        .section-header {
+            width: 100%;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Llamar Conjugations -->
+        <div class="section-header">Llamar (to call)</div>
+        <div class="card">yo me llamo</div>
+        <div class="card">tú te llamas</div>
+        <div class="card">él se llama</div>
+        <div class="card">ella se llama</div>
+        <div class="card">nosotros nos llamamos</div>
+        <div class="card">ellos se llaman</div>
+
+        <!-- Escuchar Conjugations -->
+        <div class="section-header">Escuchar (to listen)</div>
+        <div class="card">yo escucho</div>
+        <div class="card">tú escuchas</div>
+        <div class="card">él escucha</div>
+        <div class="card">ella escucha</div>
+        <div class="card">nosotros escuchamos</div>
+        <div class="card">ellos escuchan</div>
+        <!-- Past Tense for Escuchar -->
+        <div class="section-header">Escuchar (Past Tense)</div>
+        <div class="card">yo escuché</div>
+        <div class="card">tú escuchaste</div>
+        <div class="card">él escuchó</div>
+        <div class="card">ella escuchó</div>
+        <div class="card">nosotros escuchamos</div>
+        <div class="card">ellos escucharon</div>
+
+        <!-- Repetir Conjugations -->
+        <div class="section-header">Repetir (to repeat)</div>
+        <div class="card">yo repito</div>
+        <div class="card">tú repites</div>
+        <div class="card">él repite</div>
+        <div class="card">ella repite</div>
+        <div class="card">nosotros repetimos</div>
+        <div class="card">ellos repiten</div>
+        <!-- Past Tense for Repetir -->
+        <div class="section-header">Repetir (Past Tense)</div>
+        <div class="card">yo repetí</div>
+        <div class="card">tú repetiste</div>
+        <div class="card">él repitió</div>
+        <div class="card">ella repitió</div>
+        <div class="card">nosotros repetimos</div>
+        <div class="card">ellos repitieron</div>
+
+        <!-- Sentar Conjugations -->
+        <div class="section-header">Sentar (to sit)</div>
+        <div class="card">yo siento</div>
+        <div class="card">tú sientas</div>
+        <div class="card">él sienta</div>
+        <div class="card">ella sienta</div>
+        <div class="card">nosotros sentamos</div>
+        <div class="card">ellos sienten</div>
+        <!-- Past Tense for Sentar -->
+        <div class="section-header">Sentar (Past Tense)</div>
+        <div class="card">yo senté</div>
+        <div class="card">tú sentaste</div>
+        <div class="card">él sentó</div>
+        <div class="card">ella sentó</div>
+        <div class="card">nosotros sentamos</div>
+        <div class="card">ellos sentaron</div>
+
+        <!-- Levantar la Mano Conjugations -->
+        <div class="section-header">Levantar la Mano (to raise the hand)</div>
+        <div class="card">yo levanto la mano</div>
+        <div class="card">tú levantas la mano</div>
+        <div class="card">él levanta la mano</div>
+        <div class="card">ella levanta la mano</div>
+        <div class="card">nosotros levantamos la mano</div>
+        <div class="card">ellos levantan la mano</div>
+        <!-- Past Tense for Levantar la Mano -->
+        <div class="section-header">Levantar la Mano (Past Tense)</div>
+        <div class="card">yo levanté la mano</div>
+        <div class="card">tú levantaste la mano</div>
+        <div class="card">él levantó la mano</div>
+        <div class="card">ella levantó la mano</div>
+        <div class="card">nosotros levantamos la mano</div>
+        <div class="card">ellos levantaron la mano</div>
+
+        <!-- Mirar Conjugations -->
+        <div class="section-header">Mirar (to look/watch)</div>
+        <div class="card">yo miro</div>
+        <div class="card">tú miras</div>
+        <div class="card">él mira</div>
+        <div class="card">ella mira</div>
+        <div class="card">nosotros miramos</div>
+        <div class="card">ellos miran</div>
+        <!-- Past Tense for Mirar -->
+        <div class="section-header">Mirar (Past Tense)</div>
+        <div class="card">yo miré</div>
+        <div class="card">tú miraste</div>
+        <div class="card">él miró</div>
+        <div class="card">ella miró</div>
+        <div class="card">nosotros miramos</div>
+        <div class="card">ellos miraron</div>
+
+        <!-- Hablar Conjugations -->
+        <div class="section-header">Hablar (to speak)</div>
+        <div class="card">yo hablo</div>
+        <div class="card">tú hablas</div>
+        <div class="card">él habla</div>
+        <div class="card">ella habla</div>
+        <div class="card">nosotros hablamos</div>
+        <div class="card">ellos hablan</div>
+        <!-- Past Tense for Hablar -->
+        <div class="section-header">Hablar (Past Tense)</div>
+        <div class="card">yo hablé</div>
+        <div class="card">tú hablaste</div>
+        <div class="card">él habló</div>
+        <div class="card">ella habló</div>
+        <div class="card">nosotros hablamos</div>
+        <div class="card">ellos hablaron</div>
+
+        <!-- Additional Phrases -->
+        <div class="section-header">Additional Phrases</div>
+        <div class="card">¿cuántos años tienes?</div>
+        <div class="card">tengo quince años</div>
+        <div class="card">tengo cien años</div>
+        <div class="card">¿cómo estás?</div>
+        <div class="card">estoy bien</div>
+    </div>
+</body>
+</html>

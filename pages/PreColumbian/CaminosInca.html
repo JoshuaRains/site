@@ -1,3 +1,4 @@
+<html lang="en" class="doc" translate="no"></html>
 <!DOCTYPE html>
 <html lang="en" translate="no">
 <head>
@@ -41,9 +42,7 @@
         .definitions p {
             margin: 0;
             padding: 5px 10px;
-            
             border-radius: 5px;
-           
         }
 
         .content-container img {
@@ -56,40 +55,169 @@
         sup {
             font-size: 12px;
         }
+        .game-container {
+      
+      padding: 50px;
+    }
+    .story {
+      font-size: 1.2em;
+      line-height: 1.6;
+      text-align: left;
+      color: #333;
+    }
+    /* Make clickable words more distinguishable */
+    .clickable-word {
+      cursor: pointer;
+      color: #222121; 
+      transition: color 0.2s;
+      font-weight: 600;
+    }
+    .clickable-word:hover {
+      color: #007BFF;
+    }
+    .definition-box {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 10;
+      font-size: 0.9em;
+      color: #333;
+    }
     </style>
 </head>
 <body>
     <div class="content-container">
-        <h1>Lesson</h1>
-        <p>
-            Los <strong>caminos</strong><sup>1</sup> incas formaban una <strong>red</strong><sup>2</sup> extensa que conectaba todo el imperio, 
-            <strong>desde</strong><sup>3</sup> las montañas de los Andes <strong>hasta</strong><sup>4</sup> las costas del Pacífico. Estos caminos 
-            <strong>eran conocidos como</strong><sup>5</sup> el <i>Qhapaq Ñan</i> y eran muy importantes para el transporte de personas, 
-            productos y mensajes <strong>a lo largo del</strong><sup>6</sup> territorio. Los <strong>mensajeros</strong><sup>7</sup>, 
-            llamados <i>chasquis</i>, corrían por estos caminos <strong>llevando noticias</strong><sup>8</sup> rápidamente entre las 
-            ciudades y <strong>pueblos</strong><sup>9</sup>. <strong>Además</strong><sup>10</sup>, los caminos incas <strong>permitían</strong><sup>11</sup> 
-            que el <strong>ejército</strong><sup>12</sup> y los <strong>gobernantes</strong><sup>13</sup> viajaran de manera eficiente 
-            <strong>por</strong><sup>14</sup> el imperio.
-        </p>
-        <div class="definitions">
-            <p><sup>1</sup> roads</p>
-            <p><sup>2</sup> network</p>
-            <p><sup>3</sup> from</p>
-            <p><sup>4</sup> to</p>
-            <p><sup>5</sup> were known as</p>
-            <p><sup>6</sup> throughout</p>
-            <p><sup>7</sup> messengers</p>
-            <p><sup>8</sup> carrying news</p>
-            <p><sup>9</sup> towns</p>
-            <p><sup>10</sup> furthermore</p>
-            <p><sup>11</sup> allowed</p>
-            <p><sup>12</sup> army</p>
-            <p><sup>13</sup> rulers</p>
-            <p><sup>14</sup> through</p>
-        </div>
-        <div style="text-align: center;">
-            <img src="./Incan map.JPG" alt="Incan Map">
-        </div>
+        <div class="game-container">
+            <h2>Caminos Incas: Lectura con Definiciones</h2>
+        
+            <div class="story">
+              <p>
+                Los 
+                <span class="clickable-word" data-definition="roads / pathways used in the Inca civilization">
+                  caminos
+                </span> 
+                incas 
+                <span class="clickable-word" data-definition="(imperfect) they used to form / they formed">
+                  formaban
+                </span> 
+                una 
+                <span class="clickable-word" data-definition="network">
+                  red
+                </span> 
+                extensa que                 <span class="clickable-word" data-definition="connected">connectaba</span>
+                    todo el imperio, 
+                <span class="clickable-word" data-definition="from">
+                  desde
+                </span> 
+                las montañas de los Andes 
+                <span class="clickable-word" data-definition="until / up to">
+                  hasta
+                </span> 
+                las costas del Pacífico. Estos caminos 
+                <span class="clickable-word" data-definition="(imperfect) they were">
+                  eran
+                </span> 
+                <span class="clickable-word" data-definition="known">
+                    conocidos 
+                </span>
+                <span class="clickable-word" data-definition="as / like">
+                  como
+                </span> 
+                el 
+                <span class="clickable-word" data-definition="The Great Inca Road (in Quechua). A vast network of roads connecting the empire.">
+                  Qhapaq Ñan
+                </span> 
+                y 
+                <span class="clickable-word" data-definition="(imperfect) they were">
+                  eran
+                </span> 
+                muy importantes para el transporte de personas, productos y mensajes 
+                <span class="clickable-word" data-definition="throughout the territory">
+                  a lo largo del territorio
+                </span>.
+                Los 
+                <span class="clickable-word" data-definition="messengers">
+                  mensajeros
+                </span>, 
+                llamados chasquis, 
+                <span class="clickable-word" data-definition="ran">
+                    corrían
+                </span> por estos caminos 
+                <span class="clickable-word" data-definition="carrying">
+                    llevando
+                </span> 
+                <span class="clickable-word" data-definition="news">
+                  noticias
+                </span> 
+                rápidamente entre las ciudades y 
+                <span class="clickable-word" data-definition="towns / villages">
+                  pueblos
+                </span>. 
+                <span class="clickable-word" data-definition="in addition / moreover">
+                  Además
+                </span>, 
+                los caminos incas 
+                <span class="clickable-word" data-definition="(imperfect) they allowed / were allowing">
+                  permitían
+                </span> 
+                que el 
+                <span class="clickable-word" data-definition="army">
+                  ejército
+                </span> 
+                y los 
+                <span class="clickable-word" data-definition="rulers / governors">
+                  gobernantes
+                </span> 
+                viajaran de manera 
+                <span class="clickable-word" data-definition="in an efficient way">
+                  eficiente
+                </span> 
+                <span class="clickable-word" data-definition="by / through">
+                  por
+                </span> 
+                el imperio.
+              </p>
+              <div style="text-align: center;">
+                <img src="./Incan map.JPG" alt="Incan Map">
+            </div>
+            </div>
+        
+            <!-- Definition Box (appears when a clickable word is clicked) -->
+            <div id="definitionBox" class="definition-box"></div>
+          </div>
     </div>
 </body>
 </html>
+
+<script>
+    // Get the definition box element
+    const definitionBox = document.getElementById('definitionBox');
+
+    // Add click event listeners to all clickable words
+    document.querySelectorAll('.clickable-word').forEach(word => {
+      word.addEventListener('click', (e) => {
+        // Get the clicked word's position
+        const rect = word.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+        // Position the definition box above the clicked word
+        definitionBox.style.display = 'block';
+        definitionBox.style.top = `${rect.top + scrollTop - 50}px`; // 50px above the word
+        definitionBox.style.left = `${rect.left}px`;
+
+        // Display the definition from the data-definition attribute
+        definitionBox.textContent = word.getAttribute('data-definition');
+      });
+    });
+
+    // Hide the definition box when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('clickable-word')) {
+        definitionBox.style.display = 'none';
+      }
+    });
+  </script>

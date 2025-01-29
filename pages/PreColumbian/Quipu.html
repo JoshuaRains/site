@@ -1,186 +1,206 @@
 <html lang="en" class="doc" translate="no"></html>
+<!DOCTYPE html>
+<html lang="en" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Columbian Civilizations</title>
     <style>
-body, html {
-    height: 100%; /* Make sure the parent has a defined height */
-    margin: 0; /* Remove default margin */
-    display: flex;
-    justify-content: center; /* Align horizontally center */
-    align-items: center; /* Align vertically center */
-   
-}
-
-body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
-      min-height: 100vh;
-    }
-
-/* Window container */
-.window {
-	width: 90%;
-    min-width: 800px;
-	border: 2px solid #80808070; /* Dark gray border */
-	border-radius: 10px;
-    font-size: 20px;
-	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* Shadow for the raised effect */
-	background-color: #d4d0c800; /* Classic XP window background color */
-}
-
-/* Title bar */
-.title-bar {
-	background: rgba(175, 210, 255, 0.5);
-	color: white;
-	padding: 4px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	border-bottom: 2px solid #000080; /* XP-like deep blue bottom border */
-	height: 24px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-/* Title text */
-.title-bar-text {
-	font-weight: bold;
-	padding-left: 8px;
-}
-
-/* Title bar controls (Minimize, Maximize, Close buttons) */
-.title-bar-controls button {
-	width: 16px;
-	height: 16px;
-	background-color: #d4d0c8;
-	border: 1px solid #808080;
-	margin-left: 4px;
-	cursor: pointer;
-    padding: 1px;
-    padding-bottom: 16px;
-}
-
-.title-bar-controls button:active {
-	background-color: #000080;
-}
-
-/* Window body */
-.window-body {
-	padding: 10px;
-	border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    
-    background-color: #ffffff; /* The content area should be white */
-}
-.rotatable {
-    display: block; /* Changes the image from inline to block-level element */
-    margin: 0 auto; /* Automatically adjusts margin to center the block horizontally */
-    width: 150px; /* Optional: Adjusts the width of the image as per requirement */
-    height: auto; /* Keeps the aspect ratio intact */
-    transition: transform 0.5s ease; /* For the rotation effect on hover */
-}
-
-.rotatable:hover {
-    transform: rotate(180deg); /* Rotation effect on hover */
-}
-
-
-
-.click-activity {
-    text-align: center;
-    padding: 20px;
-    background-color: #f0f8ff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    max-width: 200px;
-    margin: 20px auto;
-    cursor: pointer;
-}
-.click-activity:hover {
-    background-color: #e4e7ea;
-}
-
-
-.click-activity h3 {
-    color: #333; /* Dark grey color for the text */
-    font-family: 'Arial', sans-serif; /* Font styling */
-    margin-bottom: 10px; /* Space between the title and the image */
-}
-
-/* Scroll container within the window body */
-.scroll-container {
-	
-	width: 100%; /* Take full width of the window body */
-	overflow-y: scroll; /* Native vertical scroll bar */
-}
-
-/* Content area */
-.content {
-	padding: 10px;
-}
-sup {
-            font-size: 15px;
-        }
-        .definitions p {
-            padding-left: 20px;
-        }
-        .definitions {
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             display: flex;
-            
-            font-size: 15px;
-            margin-top: 20px;
-            
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
         }
 
+        .content-container {
+            width: 80%;
+            height: 100%;
+            background-color: #ffffff;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
+        .definitions {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .definitions p {
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .content-container img {
+            display: block;
+            margin: 20px auto;
+            width: 80%;
+            height: auto;
+        }
+
+        sup {
+            font-size: 12px;
+        }
+        .game-container {
+      
+      padding: 50px;
+    }
+    .story {
+      font-size: 1.2em;
+      line-height: 1.6;
+      text-align: left;
+      color: #333;
+    }
+    /* Make clickable words more distinguishable */
+    .clickable-word {
+      cursor: pointer;
+      color: #222121; 
+      transition: color 0.2s;
+      font-weight: 600;
+    }
+    .clickable-word:hover {
+      color: #007BFF;
+    }
+    .definition-box {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 10;
+      font-size: 0.9em;
+      color: #333;
+    }
     </style>
 </head>
 <body>
-    
-
-<div class="window">
-	<div class="title-bar">
-		<div class="title-bar-text">Lesson</div>
+    <div class="content-container">
+        <div class="game-container">
+            <h2>Caminos Incas: Lectura con Definiciones</h2>
         
-		
-	</div>
-	<div class="window-body">
-        <div class="scroll-container">
-            <div class="content">
-                <p>
-                    El quipu <strong>era</strong><sup>1</sup> un sistema de <strong>cuerdas</strong><sup>2</sup> y <strong>nudos</strong><sup>3</sup> que <strong>usaban los incas</strong><sup>4</sup> para registrar información. <strong>En lugar de</strong><sup>5</sup> escribir, los incas <strong>hacían</strong><sup>6</sup> nudos en cuerdas que representaban números y datos importantes, como la cantidad de <strong>alimentos</strong><sup>7</sup> o personas en una comunidad. El quipu era una <strong>herramienta</strong><sup>8</sup> importante para la administración del imperio, que <strong>ayudaba</strong><sup>9</sup> a los <strong>gobernantes</strong><sup>10</sup> a organizar y controlar su vasto territorio.
-                </p>
-                <p>
-                    Hoy en día, los quipus son una parte importante de la historia de los incas. Aunque <strong>ya no se usan</strong><sup>11</sup>, muchos quipus <strong>han sido encontrados</strong><sup>12</sup> por arqueólogos y <strong>se estudian</strong><sup>13</sup> para entender mejor cómo funcionaban. Algunas comunidades indígenas en Perú y Bolivia <strong>recuerdan</strong><sup>14</sup> el uso de los quipus y los consideran un símbolo de la inteligencia y cultura de sus antepasados.
-                </p>
-                <div class="definitions">
-                    <p><sup>1</sup> was</p>
-                    <p><sup>2</sup> ropes</p>
-                    <p><sup>3</sup> knots</p>
-                    <p><sup>4</sup> the Incas used</p>
-                    <p><sup>5</sup> instead of</p>
-                    <p><sup>6</sup> made</p>
-                    <p><sup>7</sup> food</p>
-                    <p><sup>8</sup> tool</p>
-                    <p><sup>9</sup> helped</p>
-                    <p><sup>10</sup> rulers</p>
-                    <p><sup>11</sup> are no longer used</p>
-                    <p><sup>12</sup> have been found</p>
-                    <p><sup>13</sup> are studied</p>
-                    <p><sup>14</sup> remember</p>
-
+            <div class="story">
+              <p>
+                El 
+                <span class="clickable-word" data-definition="record-keeping device used by the Incas">
+                  quipu
+                </span> 
+                <span class="clickable-word" data-definition="(imperfect) it was / used to be">
+                  era
+                </span> 
+                un sistema de 
+                <span class="clickable-word" data-definition="ropes / cords">
+                  cuerdas
+                </span> 
+                y 
+                <span class="clickable-word" data-definition="knots made in the cords">
+                  nudos
+                </span> 
+                que 
+                <span class="clickable-word" data-definition="(imperfect) the Incas used">
+                  usaban los incas
+                </span> 
+                para 
+                <span class="clickable-word" data-definition="to record / to note down">
+                  registrar
+                </span> 
+                información. 
+                <span class="clickable-word" data-definition="instead of / in place of">
+                  En lugar de
+                </span> 
+                escribir, los incas 
+                <span class="clickable-word" data-definition="(imperfect) they made / used to make">
+                  hacían
+                </span> 
+                nudos en cuerdas que representaban 
+                <span class="clickable-word" data-definition="numbers / figures">
+                  números
+                </span> 
+                y datos importantes, como la cantidad de 
+                <span class="clickable-word" data-definition="food / provisions">
+                  alimentos
+                </span> 
+                o 
+                <span class="clickable-word" data-definition="people">
+                  personas
+                </span> 
+                en una comunidad. El quipu era una 
+                <span class="clickable-word" data-definition="tool / instrument">
+                  herramienta
+                </span> 
+                importante para la administración del imperio, que 
+                <span class="clickable-word" data-definition="(imperfect) it helped / assisted">
+                  ayudaba
+                </span> 
+                a los 
+                <span class="clickable-word" data-definition="rulers / governors">
+                  gobernantes
+                </span> 
+                a organizar y controlar su 
+                <span class="clickable-word" data-definition="huge / vast">
+                  vasto
+                </span> 
+                territorio.
+              </p>
+            
+              <p>
+                Hoy en día, los 
+                <span class="clickable-word" data-definition="plural of quipu">
+                  quipus
+                </span> 
+                son una parte importante de la historia de los incas. Aunque ya no 
+                <span class="clickable-word" data-definition="(present tense) they are used">
+                  se usan
+                </span>, 
+                muchos quipus 
+                <span class="clickable-word" data-definition="(present perfect passive) have been found">
+                  han sido encontrados
+                </span> 
+                por arqueólogos y 
+                <span class="clickable-word" data-definition="(present passive) are studied">
+                  se estudian
+                </span> 
+                para entender mejor cómo funcionaban. Algunas comunidades 
+                <span class="clickable-word" data-definition="indigenous / native">
+                  indígenas
+                </span> 
+                en Perú y Bolivia 
+                <span class="clickable-word" data-definition="(present) they remember / recall">
+                  recuerdan
+                </span> 
+                el uso de los quipus y los consideran un 
+                <span class="clickable-word" data-definition="emblem / representation">
+                  símbolo
+                </span> 
+                de la inteligencia y cultura de sus 
+                <span class="clickable-word" data-definition="ancestors / people who came before">
+                  antepasados
+                </span>.
+              </p>
+              <div style="text-align: center;">
+                <img src ="https://www.si.edu/sites/default/files/snapshots/quipu-new.jpg" style = "width: 40%; ">
                 </div>
-                <div style="text-align: center;">
-                    <img src ="https://www.si.edu/sites/default/files/snapshots/quipu-new.jpg" style = "width: 40%; ">
-                    </div>
-                
-
-                <!-- More content here to demonstrate scrolling -->
+            
             </div>
-            <div class="scroll-bar"></div>
-        </div>
+        
+            <!-- Definition Box (appears when a clickable word is clicked) -->
+            <div id="definitionBox" class="definition-box"></div>
+          </div>
     </div>
-    
-</div>
+</body>
+</html>

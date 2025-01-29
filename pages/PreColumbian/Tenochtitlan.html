@@ -1,204 +1,267 @@
 <html lang="en" class="doc" translate="no"></html>
+<!DOCTYPE html>
+<html lang="en" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Columbian Civilizations</title>
     <style>
-body, html {
-    height: 100%; /* Make sure the parent has a defined height */
-    margin: 0; /* Remove default margin */
-    display: flex;
-    justify-content: center; /* Align horizontally center */
-    align-items: center; /* Align vertically center */
-   
-}
-
-body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
-      min-height: 100vh;
-    }
-
-/* Window container */
-.window {
-	width: 90%;
-    min-width: 800px;
-	border: 2px solid #80808070; /* Dark gray border */
-	border-radius: 10px;
-    font-size: 20px;
-	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* Shadow for the raised effect */
-	background-color: #d4d0c800; /* Classic XP window background color */
-}
-
-/* Title bar */
-.title-bar {
-	background: rgba(175, 210, 255, 0.5);
-	color: white;
-	padding: 4px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	border-bottom: 2px solid #000080; /* XP-like deep blue bottom border */
-	height: 24px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-/* Title text */
-.title-bar-text {
-	font-weight: bold;
-	padding-left: 8px;
-}
-
-/* Title bar controls (Minimize, Maximize, Close buttons) */
-.title-bar-controls button {
-	width: 16px;
-	height: 16px;
-	background-color: #d4d0c8;
-	border: 1px solid #808080;
-	margin-left: 4px;
-	cursor: pointer;
-    padding: 1px;
-    padding-bottom: 16px;
-}
-
-.title-bar-controls button:active {
-	background-color: #000080;
-}
-
-/* Window body */
-.window-body {
-	padding: 10px;
-	border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    
-    background-color: #ffffff; /* The content area should be white */
-}
-.rotatable {
-    display: block; /* Changes the image from inline to block-level element */
-    margin: 0 auto; /* Automatically adjusts margin to center the block horizontally */
-    width: 150px; /* Optional: Adjusts the width of the image as per requirement */
-    height: auto; /* Keeps the aspect ratio intact */
-    transition: transform 0.5s ease; /* For the rotation effect on hover */
-}
-
-.rotatable:hover {
-    transform: rotate(180deg); /* Rotation effect on hover */
-}
-
-
-
-.click-activity {
-    text-align: center;
-    padding: 20px;
-    background-color: #f0f8ff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    max-width: 200px;
-    margin: 20px auto;
-    cursor: pointer;
-}
-.click-activity:hover {
-    background-color: #e4e7ea;
-}
-
-
-.click-activity h3 {
-    color: #333; /* Dark grey color for the text */
-    font-family: 'Arial', sans-serif; /* Font styling */
-    margin-bottom: 10px; /* Space between the title and the image */
-}
-
-/* Scroll container within the window body */
-.scroll-container {
-	
-	width: 100%; /* Take full width of the window body */
-	overflow-y: scroll; /* Native vertical scroll bar */
-}
-
-/* Content area */
-.content {
-	padding: 10px;
-}
-sup {
-            font-size: 15px;
-        }
-        .definitions p {
-            padding-left: 20px;
-        }
-        .definitions {
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             display: flex;
-            
-            font-size: 15px;
-            margin-top: 20px;
-            
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
         }
 
+        .content-container {
+            width: 80%;
+            height: 100%;
+            background-color: #ffffff;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
+        .definitions {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .definitions p {
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .content-container img {
+            display: block;
+            margin: 20px auto;
+            width: 80%;
+            height: auto;
+        }
+
+        sup {
+            font-size: 12px;
+        }
+        .game-container {
+      
+      padding: 50px;
+    }
+    .story {
+      font-size: 1.2em;
+      line-height: 1.6;
+      text-align: left;
+      color: #333;
+    }
+    /* Make clickable words more distinguishable */
+    .clickable-word {
+      cursor: pointer;
+      color: #222121; 
+      transition: color 0.2s;
+      font-weight: 600;
+    }
+    .clickable-word:hover {
+      color: #007BFF;
+    }
+    .definition-box {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 10;
+      font-size: 0.9em;
+      color: #333;
+    }
     </style>
 </head>
 <body>
-    
-
-<div class="window">
-	<div class="title-bar">
-		<div class="title-bar-text">Lesson</div>
+    <div class="content-container">
+        <div class="game-container">
         
-		
-	</div>
-	<div class="window-body">
-        <div class="scroll-container">
-            <div class="content">
-                <p>
-                    Tenochtitlán <strong>fue</strong><sup>1</sup> la capital del imperio azteca, <strong>ubicada</strong><sup>2</sup> en una isla del lago <strong>Texcoco</strong><sup>3</sup>. <strong>Era</strong><sup>4</sup> una ciudad grande y avanzada, con <strong>calles</strong><sup>5</sup> organizadas, canales para el transporte, y templos majestuosos dedicados a sus <strong>dioses</strong><sup>6</sup>. Según la <strong>leyenda</strong><sup>7</sup>, los aztecas <strong>fundaron</strong><sup>8</sup> la ciudad donde <strong>vieron</strong><sup>9</sup> un <strong>águila posada en un nopal, devorando una serpiente.</strong><sup>10</sup> La ciudad también era un importante centro de comercio y cultura en Mesoamérica.
-                </p>
-                <p>
-                    Cuando los españoles <strong>llegaron</strong><sup>11</sup> en 1519, <strong>quedaron impresionados</strong><sup>12</sup> por el <strong>tamaño</strong><sup>13</sup> y la belleza de Tenochtitlán. Sin embargo, después de un tiempo de conflicto, los europeos conquistaron la ciudad en 1521, <strong>destruyendo</strong><sup>14</sup> gran parte de ella. Los aztecas <strong>lucharon</strong><sup>15</sup> para defender su tierra, pero no pudieron <strong>detener</strong><sup>16</sup> el avance de los invasores, que trajeron consigo nuevas <strong>enfermedades y armas.</strong><sup>17</sup>
-                </p>
-                <p>
-                    Después de la conquista, los españoles <strong>desmantelaron</strong><sup>18</sup> gran parte de Tenochtitlán y usaron los materiales de los templos y <strong>edificios</strong><sup>19</sup> aztecas para construir una nueva ciudad: Ciudad de México, justo sobre las ruinas de la <strong>antigua</strong><sup>20</sup> capital. Hoy en día, <strong>muy poco queda</strong><sup>21</sup> de la Tenochtitlán original, pero sus restos arqueológicos pueden visitarse en el centro de Ciudad de México, donde la historia de los aztecas sigue viva.
-                </p>
-                
-                <div class="definitions">
-                    <p><sup>1</sup> was</p>
-                    <p><sup>2</sup> located</p>
-                    <p><sup>3</sup> name of the lake</p>
-                    <p><sup>4</sup> was</p>
-                    <p><sup>5</sup> streets</p>
-                    <p><sup>6</sup> gods</p>
-                    <p><sup>7</sup> legend</p>
-                    <p><sup>8</sup> founded</p>
-                    <p><sup>9</sup> saw</p>
-                    <p><sup>10</sup> eagle perched on a cactus, devouring a snake</p>
-                    <p><sup>11</sup> arrived</p>
-                    <p><sup>12</sup> were impressed</p>
-                    <p><sup>13</sup> size</p>
-                    <p><sup>14</sup> destroying</p>
-                    <p><sup>15</sup> fought</p>
-                    <p><sup>16</sup> stop</p>
-                    <p><sup>17</sup> diseases and weapons</p>
-                    <p><sup>18</sup> dismantled</p>
-                    <p><sup>19</sup> buildings</p>
-                    <p><sup>20</sup> old</p>
-                    <p><sup>21</sup> very little remains</p>
-                </div>
-                
-                <div style="text-align: center;">
-                    <img src ="./Aztec map.JPG" style = "width: 80%; ">
-                </div>
+            <div class="story">
+              <!-- TENOCHTITLÁN (Paragraph 1) -->
+              <h2>Tenochtitlán</h2>
 
-                <!-- More content here to demonstrate scrolling -->
+              <p>
+                <span class="clickable-word" data-definition="(preterite) It was">
+                  Fue
+                </span> 
+                la capital del imperio azteca, 
+                <span class="clickable-word" data-definition="located / placed">
+                  ubicada
+                </span> 
+                en una isla del 
+                <span class="clickable-word" data-definition="Lake Texcoco, in the Valley of Mexico">
+                  lago Texcoco
+                </span>. 
+                <span class="clickable-word" data-definition="(imperfect) it was / used to be">
+                  Era
+                </span> 
+                una ciudad grande y avanzada, con 
+                <span class="clickable-word" data-definition="streets">
+                  calles
+                </span> 
+                organizadas, canales para el 
+                <span class="clickable-word" data-definition="transport / means of getting around">
+                  transporte
+                </span>, 
+                y templos majestuosos dedicados a sus 
+                <span class="clickable-word" data-definition="gods / deities">
+                  dioses
+                </span>. 
+                Según la 
+                <span class="clickable-word" data-definition="legend / myth">
+                  leyenda
+                </span>, 
+                los aztecas 
+                <span class="clickable-word" data-definition="(preterite) founded / established">
+                  fundaron
+                </span> 
+                la ciudad donde 
+                  vieron
+                
+                un águila posada en un nopal, 
+                <span class="clickable-word" data-definition="devouring a snake">
+                  devorando una serpiente
+                </span>. 
+                La ciudad también 
+                <span class="clickable-word" data-definition="was">
+                  era
+                </span>
+                  un importante centro de comercio y cultura en Mesoamérica.
+              </p>
+            
+              <p>
+                Cuando los españoles 
+                <span class="clickable-word" data-definition="(preterite) they arrived">
+                  llegaron
+                </span> 
+                en 1519, 
+                <span class="clickable-word" data-definition="(preterite) they were left astonished">
+                  quedaron impresionados
+                </span> 
+                por el 
+                <span class="clickable-word" data-definition="size / dimension">
+                  tamaño
+                </span> 
+                y la belleza de Tenochtitlán. Sin embargo, después de un tiempo de conflicto, los europeos 
+                <span class="clickable-word" data-definition="(preterite) they conquered / overcame">
+                  conquistaron
+                </span> 
+                la ciudad en 1521, 
+                <span class="clickable-word" data-definition="destroying / demolishing">
+                  destruyendo
+                </span> 
+                gran parte de ella. Los aztecas 
+                <span class="clickable-word" data-definition="(preterite) they fought / battled">
+                  lucharon
+                </span> 
+                para defender su tierra, pero no pudieron 
+                <span class="clickable-word" data-definition="to stop / prevent">
+                  detener
+                </span> 
+                el avance de los 
+                <span class="clickable-word" data-definition="invaders / conquerors">
+                  invasores
+                </span>, 
+                que 
+                <span class="clickable-word" data-definition="(preterite) they brought with them">
+                  trajeron consigo
+                </span> 
+                nuevas 
+                <span class="clickable-word" data-definition="diseases">
+                  enfermedades
+                </span> y 
+                <span class="clickable-word" data-definition="weapons">
+                  armas
+                </span>.
+              </p>
+            
+              <p>
+                Después de la 
+                <span class="clickable-word" data-definition="conquest / subjugation">
+                  conquista
+                </span>, 
+                los españoles 
+                <span class="clickable-word" data-definition="(preterite) they dismantled / took apart">
+                  desmantelaron
+                </span> 
+                gran parte de Tenochtitlán y usaron los materiales de los templos y 
+                <span class="clickable-word" data-definition="buildings / structures">
+                  edificios
+                </span> 
+                aztecas para construir una nueva ciudad: Ciudad de México, justo sobre las ruinas de la 
+                <span class="clickable-word" data-definition="old / ancient">
+                  antigua
+                </span> 
+                capital. 
+                <span class="clickable-word" data-definition="nowadays / at present">
+                  Hoy en día
+                </span>, 
+                muy poco 
+                <span class="clickable-word" data-definition="remains / is left">
+                  queda
+                </span> 
+                de la Tenochtitlán original, pero sus 
+                <span class="clickable-word" data-definition="archaeological remains / ruins">
+                  restos arqueológicos
+                </span> 
+                pueden visitarse en el centro de Ciudad de México, donde la historia de los aztecas 
+                <span class="clickable-word" data-definition="continues alive / remains living">
+                  sigue viva
+                </span>.
+              </p>
+              <div style="text-align: center;">
+                <img src ="./Aztec map.JPG" style = "width: 80%; ">
             </div>
-            <div class="scroll-bar"></div>
-        </div>
+            </div>
+        
+            <!-- Definition Box (appears when a clickable word is clicked) -->
+            <div id="definitionBox" class="definition-box"></div>
+          </div>
     </div>
-    
-</div>
-
-
-
-
-  
 </body>
-
 </html>
+<script>
+    // Get the definition box element
+    const definitionBox = document.getElementById('definitionBox');
+
+    // Add click event listeners to all clickable words
+    document.querySelectorAll('.clickable-word').forEach(word => {
+      word.addEventListener('click', (e) => {
+        // Get the clicked word's position
+        const rect = word.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+        // Position the definition box above the clicked word
+        definitionBox.style.display = 'block';
+        definitionBox.style.top = `${rect.top + scrollTop - 50}px`; // 50px above the word
+        definitionBox.style.left = `${rect.left}px`;
+
+        // Display the definition from the data-definition attribute
+        definitionBox.textContent = word.getAttribute('data-definition');
+      });
+    });
+
+    // Hide the definition box when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('clickable-word')) {
+        definitionBox.style.display = 'none';
+      }
+    });
+  </script>

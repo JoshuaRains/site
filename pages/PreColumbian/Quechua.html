@@ -1,189 +1,225 @@
 <html lang="en" class="doc" translate="no"></html>
+<!DOCTYPE html>
+<html lang="en" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Columbian Civilizations</title>
     <style>
-body, html {
-    height: 100%; /* Make sure the parent has a defined height */
-    margin: 0; /* Remove default margin */
-    display: flex;
-    justify-content: center; /* Align horizontally center */
-    align-items: center; /* Align vertically center */
-   
-}
-
-body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
-      min-height: 100vh;
-    }
-
-/* Window container */
-.window {
-	width: 90%;
-    min-width: 800px;
-	border: 2px solid #80808070; /* Dark gray border */
-	border-radius: 10px;
-    font-size: 20px;
-	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* Shadow for the raised effect */
-	background-color: #d4d0c800; /* Classic XP window background color */
-}
-
-/* Title bar */
-.title-bar {
-	background: rgba(175, 210, 255, 0.5);
-	color: white;
-	padding: 4px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	border-bottom: 2px solid #000080; /* XP-like deep blue bottom border */
-	height: 24px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-/* Title text */
-.title-bar-text {
-	font-weight: bold;
-	padding-left: 8px;
-}
-
-/* Title bar controls (Minimize, Maximize, Close buttons) */
-.title-bar-controls button {
-	width: 16px;
-	height: 16px;
-	background-color: #d4d0c8;
-	border: 1px solid #808080;
-	margin-left: 4px;
-	cursor: pointer;
-    padding: 1px;
-    padding-bottom: 16px;
-}
-
-.title-bar-controls button:active {
-	background-color: #000080;
-}
-
-/* Window body */
-.window-body {
-	padding: 10px;
-	border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    
-    background-color: #ffffff; /* The content area should be white */
-}
-.rotatable {
-    display: block; /* Changes the image from inline to block-level element */
-    margin: 0 auto; /* Automatically adjusts margin to center the block horizontally */
-    width: 150px; /* Optional: Adjusts the width of the image as per requirement */
-    height: auto; /* Keeps the aspect ratio intact */
-    transition: transform 0.5s ease; /* For the rotation effect on hover */
-}
-
-.rotatable:hover {
-    transform: rotate(180deg); /* Rotation effect on hover */
-}
-
-
-
-.click-activity {
-    text-align: center;
-    padding: 20px;
-    background-color: #f0f8ff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    max-width: 200px;
-    margin: 20px auto;
-    cursor: pointer;
-}
-.click-activity:hover {
-    background-color: #e4e7ea;
-}
-
-
-.click-activity h3 {
-    color: #333; /* Dark grey color for the text */
-    font-family: 'Arial', sans-serif; /* Font styling */
-    margin-bottom: 10px; /* Space between the title and the image */
-}
-
-/* Scroll container within the window body */
-.scroll-container {
-	
-	width: 100%; /* Take full width of the window body */
-	overflow-y: scroll; /* Native vertical scroll bar */
-}
-
-/* Content area */
-.content {
-	padding: 10px;
-}
-sup {
-            font-size: 15px;
-        }
-        .definitions p {
-            padding-left: 20px;
-        }
-        .definitions {
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             display: flex;
-            
-            font-size: 15px;
-            margin-top: 20px;
-            
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #5ffaff, #7ba9fe);
         }
 
+        .content-container {
+            width: 80%;
+            height: 100%;
+            background-color: #ffffff;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
+        .definitions {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .definitions p {
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .content-container img {
+            display: block;
+            margin: 20px auto;
+            width: 80%;
+            height: auto;
+        }
+
+        sup {
+            font-size: 12px;
+        }
+        .game-container {
+      
+      padding: 50px;
+    }
+    .story {
+      font-size: 1.2em;
+      line-height: 1.6;
+      text-align: left;
+      color: #333;
+    }
+    /* Make clickable words more distinguishable */
+    .clickable-word {
+      cursor: pointer;
+      color: #222121; 
+      transition: color 0.2s;
+      font-weight: 600;
+    }
+    .clickable-word:hover {
+      color: #007BFF;
+    }
+    .definition-box {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 10;
+      font-size: 0.9em;
+      color: #333;
+    }
     </style>
 </head>
 <body>
-    
-
-<div class="window">
-	<div class="title-bar">
-		<div class="title-bar-text">Lesson</div>
+    <div class="content-container">
+        <div class="game-container">
         
-		
-	</div>
-	<div class="window-body">
-        <div class="scroll-container">
-            <div class="content">
-                <p>
-                    Quechua es una lengua indígena que se originó en la región de los <strong>Andes</strong><sup>1</sup> y <strong>se extendió</strong><sup>2</sup> durante el imperio inca. Los incas <strong>lo adoptaron</strong><sup>3</sup> como el <strong>idioma</strong><sup>4</sup> oficial de su imperio para <strong>unificar</strong><sup>5</sup> a los diferentes <strong>pueblos</strong><sup>6</sup> que conquistaron, desde lo que hoy es Colombia hasta Chile y Argentina. <strong>Aunque había</strong><sup>7</sup> muchas lenguas en los territorios del imperio, el quechua <strong>se convirtió en</strong><sup>8</sup> la lengua de la administración y el comercio, lo que permitió su expansión y consolidación.
-                </p>
-                <p>
-                    Hoy en día, el quechua <strong>sigue siendo hablado</strong><sup>9</sup> por millones de personas en varios países de Sudamérica, especialmente en Perú, Bolivia y Ecuador. Muchos pueblos indígenas lo usan en su <strong>vida diaria</strong><sup>10</sup> y <strong>se están haciendo esfuerzos</strong><sup>11</sup> para revitalizarlo, tanto en las escuelas como en la cultura popular. En Perú, por ejemplo, el quechua es una lengua oficial junto con el español, y existen programas de radio, televisión y literatura en quechua, ayudando a mantener viva esta <strong>antigua</strong><sup>12</sup> lengua.
-                </p>
-                <div class="definitions">
-                    <p><sup>1</sup> A mountain range in South America</p>
-                    <p><sup>2</sup> it was spread</p>
-                    <p><sup>3</sup> adopted it</p>
-                    <p><sup>4</sup> language</p>
-                    <p><sup>5</sup> unify</p>
-                    <p><sup>6</sup> peoples</p>
-                    <p><sup>7</sup> even though there had been</p>
-                    <p><sup>8</sup> made itself into</p>
-                    <p><sup>9</sup> continues being spoken</p>
-                    <p><sup>10</sup> everyday life</p>
-                    <p><sup>11</sup> efforts are being made</p>
-                    <p><sup>12</sup> old</p>
-                    
-                </div>
+            <div class="story">
+              <!-- QUECHUA (Paragraph 1) -->
+              <h2>Quechua</h2>
 
-
-                <!-- More content here to demonstrate scrolling -->
+              <p>
+                <span class="clickable-word" data-definition="an indigenous language family spoken in the Andes region">
+                  Quechua
+                </span> 
+                es una lengua indígena que se 
+                <span class="clickable-word" data-definition="(preterite) originated / began">
+                  originó
+                </span> 
+                en la 
+                <span class="clickable-word" data-definition="the Andes region (mountain range in South America)">
+                  región de los Andes
+                </span> 
+                y se 
+                <span class="clickable-word" data-definition="(preterite passive) it was extended / it spread">
+                  extendió
+                </span> 
+                durante el imperio inca. Los incas 
+                <span class="clickable-word" data-definition="(preterite) they adopted it">
+                  lo adoptaron
+                </span> 
+                como el 
+                <span class="clickable-word" data-definition="language / tongue">
+                  idioma
+                </span> 
+                oficial de su imperio para 
+                <span class="clickable-word" data-definition="to unify / to bring together">
+                  unificar
+                </span> 
+                a los diferentes 
+                <span class="clickable-word" data-definition="peoples / communities">
+                  pueblos
+                </span> 
+                que conquistaron, desde lo que hoy es Colombia hasta Chile y Argentina. Aunque 
+                <span class="clickable-word" data-definition="(imperfect) there were">
+                  había
+                </span> 
+                muchas lenguas en los territorios del imperio, el quechua 
+                <span class="clickable-word" data-definition="(preterite reflexive) became / turned into">
+                  se convirtió
+                </span> 
+                en la lengua de la administración y el comercio, lo que permitió su expansión y consolidación.
+              </p>
+            
+              <p>
+                Hoy en día, el quechua 
+                <span class="clickable-word" data-definition="continues to be spoken">
+                  sigue siendo hablado
+                </span> 
+                por millones de personas en varios países de Sudamérica, especialmente en Perú, Bolivia y Ecuador. Muchos pueblos indígenas lo 
+                <span class="clickable-word" data-definition="use it / speak it">
+                  usan
+                </span> 
+                en su 
+                <span class="clickable-word" data-definition="daily life">
+                  vida diaria
+                </span> 
+                y se están haciendo 
+                <span class="clickable-word" data-definition="efforts / attempts">
+                  esfuerzos
+                </span> 
+                para 
+                <span class="clickable-word" data-definition="to revitalize / to bring back to active use">
+                  revitalizarlo
+                </span>, 
+                tanto en las 
+                <span class="clickable-word" data-definition="schools / educational institutions">
+                  escuelas
+                </span> 
+                como en la 
+                <span class="clickable-word" data-definition="popular culture / mainstream culture">
+                  cultura popular
+                </span>. 
+                En Perú, por ejemplo, el quechua es una lengua oficial junto con el español, y existen programas de 
+                <span class="clickable-word" data-definition="radio">
+                  radio
+                </span>, 
+                <span class="clickable-word" data-definition="television">
+                  televisión
+                </span> 
+                y 
+                <span class="clickable-word" data-definition="literature / written works">
+                  literatura
+                </span> 
+                en quechua, ayudando a mantener viva esta 
+                <span class="clickable-word" data-definition="ancient / old">
+                  antigua
+                </span> 
+                lengua.
+              </p>
+             
             </div>
-            <div class="scroll-bar"></div>
-        </div>
+        
+            <!-- Definition Box (appears when a clickable word is clicked) -->
+            <div id="definitionBox" class="definition-box"></div>
+          </div>
     </div>
-    
-</div>
-
-
-
-
-  
 </body>
-
 </html>
+<script>
+    // Get the definition box element
+    const definitionBox = document.getElementById('definitionBox');
+
+    // Add click event listeners to all clickable words
+    document.querySelectorAll('.clickable-word').forEach(word => {
+      word.addEventListener('click', (e) => {
+        // Get the clicked word's position
+        const rect = word.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+        // Position the definition box above the clicked word
+        definitionBox.style.display = 'block';
+        definitionBox.style.top = `${rect.top + scrollTop - 50}px`; // 50px above the word
+        definitionBox.style.left = `${rect.left}px`;
+
+        // Display the definition from the data-definition attribute
+        definitionBox.textContent = word.getAttribute('data-definition');
+      });
+    });
+
+    // Hide the definition box when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('clickable-word')) {
+        definitionBox.style.display = 'none';
+      }
+    });
+  </script>

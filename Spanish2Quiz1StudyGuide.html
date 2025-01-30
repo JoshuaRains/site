@@ -160,11 +160,13 @@
         }
 
         .chart-table input {
-            width: 100%;
+            width: 95%;
             font-size: 16px;
             outline: none;
             text-align: left;
             padding: 5px;
+            border-width: 1px;
+            border-color: #000;
         }
 
         .short-response.textarea {
@@ -327,7 +329,7 @@
 <div class="page-container">
 
     <!-- PAGE TITLE & HEADER -->
-    <div class="page-title">Spanish 1 Study Guide</div>
+    <div class="page-title">Spanish 2 Quiz 1 - Study Guide</div>
     <div class="header">
         <div class="header-section nombre">
             <label for="nombre">Nombre:</label>
@@ -345,8 +347,8 @@
     <div class="divider-line"></div>
 
 
-    <!-- 1. Alphabet & Pronunciation (combined old #1 and #15) -->
-    <h3>1. Spanish Alphabet & Pronunciation</h3>
+    <!-- Alphabet & Pronunciation -->
+    <h3>Spanish Alphabet & Pronunciation</h3>
     <p>Fill in the vowels and their pronunciations, then answer the additional questions about the alphabet.</p>
     
     <div class="question">
@@ -380,11 +382,10 @@
     <div class="divider-line"></div>
 
 
-    <!-- 2. Days (combined old #2 and #18) -->
-    <h3>2. Days of the Week & Additional Practice</h3>
+    <!-- Days (with Additional Practice) -->
+    <h3>Days of the Week & Additional Practice</h3>
     <p>Fill in the Spanish or English names for each day, then answer the extra questions.</p>
 
-    <!-- Original 7 fill-ins for the days -->
     <div class="question">
         <p><b>1.</b> Monday = 
             <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
@@ -421,7 +422,6 @@
         </p>
     </div>
 
-    <!-- Additional Practice (original #18 + added Qs) -->
     <div class="question">
         <p><b>8.</b> ¿Qué día es hoy?
             <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
@@ -441,11 +441,10 @@
     <div class="divider-line"></div>
 
 
-    <!-- 3. Months (combined old #3 and #20) -->
-    <h3>3. Months</h3>
+    <!-- Months (with Additional Practice) -->
+    <h3>Months</h3>
     <p>Fill in the correct month in Spanish or English, then complete the additional practice questions.</p>
 
-    <!-- Original fill-ins for all 12 months -->
     <div class="question">
         <p><b>1.</b> January = 
             <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
@@ -507,87 +506,127 @@
         </p>
     </div>
 
-   
     <div class="divider-line"></div>
 
+    <!-- Colors (Box Coloring) -->
+    <style>
+      .color-row {
+        display: flex;
+        flex-wrap: wrap; /* allows boxes to wrap onto a new line */
+        gap: 15px;       /* space between each color item */
+        margin-bottom: 20px;
+      }
+    
+      .color-item {
+        text-align: center;
+      }
+    
+      .color-item p {
+        margin: 0 0 5px 0; /* space below label */
+        font-weight: bold;
+      }
+    
+      .color-box {
+        width: 30px;         /* adjust this to change box width */
+        height: 30px;        /* adjust this to change box height */
+        border: 2px solid #000;
+        background-color: #fff; /* white so students can color it in */
+      }
+    </style>
+    
+    <div class="section">
+      <h3>Colors</h3>
+      <p>Color each box according to its label:</p>
+      
+      <div class="color-row">
+        <div class="color-item">
+          <p>Rojo</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Anaranjado</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Amarillo</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Verde</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Azul</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Morado</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Rosa</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Marrón</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Negro</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Blanco</p>
+          <div class="color-box"></div>
+        </div>
+        <div class="color-item">
+          <p>Gris</p>
+          <div class="color-box"></div>
+        </div>
+      </div>
+    </div>
 
-    <!-- 4. Colors (combined old #4 and #17) -->
-    <h3>4. Colors</h3>
-    <p>Fill in the Spanish or English equivalent below, then practice labeling boxes.</p>
-
-    <!-- Original #4 with at least 5 colors -->
-    <div class="question">
-        <p><b>1.</b> Red = 
-            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>2.</b> Orange = 
-            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>3.</b> Yellow = 
-            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>4.</b> Green = 
-            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>5.</b> Blue = 
-            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-
-    <!-- Additional Practice from old #17 (Box labeling, etc.) -->
-    <p><b>Additional Practice:</b> Label the following boxes in Spanish (and color them if possible):</p>
-    <div class="question">
-        <p><b>6.</b> Box 1 is red =
-            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>7.</b> Box 2 is green =
-            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>8.</b> Box 3 is blue =
-            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>9.</b> Box 4 is black =
-            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>10.</b> Box 5 is brown =
-            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="divider-line"></div>
-
-
-    <!-- 5. Greetings & Introductions (combined old #5 and #23) -->
-    <h3>5. Basic Greetings & Introductions</h3>
-
-    <!-- Original #5 had 2, we add more to reach 5, plus old #23 merged in -->
-    <div class="question">
-   
-    <div class="divider-line"></div>
-
-
+    <!-- Greetings & Introductions -->
+    <h3>Basic Greetings & Introductions</h3>
+    
+    <p>Fill in the blanks with the correct Spanish words or translations:</p>
   
+    <div class="question">
+      <p><b>2.</b> My name is…
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+      </p>
+    </div>
+    <div class="question">
+      <p><b>3.</b> What is your name?
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+      </p>
+    </div>
+    <div class="question">
+      <p><b>4.</b> How are you?
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+      </p>
+    </div>
+    <div class="question">
+      <p><b>5.</b> I am from…
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+      </p>
+    </div>
+    <div class="question">
+      <p><b>6.</b> Nice to meet you =
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+      </p>
+    </div>
+    <div class="question">
+      <p><b>7.</b> See you later =
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+      </p>
+    </div>
 
-    <!-- 7. Telling Time (combined old #7 and #16) -->
-    <h3>7. Telling Time & Additional Practice</h3>
+
+    <!-- Telling Time (with Additional Practice) -->
+    <h3>Telling Time & Additional Practice</h3>
     <p>Write how you would say these times in Spanish or English, then complete extra practice questions.</p>
 
-    <!-- Original #7 (2 Qs) -->
     <div class="question">
         <p><b>1.</b> 8:00 AM =
             <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
@@ -598,8 +637,6 @@
             <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
         </p>
     </div>
-
-    <!-- Additional Practice from old #16 + added Qs -->
     <div class="question">
         <p><b>3.</b> “It is 1:00” =
             <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
@@ -615,7 +652,6 @@
             <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
         </p>
     </div>
-   
     <div class="question">
         <p><b>6.</b> 10:45 PM =
             <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
@@ -625,15 +661,14 @@
       <p><b>7.</b> Explain when to use <em>Es la</em> vs. <em>Son las</em>:
           <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
       </p>
-  </div>
+    </div>
     <div class="divider-line"></div>
 
 
-    <!-- 8. Numbers (combined old #8 "Large Numbers" and #24 "Numbers (Additional Practice)") -->
-    <h3>8. Numbers & Large Numbers</h3>
+    <!-- Numbers & Large Numbers -->
+    <h3>Numbers & Large Numbers</h3>
     <p>Write these numbers in Spanish.</p>
 
-    <!-- Original #8 Large Numbers (2 Qs) -->
     <div class="question">
         <p><b>1.</b> 15,567 =
             <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
@@ -644,8 +679,6 @@
             <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
         </p>
     </div>
-
-    <!-- Additional practice from #24 + new Qs to reach at least 5 total -->
     <div class="question">
         <p><b>3.</b> 27:
             <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
@@ -655,32 +688,30 @@
       <p><b>4.</b> 1,000,000:
           <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
       </p>
-  </div>
+    </div>
     <div class="question">
         <p><b>5.</b> Write the numbers 10 - 20 in Spanish:
             <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
         </p>
     </div>
-   
-    
     <div class="divider-line"></div>
 
 
-    <!-- 10. Present Tense Verbs (-AR, -ER, -IR) [Combined #10, #11, #12] -->
-    <h3>10. Present Tense Verbs: -AR, -ER, -IR</h3>
+    <!-- Present Tense Verbs: -AR, -ER, -IR -->
+    <h3>Present Tense Verbs: -AR, -ER, -IR</h3>
     <p>Fill in the <i>-AR Endings Chart</i> with the correct endings for the present tense:</p>
     
     <div class="chart-row">
         <div class="question chart">
             <div class="chart-table">
-                <input type="text" value="singular:" disabled="true" />
-                <input type="text" value="plural:" disabled="true" />
-                <input type="text" disabled="false" value="yo: " />
-                <input type="text" disabled="false" value="nosotros: " />
-                <input type="text" disabled="false" value="tú: " />
-                <input type="text" disabled="false" value="vosotros: " />
-                <input type="text" disabled="false" value="él/ella/ud.: " />
-                <input type="text" disabled="false" value="ellos/ellas/uds.: " />
+                <input type="text" value="singular:" disabled="true" style="text-align: center;"/>
+                <input type="text" value="plural:" disabled="true" style="text-align: center;"/>
+                <input type="text"  value="yo: " />
+                <input type="text"  value="nosotros: " />
+                <input type="text"  value="tú: " />
+                <input type="text"  value="vosotros: " />
+                <input type="text"  value="él/ella/ud.: " />
+                <input type="text"  value="ellos/ellas/uds.: " />
             </div>
         </div>
     </div>
@@ -719,16 +750,16 @@
     <p>Fill in the <i>-ER Endings Chart</i> with the correct endings for the present tense:</p>
     <div class="chart-row">
         <div class="question chart">
-            <div class="chart-table">
-              <input type="text" value="singular:" disabled="true" />
-              <input type="text" value="plural:" disabled="true" />
-              <input type="text" disabled="false" value="yo: " />
-              <input type="text" disabled="false" value="nosotros: " />
-              <input type="text" disabled="false" value="tú: " />
-              <input type="text" disabled="false" value="vosotros: " />
-              <input type="text" disabled="false" value="él/ella/ud.: " />
-              <input type="text" disabled="false" value="ellos/ellas/uds.: " />
-            </div>
+          <div class="chart-table">
+            <input type="text" value="singular:" disabled="true" style="text-align: center;"/>
+            <input type="text" value="plural:" disabled="true" style="text-align: center;"/>
+            <input type="text"  value="yo: " />
+            <input type="text"  value="nosotros: " />
+            <input type="text"  value="tú: " />
+            <input type="text"  value="vosotros: " />
+            <input type="text"  value="él/ella/ud.: " />
+            <input type="text"  value="ellos/ellas/uds.: " />
+        </div>
         </div>
     </div>
     <p>Complete each sentence with the correct -ER form:</p>
@@ -767,16 +798,16 @@
     
     <div class="chart-row">
         <div class="question chart">
-            <div class="chart-table">
-                <input type="text" value="singular:" disabled="true" />
-                <input type="text" value="plural:" disabled="true" />
-                <input type="text" disabled="false" value="yo: " />
-                <input type="text" disabled="false" value="nosotros: " />
-                <input type="text" disabled="false" value="tú: " />
-                <input type="text" disabled="false" value="vosotros: " />
-                <input type="text" disabled="false" value="él/ella/ud.: " />
-                <input type="text" disabled="false" value="ellos/ellas/uds.: " />
-            </div>
+          <div class="chart-table">
+            <input type="text" value="singular:" disabled="true" style="text-align: center;"/>
+            <input type="text" value="plural:" disabled="true" style="text-align: center;"/>
+            <input type="text"  value="yo: " />
+            <input type="text"  value="nosotros: " />
+            <input type="text"  value="tú: " />
+            <input type="text"  value="vosotros: " />
+            <input type="text"  value="él/ella/ud.: " />
+            <input type="text"  value="ellos/ellas/uds.: " />
+        </div>
         </div>
     </div>
     <p>Fill in the correct -IR form in each blank:</p>
@@ -813,8 +844,8 @@
     <div class="divider-line"></div>
 
 
-    <!-- 13. Cognates -->
-    <h3>11. Cognates</h3>
+    <!-- Cognates -->
+    <h3>Cognates</h3>
     <p>Answer the following to show your understanding of cognates:</p>
     <div class="question">
         <p><b>1.</b> In your own words, define “cognate”:
@@ -830,8 +861,8 @@
     <div class="divider-line"></div>
 
 
-    <!-- 14. Weather -->
-    <h3>12. Weather</h3>
+    <!-- Weather -->
+    <h3>Weather</h3>
     <p>Fill in the correct weather expressions in Spanish:</p>
     <div class="question">
         <p><b>1.</b> “It’s cold” =
@@ -857,8 +888,8 @@
     <div class="divider-line"></div>
 
 
-    <!-- 19. Seasons -->
-    <h3>13. Seasons</h3>
+    <!-- Seasons -->
+    <h3>Seasons</h3>
     <p>Fill in the blanks about seasons in Spanish:</p>
     <div class="question">
         <p><b>1.</b> The four seasons are:
@@ -869,8 +900,8 @@
     <div class="divider-line"></div>
 
 
-    <!-- 21. Courtesy Phrases -->
-    <h3>14. Courtesy Phrases (“You’re Welcome,” etc.)</h3>
+    <!-- Courtesy Phrases -->
+    <h3>Courtesy Phrases (“You’re Welcome,” etc.)</h3>
     <p>Provide the Spanish equivalents for each courtesy phrase:</p>
     <div class="question">
         <p><b>1.</b> “You’re welcome” =
@@ -900,8 +931,8 @@
     <div class="divider-line"></div>
 
 
-    <!-- 22. Ser vs. Estar -->
-    <h3>15. Ser vs. Estar</h3>
+    <!-- Ser vs. Estar -->
+    <h3>Ser vs. Estar</h3>
     <p>Fill in each blank with the correct form of <em>ser</em> or <em>estar</em>:</p>
     <div class="question">
         <p><b>1.</b> (Nosotros)
@@ -932,16 +963,18 @@
             de España.
         </p>
     </div>
+    <p><i>Tip:</i> Make sure you know the acronyms to help you remember which one to use!</p>
+
     <div class="divider-line"></div>
 
-
-    <!-- 25. Parts of Speech -->
-    <h3>16. Parts of Speech</h3>
+    <h3>Parts of Speech</h3>
     <p>Identify or provide Spanish examples:</p>
     <div class="question">
-        <p><b>1.</b> “Comer” is a 
-          <input type="text" style="width: 150px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+        <p><b>1.</b> “correr” is a 
+          <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
             (noun, verb, adjective?).
+            How can you tell?           <input type="text" style="width: 200px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+
         </p>
     </div>
     <div class="question">
@@ -954,21 +987,12 @@
             <input type="text" style="width: 200px; border: none; border-bottom: 2px solid black; outline: none;" />
         </p>
     </div>
-    <div class="question">
-        <p><b>4.</b> Give one example of a Spanish adverb:
-            <input type="text" style="width: 200px; border: none; border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
-    <div class="question">
-        <p><b>5.</b> Why is “comer” considered a verb?
-            <input type="text" style="width: 350px; border: none; border-bottom: 2px solid black; outline: none;" />
-        </p>
-    </div>
+    
     <div class="divider-line"></div>
 
 
-    <!-- 26. Gustar -->
-    <h3>17. Gustar</h3>
+    <!-- Gustar -->
+    <h3>Gustar</h3>
     <p>Practice with the verb <em>gustar</em>:</p>
     <div class="question">
         <p><b>1.</b> “I like apples” =
@@ -1013,9 +1037,7 @@
     <button id="download-button" onclick="download()">
         <span class="material-icons">download</span>
     </button>
-    <a id="submit-button"
-       href="https://docs.google.com/forms/d/e/1FAIpQLSd93KBw1PWfN_5VdvvNGluo4dOofDvIZHo3qTE8JlUB-fYCZA/viewform?usp=header"
-       target="_blank">Open Dropbox</a>
+    
 </div>
 
 </body>

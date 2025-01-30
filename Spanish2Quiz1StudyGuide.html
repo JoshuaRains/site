@@ -1,212 +1,1022 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
-  <meta charset="UTF-8">
-  <title>Spanish 1 Quiz: Fill-In Study Guide</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f8f8f8;
-    }
-    h1, h2, h3 {
-      color: #003366;
-      margin-bottom: 0.5em;
-    }
-    h1 {
-      text-align: center;
-    }
-    p, ul, ol {
-      margin-bottom: 1em;
-      line-height: 1.5;
-    }
-    .section {
-      background-color: #ffffff;
-      padding: 1em;
-      margin: 1em 0;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    .blanks {
-      margin-left: 1em;
-    }
-    .blanks p {
-      margin: 0.5em 0;
-    }
-    .note {
-      font-style: italic;
-      color: #666;
-      margin-top: 1em;
-    }
-    .fill-line {
-      display: inline-block;
-      width: 200px;
-      border-bottom: 1px solid #999;
-      margin: 0 5px;
-    }
-    .wide {
-      width: 300px;
-    }
-  </style>
+    <!-- Scripts & Fonts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Google Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Doto:wght@100..900&family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish 1 Study Guide</title>
+
+    <style>
+        body {
+            font-family: "Noto Sans", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4b976a, #a8d5ba);
+        }
+
+        .page-container {
+            background-color: white;
+            width: 80%;
+            max-width: 850px;
+            min-width: 800px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; /* Enable vertical scrolling if necessary */
+        }
+
+        #sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f4f4f4;
+            border-top: 1px solid #ddd;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                margin: 0;
+            }
+            .page-container {
+                box-shadow: none;
+                width: 850px;
+                padding: 40px;
+            }
+            #sticky-bar {
+                display: none;
+            }
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-section {
+            width: 100%;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-section.nombre {
+            max-width: 325px;
+        }
+
+        .header-section.fecha {
+            max-width: 150px;
+        }
+
+        .header-section.clase {
+            max-width: 100px;
+        }
+
+        .header label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .input-line {
+            border: none;
+            border-bottom: 1px solid black;
+            font-size: 16px;
+            outline: none;
+            width: 100%;
+        }
+
+        .input-line::placeholder {
+            color: black;
+        }
+
+        .divider-line {
+            border-top: 2px solid black;
+            margin: 20px 0;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .short-response {
+            margin-bottom: 10px;
+        }
+
+        .short-response .line {
+            border-bottom: 1px solid black;
+            margin: 5px 0;
+            height: 20px;
+        }
+
+        /* Charts */
+        .chart {
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .chart-table {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 100%;
+            max-width: 450px;
+            gap: 0px;
+        }
+
+        .chart-table input {
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+            text-align: left;
+            padding: 5px;
+        }
+
+        .short-response.textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            line-height: 20px;
+            resize: none;
+            overflow: hidden;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .chart-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-right: 15px;
+            margin-bottom: 20px;
+        }
+
+        .accent-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f4f4f4;
+            color: black;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .accent-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        #submit-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        #submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        #download-button {
+            padding: 8px 8px;
+            font-size: 1px;
+            border: none;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+        #download-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Modal container styles */
+        #submit-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        #modal-content {
+            background-color: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        #close-modal {
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+        .spaced-examples-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-right: 15px;
+        }
+    </style>
+
+    <script>
+        let lastFocusedElement = null;
+
+        // Track the last focused input or textarea
+        document.addEventListener('focusin', (event) => {
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                lastFocusedElement = event.target;
+            }
+        });
+
+        // Insert special characters into the last focused input or textarea
+        function insertCharacter(char) {
+            if (lastFocusedElement) {
+                const start = lastFocusedElement.selectionStart;
+                const end = lastFocusedElement.selectionEnd;
+                const text = lastFocusedElement.value;
+                lastFocusedElement.value = text.slice(0, start) + char + text.slice(end);
+                lastFocusedElement.setSelectionRange(start + char.length, start + char.length);
+                lastFocusedElement.focus();
+            }
+        }
+
+        async function download() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'pt', 'a4');
+            const content = document.querySelector('.page-container');
+
+            const formElements = content.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+            const elementStates = Array.from(formElements).map(el => el.checked);
+
+            const pdfWidth = 595.28;
+            const scale = pdfWidth / content.offsetWidth;
+
+            await doc.html(content, {
+                callback: function (doc) {
+                    doc.save('Spanish_1_Study_Guide.pdf');
+                },
+                x: 0,
+                y: 0,
+                width: pdfWidth,
+                html2canvas: {
+                    scale: scale,
+                    useCORS: true
+                }
+            });
+
+            formElements.forEach((el, index) => {
+                el.checked = elementStates[index];
+            });
+        }
+    </script>
 </head>
+
 <body>
+<div class="page-container">
 
-<h1>Spanish 1 Quiz: Fill-In Study Guide</h1>
+    <!-- PAGE TITLE & HEADER -->
+    <div class="page-title">Spanish 1 Study Guide</div>
+    <div class="header">
+        <div class="header-section nombre">
+            <label for="nombre">Nombre:</label>
+            <input type="text" spellcheck="false" id="nombre" class="input-line">
+        </div>
+        <div class="header-section fecha">
+            <label for="fecha">Fecha:</label>
+            <input type="text" spellcheck="false" id="fecha" class="input-line">
+        </div>
+        <div class="header-section clase">
+            <label for="clase">Clase:</label>
+            <input type="text" spellcheck="false" id="clase" class="input-line">
+        </div>
+    </div>
+    <div class="divider-line"></div>
 
-<p>
-  <strong>Instructions:</strong> Use this guide to review the main topics for your Spanish 1 quiz. 
-  Complete the blanks below to test your knowledge of vocabulary and grammar. 
-  This is <em>not</em> the actual quiz—just a practice tool!
-</p>
 
-<div class="section">
-  <h2>1. Spanish Alphabet & Vowels</h2>
-  <p>Write the five primary vowels in Spanish and how they are pronounced in English (ex: <em>a</em> = “ah”):</p>
-  <div class="blanks">
-    <p>
-      1) A: Pronounced 
-      <span class="fill-line"></span>
-    </p>
-    <p>
-      2) E: Pronounced 
-      <span class="fill-line"></span>
-    </p>
-    <p>
-      3) I: Pronounced 
-      <span class="fill-line"></span>
-    </p>
-    <p>
-      4) O: Pronounced 
-      <span class="fill-line"></span>
-    </p>
-    <p>
-      5) U: Pronounced 
-      <span class="fill-line"></span>
-    </p>
+    <!-- 1. Alphabet & Pronunciation (combined old #1 and #15) -->
+    <h3>1. Spanish Alphabet & Pronunciation</h3>
+    <p>Fill in the vowels and their pronunciations, then answer the additional questions about the alphabet.</p>
+    
+    <div class="question">
+        <p><b>1.</b> A = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> E = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> I = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> O = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> U = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <p><i>Tip:</i> Practice saying each letter aloud, including <b>Ñ</b>.</p>
+
+ 
+    <div class="divider-line"></div>
+
+
+    <!-- 2. Days (combined old #2 and #18) -->
+    <h3>2. Days of the Week & Additional Practice</h3>
+    <p>Fill in the Spanish or English names for each day, then answer the extra questions.</p>
+
+    <!-- Original 7 fill-ins for the days -->
+    <div class="question">
+        <p><b>1.</b> Monday = 
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> Tuesday = 
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> Wednesday = 
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> Thursday = 
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> Friday = 
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>6.</b> Saturday = 
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>7.</b> Sunday = 
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+
+    <!-- Additional Practice (original #18 + added Qs) -->
+    <div class="question">
+        <p><b>8.</b> ¿Qué día es hoy?
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>9.</b> ¿Qué día fue ayer?
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>10.</b> ¿Qué día es mañana?
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+  
+    <div class="divider-line"></div>
+
+
+    <!-- 3. Months (combined old #3 and #20) -->
+    <h3>3. Months</h3>
+    <p>Fill in the correct month in Spanish or English, then complete the additional practice questions.</p>
+
+    <!-- Original fill-ins for all 12 months -->
+    <div class="question">
+        <p><b>1.</b> January = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> February = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> March = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> April = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> May = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>6.</b> June = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>7.</b> July = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>8.</b> August = 
+            <input type="text" style="width: 150px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>9.</b> September = 
+            <input type="text" style="width: 180px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>10.</b> October = 
+            <input type="text" style="width: 180px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>11.</b> November = 
+            <input type="text" style="width: 180px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>12.</b> December = 
+            <input type="text" style="width: 180px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+
+   
+    <div class="divider-line"></div>
+
+
+    <!-- 4. Colors (combined old #4 and #17) -->
+    <h3>4. Colors</h3>
+    <p>Fill in the Spanish or English equivalent below, then practice labeling boxes.</p>
+
+    <!-- Original #4 with at least 5 colors -->
+    <div class="question">
+        <p><b>1.</b> Red = 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> Orange = 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> Yellow = 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> Green = 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> Blue = 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+
+    <!-- Additional Practice from old #17 (Box labeling, etc.) -->
+    <p><b>Additional Practice:</b> Label the following boxes in Spanish (and color them if possible):</p>
+    <div class="question">
+        <p><b>6.</b> Box 1 is red =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>7.</b> Box 2 is green =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>8.</b> Box 3 is blue =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>9.</b> Box 4 is black =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>10.</b> Box 5 is brown =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="divider-line"></div>
+
+
+    <!-- 5. Greetings & Introductions (combined old #5 and #23) -->
+    <h3>5. Basic Greetings & Introductions</h3>
+
+    <!-- Original #5 had 2, we add more to reach 5, plus old #23 merged in -->
+    <div class="question">
+   
+    <div class="divider-line"></div>
+
+
+  
+
+    <!-- 7. Telling Time (combined old #7 and #16) -->
+    <h3>7. Telling Time & Additional Practice</h3>
+    <p>Write how you would say these times in Spanish or English, then complete extra practice questions.</p>
+
+    <!-- Original #7 (2 Qs) -->
+    <div class="question">
+        <p><b>1.</b> 8:00 AM =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> 2:30 PM =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+
+    <!-- Additional Practice from old #16 + added Qs -->
+    <div class="question">
+        <p><b>3.</b> “It is 1:00” =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> “It is noon” =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> “It is midnight” =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+   
+    <div class="question">
+        <p><b>6.</b> 10:45 PM =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+      <p><b>7.</b> Explain when to use <em>Es la</em> vs. <em>Son las</em>:
+          <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+      </p>
   </div>
-  <p class="note">
-    Tip: Practice saying each letter of the Spanish alphabet out loud and spelling simple words. 
-    Don’t forget the letter <strong>Ñ</strong>.
-  </p>
-</div>
+    <div class="divider-line"></div>
 
-<div class="section">
-  <h2>2. Days of the Week</h2>
-  <p>Fill in the Spanish word for each English day, or vice versa:</p>
-  <div class="blanks">
-    <p>Monday: <span class="fill-line"></span></p>
-    <p>Tuesday: <span class="fill-line"></span></p>
-    <p>Wednesday: <span class="fill-line"></span></p>
-    <p>Thursday: <span class="fill-line"></span></p>
-    <p>Friday: <span class="fill-line"></span></p>
-    <p>Saturday: <span class="fill-line"></span></p>
-    <p>Sunday: <span class="fill-line"></span></p>
+
+    <!-- 8. Numbers (combined old #8 "Large Numbers" and #24 "Numbers (Additional Practice)") -->
+    <h3>8. Numbers & Large Numbers</h3>
+    <p>Write these numbers in Spanish.</p>
+
+    <!-- Original #8 Large Numbers (2 Qs) -->
+    <div class="question">
+        <p><b>1.</b> 15,567 =
+            <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> 700,000 =
+            <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+
+    <!-- Additional practice from #24 + new Qs to reach at least 5 total -->
+    <div class="question">
+        <p><b>3.</b> 27:
+            <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+      <p><b>4.</b> 1,000,000:
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none;" />
+      </p>
   </div>
+    <div class="question">
+        <p><b>5.</b> Write the numbers 10 - 20 in Spanish:
+            <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+   
+    
+    <div class="divider-line"></div>
+
+
+    <!-- 10. Present Tense Verbs (-AR, -ER, -IR) [Combined #10, #11, #12] -->
+    <h3>10. Present Tense Verbs: -AR, -ER, -IR</h3>
+    <p>Fill in the <i>-AR Endings Chart</i> with the correct endings for the present tense:</p>
+    
+    <div class="chart-row">
+        <div class="question chart">
+            <div class="chart-table">
+                <input type="text" value="singular:" disabled="true" />
+                <input type="text" value="plural:" disabled="true" />
+                <input type="text" disabled="false" value="yo: " />
+                <input type="text" disabled="false" value="nosotros: " />
+                <input type="text" disabled="false" value="tú: " />
+                <input type="text" disabled="false" value="vosotros: " />
+                <input type="text" disabled="false" value="él/ella/ud.: " />
+                <input type="text" disabled="false" value="ellos/ellas/uds.: " />
+            </div>
+        </div>
+    </div>
+    <p>Complete each sentence with the correct -AR form:</p>
+    <div class="question">
+        <p><b>1.</b> (Yo) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (hablar) español todos los días.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> (Tú) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (estudiar) en la biblioteca.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> (Nosotros) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (bailar) en la fiesta.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> (Ellos) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (cantar) en el coro.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> (Ella) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (trabajar) en la oficina.
+        </p>
+    </div>
+
+    <p>Fill in the <i>-ER Endings Chart</i> with the correct endings for the present tense:</p>
+    <div class="chart-row">
+        <div class="question chart">
+            <div class="chart-table">
+              <input type="text" value="singular:" disabled="true" />
+              <input type="text" value="plural:" disabled="true" />
+              <input type="text" disabled="false" value="yo: " />
+              <input type="text" disabled="false" value="nosotros: " />
+              <input type="text" disabled="false" value="tú: " />
+              <input type="text" disabled="false" value="vosotros: " />
+              <input type="text" disabled="false" value="él/ella/ud.: " />
+              <input type="text" disabled="false" value="ellos/ellas/uds.: " />
+            </div>
+        </div>
+    </div>
+    <p>Complete each sentence with the correct -ER form:</p>
+    <div class="question">
+        <p><b>6.</b> (Yo) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (comer) una hamburguesa.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>7.</b> (Tú) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (correr) en el parque.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>8.</b> (Nosotros) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (leer) libros.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>9.</b> (Ella) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (beber) café.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>10.</b> (Ellos) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (aprender) inglés.
+        </p>
+    </div>
+
+    <p>Fill in the <i>-IR Endings Chart</i> with the correct endings for the present tense:</p>
+    
+    <div class="chart-row">
+        <div class="question chart">
+            <div class="chart-table">
+                <input type="text" value="singular:" disabled="true" />
+                <input type="text" value="plural:" disabled="true" />
+                <input type="text" disabled="false" value="yo: " />
+                <input type="text" disabled="false" value="nosotros: " />
+                <input type="text" disabled="false" value="tú: " />
+                <input type="text" disabled="false" value="vosotros: " />
+                <input type="text" disabled="false" value="él/ella/ud.: " />
+                <input type="text" disabled="false" value="ellos/ellas/uds.: " />
+            </div>
+        </div>
+    </div>
+    <p>Fill in the correct -IR form in each blank:</p>
+    <div class="question">
+        <p><b>11.</b> (Yo) 
+            <input type="text" style="width: 120px;border: none; border-bottom: 2px solid black; outline: none;" />
+            (vivir) en una casa pequeña.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>12.</b> (Tú) 
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (abrir) la puerta de la escuela.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>13.</b> (Nosotros)
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (escribir) la tarea.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>14.</b> (Ellas)
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (abrir) los regalos.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>15.</b> (Uds.)
+            <input type="text" style="width: 120px; border: none;border-bottom: 2px solid black; outline: none;" />
+            (compartir) el chocolate.
+        </p>
+    </div>
+    <div class="divider-line"></div>
+
+
+    <!-- 13. Cognates -->
+    <h3>11. Cognates</h3>
+    <p>Answer the following to show your understanding of cognates:</p>
+    <div class="question">
+        <p><b>1.</b> In your own words, define “cognate”:
+            <input type="text" style="width: 300px;border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> Give one Spanish-English cognate pair:
+            <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    
+    <div class="divider-line"></div>
+
+
+    <!-- 14. Weather -->
+    <h3>12. Weather</h3>
+    <p>Fill in the correct weather expressions in Spanish:</p>
+    <div class="question">
+        <p><b>1.</b> “It’s cold” =
+            <input type="text" style="width: 200px;border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> “It’s hot” =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> “It’s raining” =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> “It’s snowing” =
+            <input type="text" style="width: 200px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    
+    <div class="divider-line"></div>
+
+
+    <!-- 19. Seasons -->
+    <h3>13. Seasons</h3>
+    <p>Fill in the blanks about seasons in Spanish:</p>
+    <div class="question">
+        <p><b>1.</b> The four seasons are:
+            <input type="text" style="width: 400px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    
+    <div class="divider-line"></div>
+
+
+    <!-- 21. Courtesy Phrases -->
+    <h3>14. Courtesy Phrases (“You’re Welcome,” etc.)</h3>
+    <p>Provide the Spanish equivalents for each courtesy phrase:</p>
+    <div class="question">
+        <p><b>1.</b> “You’re welcome” =
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> “Please” =
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> “Thank you” =
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> “Excuse me” =
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> “I’m sorry” =
+            <input type="text" style="width: 250px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="divider-line"></div>
+
+
+    <!-- 22. Ser vs. Estar -->
+    <h3>15. Ser vs. Estar</h3>
+    <p>Fill in each blank with the correct form of <em>ser</em> or <em>estar</em>:</p>
+    <div class="question">
+        <p><b>1.</b> (Nosotros)
+            <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none;" />
+            en la clase.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> “I am a teacher” =
+            <input type="text" style="width: 200px; border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> (Ellos)
+            <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none;" />
+            en la biblioteca.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> (Nosotros)
+            <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none;" />
+            felices hoy.
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> (Ella)
+            <input type="text" style="width: 120px; border: none; border-bottom: 2px solid black; outline: none;" />
+            de España.
+        </p>
+    </div>
+    <div class="divider-line"></div>
+
+
+    <!-- 25. Parts of Speech -->
+    <h3>16. Parts of Speech</h3>
+    <p>Identify or provide Spanish examples:</p>
+    <div class="question">
+        <p><b>1.</b> “Comer” is a 
+          <input type="text" style="width: 150px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+            (noun, verb, adjective?).
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> Give one example of a Spanish noun:
+            <input type="text" style="width: 200px; border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> Give one example of a Spanish adjective:
+            <input type="text" style="width: 200px; border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> Give one example of a Spanish adverb:
+            <input type="text" style="width: 200px; border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>5.</b> Why is “comer” considered a verb?
+            <input type="text" style="width: 350px; border: none; border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="divider-line"></div>
+
+
+    <!-- 26. Gustar -->
+    <h3>17. Gustar</h3>
+    <p>Practice with the verb <em>gustar</em>:</p>
+    <div class="question">
+        <p><b>1.</b> “I like apples” =
+          <input type="text" style="width: 300px; border: none; border-bottom: 2px solid black; outline: none; font-size: 16px; padding: 2px;">
+        </p>
+    </div>
+    <div class="question">
+        <p><b>2.</b> “She likes to sing” =
+            <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>3.</b> Do you (<i>tú</i>) like pizza? =
+            <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+    <div class="question">
+        <p><b>4.</b> “We like the movies” =
+            <input type="text" style="width: 300px; border: none;border-bottom: 2px solid black; outline: none;" />
+        </p>
+    </div>
+
+    <p><i>¡Buena suerte!</i></p>
+    <br>
+    <br>
+    <br>
+    <br>
 </div>
 
-<div class="section">
-  <h2>3. Months</h2>
-  <p>Fill in the blank with the correct Spanish or English month:</p>
-  <div class="blanks">
-    <p>January: <span class="fill-line"></span></p>
-    <p>February: <span class="fill-line"></span></p>
-    <p>March: <span class="fill-line"></span></p>
-    <p>April: <span class="fill-line"></span></p>
-    <p>May: <span class="fill-line"></span></p>
-    <p>June: <span class="fill-line"></span></p>
-    <p>July: <span class="fill-line"></span></p>
-    <p>August: <span class="fill-line"></span></p>
-    <p>September: <span class="fill-line"></span></p>
-    <p>October: <span class="fill-line"></span></p>
-    <p>November: <span class="fill-line"></span></p>
-    <p>December: <span class="fill-line"></span></p>
-  </div>
-</div>
+<!-- Sticky Bar (Accents & Download) -->
+<div id="sticky-bar">
+    <button class="accent-button" onclick="insertCharacter('á')">á</button>
+    <button class="accent-button" onclick="insertCharacter('é')">é</button>
+    <button class="accent-button" onclick="insertCharacter('í')">í</button>
+    <button class="accent-button" onclick="insertCharacter('ó')">ó</button>
+    <button class="accent-button" onclick="insertCharacter('ú')">ú</button>
+    <button class="accent-button" onclick="insertCharacter('ñ')">ñ</button>
+    <button class="accent-button" onclick="insertCharacter('ü')">ü</button>
+    <button class="accent-button" onclick="insertCharacter('¿')">¿</button>
+    <button class="accent-button" onclick="insertCharacter('¡')">¡</button>
 
-<div class="section">
-  <h2>4. Colors</h2>
-  <p>Write the Spanish or English equivalent for each color. Feel free to add more:</p>
-  <div class="blanks">
-    <p>Red: <span class="fill-line"></span></p>
-    <p>Orange: <span class="fill-line"></span></p>
-    <p>Yellow: <span class="fill-line"></span></p>
-    <p>Green: <span class="fill-line"></span></p>
-    <p>Blue: <span class="fill-line"></span></p>
-    <p>Purple: <span class="fill-line"></span></p>
-    <p>Pink: <span class="fill-line"></span></p>
-    <p>Brown: <span class="fill-line"></span></p>
-    <p>Black: <span class="fill-line"></span></p>
-    <p>White: <span class="fill-line"></span></p>
-    <p>Gray: <span class="fill-line"></span></p>
-  </div>
+    <button id="download-button" onclick="download()">
+        <span class="material-icons">download</span>
+    </button>
+    <a id="submit-button"
+       href="https://docs.google.com/forms/d/e/1FAIpQLSd93KBw1PWfN_5VdvvNGluo4dOofDvIZHo3qTE8JlUB-fYCZA/viewform?usp=header"
+       target="_blank">Open Dropbox</a>
 </div>
-
-<div class="section">
-  <h2>5. Basic Greetings & Introductions</h2>
-  <p>Fill in the blanks with the appropriate Spanish words or translations.</p>
-  <div class="blanks">
-    <p>Hello, my name is... = <span class="fill-line wide"></span></p>
-    <p>How are you? = <span class="fill-line wide"></span></p>
-    <p>I’m doing well. = <span class="fill-line wide"></span></p>
-    <p>What is your name? = <span class="fill-line wide"></span></p>
-  </div>
-</div>
-
-<div class="section">
-  <h2>6. Common Classroom Commands</h2>
-  <p>Match each command to its English meaning (or vice versa).</p>
-  <div class="blanks">
-    <p>Listen = <span class="fill-line"></span></p>
-    <p>Repeat = <span class="fill-line"></span></p>
-    <p>Raise your hand = <span class="fill-line wide"></span></p>
-    <p>Take out a sheet of paper = <span class="fill-line wide"></span></p>
-    <p>Do you have any questions? = <span class="fill-line wide"></span></p>
-  </div>
-</div>
-
-<div class="section">
-  <h2>7. Telling Time</h2>
-  <p>Write how you would say the following in Spanish or English:</p>
-  <div class="blanks">
-    <p>8:00 AM = <span class="fill-line wide"></span></p>
-    <p>2:30 PM = <span class="fill-line wide"></span></p>
-    <p>10:15 (ten fifteen) = <span class="fill-line wide"></span></p>
-    <p>Morning (AM) = <span class="fill-line"></span></p>
-    <p>Afternoon (PM) = <span class="fill-line"></span></p>
-    <p>Night (PM) = <span class="fill-line"></span></p>
-  </div>
-  <p class="note">
-    Remember: <strong>media</strong> often means “half past,” and <strong>cuarto</strong> can mean “quarter past.”
-  </p>
-</div>
-
-<div class="section">
-  <h2>8. Large Numbers</h2>
-  <p>Practice writing or pronouncing bigger numbers in Spanish. Fill in the correct Spanish words:</p>
-  <div class="blanks">
-    <p>15,767 = <span class="fill-line wide"></span></p>
-    <p>100,000 = <span class="fill-line wide"></span></p>
-    <p>356,789 = <span class="fill-line wide"></span></p>
-  </div>
-  <p class="note">
-    Break numbers into segments (thousands, millions). E.g., <em>156,000</em> = <em>ciento cincuenta y seis mil</em>.
-  </p>
-</div>
-
-<div class="section">
-  <h2>9. Study Tips</h2>
-  <ul>
-    <li><strong>Drill Vocabulary:</strong> Make flashcards for colors, days, months, and commands.</li>
-    <li><strong>Write Out Numbers:</strong> Practice large and small numbers daily.</li>
-    <li><strong>Role-Play:</strong> Greet a friend, share your name, tell the time in Spanish, etc.</li>
-    <li><strong>Listen & Spell:</strong> Get a partner to spell words aloud in Spanish; you write them down.</li>
-    <li><strong>Pronunciation:</strong> Focus on vowel sounds and rolling the "r" (if you can).</li>
-  </ul>
-</div>
-
-<p class="note">
-  ¡Buena suerte! (Good luck!)
-</p>
 
 </body>
 </html>

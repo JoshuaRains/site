@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bubble Sheet Transcription with Square &amp; Bubble Detection Controls</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    video, canvas { border: 1px solid #ccc; margin-top: 10px; }
+    #controls { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+    .control-group { margin-bottom: 10px; }
+    label { margin-right: 10px; }
+    pre { background: #f9f9f9; padding: 10px; }
+  </style>
+  <!-- Load OpenCV.js version 3.4.0 -->
+  <script async src="https://docs.opencv.org/3.4.0/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+</head>
+<body>
+  <h1>Bubble Sheet Transcription with Square &amp; Bubble Detection Controls</h1>
+  
+  <!-- Camera and Capture Section -->
+  <div id="camera-section">
+    <label for="cameraSelect">Choose Camera:</label>
+    <select id="cameraSelect"></select>
+    <br/><br/>
+    <video id="video" autoplay playsinline width="640" height="480"></video>
+    <br/><br/>
+    <button id="captureButton">Capture Image</button>
+  </div>
+  
+  <!-- Interactive Controls -->
+  <div id="controls">
+    <h2>Adjust Processing Parameters</h2>
+    <!-- Thresholding Controls -->
+    <div class="control-group">
+      <input type="checkbox" id="adaptiveCheckbox" />
+      <label for="adaptiveCheckbox">Use Adaptive Thresholding</label>
+    </div>
+    <div class="control-group" id="fixedThresholdGroup">
+      <label for="fixedThreshold">Fixed Threshold: <span id="fixedThresholdValue">128</span></label>
+      <input type="range" id="fixedThreshold" min="0" max="255" value="128">
+    </div>
+    <div class="control-group" id="adaptiveGroup" style="display: none;">
+      <label for="adaptiveBlockSize">Adaptive Block Size (odd): <span id="adaptiveBlockSizeValue">11</span></label>
+      <input type="range" id="adaptiveBlockSize" min="3" max="31" value="11" step="2">
+      <br/>
+      <label for="adaptiveConstant">Adaptive Constant: <span id="adaptiveConstantValue">2</span></label>
+      <input type="range" id="adaptiveConstant" min="0" max="10" value="2">
+    </div>
+    <!-- Bubble Detection Controls -->
+    <div class="control-group">
+      <label for="minContourArea">Minimum Contour Area (Bubbles): <span id="minContourAreaValue">77</span></label>
+      <input type="range" id="minContourArea" min="0" max="1000" value="77">
+    </div>
+    <div class="control-group">
+      <label for="minCircularity">Minimum Circularity (Bubbles): <span id="minCircularityValue">0.84</span></label>
+      <input type="range" id="minCircularity" min="0.5" max="1.0" value="0.84" step="0.01">
+    </div>
+    <!-- Square (Fiducial) Detection Controls -->
+    <div class="control-group">
+      <label for="minSquareArea">Minimum Square Area: <span id="minSquareAreaValue">5000</span></label>
+      <input type="range" id="minSquareArea" min="0" max="1000" value="1000" step="1">
+    </div>
+    <div class="control-group">
+      <label for="maxSquareCosine">Max Square Cosine: <span id="maxSquareCosineValue">0.3</span></label>
+      <input type="range" id="maxSquareCosine" min="0.1" max="0.5" value="0.3" step="0.01">
+    </div>
+  </div>
+  
+  <!-- Display Processed Images -->
+  <h2>Grayscale Image</h2>
+  <canvas id="grayCanvas" width="640" height="480"></canvas>
+  <h2>Binary (Thresholded) Image</h2>
+  <canvas id="binaryCanvas" width="640" height="480"></canvas>
+  <h2>Detection Results (Green Circles &amp; Red Squares)</h2>
+  <canvas id="contourCanvas" width="640" height="480"></canvas>
+  
+  <h2>Transcribed Results</h2>
+  <pre id="transcription">No transcription yet.</pre>
+  
+  <div id="result"></div>
+  
+  <!-- Hidden Canvas to Store the Captured Image -->
+  <canvas id="captureCanvas" width="640" height="480" style="display:none;"></canvas>
+  
+  <script>
+    let cvReady = false;
+    function onOpenCvReady() {
+      cvReady = true;
+      document.getElementById('result').textContent = 'OpenCV.js is ready.';
+    }
+    
+    // Initialize camera and populate camera selection
+    async function initCamera() {
+      const video = document.getElementById('video');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        const cameraSelect = document.getElementById('cameraSelect');
+        cameraSelect.innerHTML = '';
+        videoDevices.forEach(device => {
+          const option = document.createElement('option');
+          option.value = device.deviceId;
+          option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+          cameraSelect.appendChild(option);
+        });
+      } catch (err) {
+        console.error('Error accessing camera:', err);
+      }
+    }
+    
+    // Switch to a selected camera
+    async function switchCamera(deviceId) {
+      const video = document.getElementById('video');
+      if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+      }
+      try {
+        const constraints = { video: { deviceId: { exact: deviceId } } };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = stream;
+      } catch (err) {
+        console.error('Error switching camera:', err);
+      }
+    }
+    
+    document.getElementById('cameraSelect').addEventListener('change', function(e) {
+      switchCamera(e.target.value);
+    });
+    
+    // Capture the current frame from the video stream
+    document.getElementById('captureButton').addEventListener('click', function() {
+      const video = document.getElementById('video');
+      const captureCanvas = document.getElementById('captureCanvas');
+      const ctx = captureCanvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
+      processImage();
+    });
+    
+    // Helper: compute the cosine of the angle between vectors (pt0->pt1) and (pt0->pt2)
+    function angle(pt1, pt2, pt0) {
+      let dx1 = pt1.x - pt0.x, dy1 = pt1.y - pt0.y;
+      let dx2 = pt2.x - pt0.x, dy2 = pt2.y - pt0.y;
+      let numerator = dx1 * dx2 + dy1 * dy2;
+      let denominator = Math.sqrt((dx1*dx1+dy1*dy1)*(dx2*dx2+dy2*dy2)) + 1e-10;
+      return Math.abs(numerator / denominator);
+    }
+    
+    // Detect squares using contour approximation with interactive parameters.
+    function detectSquares(srcMat, minArea = 5000, maxCosineThreshold = 0.3) {
+      let squares = [];
+      let contours = new cv.MatVector();
+      let hierarchy = new cv.Mat();
+      cv.findContours(srcMat, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
+      for (let i = 0; i < contours.size(); i++) {
+        let contour = contours.get(i);
+        let approx = new cv.Mat();
+        cv.approxPolyDP(contour, approx, 0.02 * cv.arcLength(contour, true), true);
+        // Check for quadrilateral: exactly 4 vertices, sufficient area, and convex.
+        if (approx.rows === 4 && cv.contourArea(approx) > minArea && cv.isContourConvex(approx)) {
+          let maxCosine = 0;
+          let pts = [];
+          for (let j = 0; j < 4; j++) {
+            pts.push(new cv.Point(approx.data32S[j*2], approx.data32S[j*2+1]));
+          }
+          for (let j = 0; j < 4; j++) {
+            let cosine = angle(pts[(j+1)%4], pts[(j+3)%4], pts[j]);
+            maxCosine = Math.max(maxCosine, cosine);
+          }
+          if (maxCosine < maxCosineThreshold) {
+            squares.push(pts);
+          }
+        }
+        approx.delete();
+        contour.delete();
+      }
+      hierarchy.delete();
+      contours.delete();
+      return squares;
+    }
+    
+    // Draw squares on the given mat in red.
+    function drawSquares(squares, mat) {
+      squares.forEach(pts => {
+        for (let j = 0; j < 4; j++) {
+          let pt1 = pts[j], pt2 = pts[(j+1)%4];
+          cv.line(mat, pt1, pt2, new cv.Scalar(255, 0, 0, 255), 2);
+        }
+      });
+    }
+    
+    // Process the captured image: threshold, detect bubbles and squares, then transcribe.
+    function processImage() {
+      const captureCanvas = document.getElementById('captureCanvas');
+      if (captureCanvas.getContext('2d').getImageData(0,0,1,1).data[3] === 0) {
+        document.getElementById('result').textContent = 'Please capture an image first.';
+        return;
+      }
+      
+      let src = cv.imread(captureCanvas);
+      let gray = new cv.Mat();
+      cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+      
+      // Create binary image using inverted thresholding.
+      let binary = new cv.Mat();
+      const useAdaptive = document.getElementById('adaptiveCheckbox').checked;
+      if (useAdaptive) {
+        let blockSize = parseInt(document.getElementById('adaptiveBlockSize').value);
+        if (blockSize % 2 === 0) blockSize++;
+        let adaptiveConstant = parseInt(document.getElementById('adaptiveConstant').value);
+        cv.adaptiveThreshold(gray, binary, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                             cv.THRESH_BINARY_INV, blockSize, adaptiveConstant);
+      } else {
+        let fixedThreshold = parseInt(document.getElementById('fixedThreshold').value);
+        cv.threshold(gray, binary, fixedThreshold, 255, cv.THRESH_BINARY_INV);
+      }
+      
+      // Show grayscale and binary images.
+      cv.imshow('grayCanvas', gray);
+      cv.imshow('binaryCanvas', binary);
+      
+      // Prepare a color image for drawing detections.
+      let detectionMat = new cv.Mat();
+      cv.cvtColor(binary, detectionMat, cv.COLOR_GRAY2RGBA);
+      
+      // --- Bubble Detection ---
+      let contours = new cv.MatVector();
+      let hierarchy = new cv.Mat();
+      cv.findContours(binary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+      let minContourArea = parseInt(document.getElementById('minContourArea').value);
+      let minCircularity = parseFloat(document.getElementById('minCircularity').value);
+      let detectedCircles = [];
+      for (let i = 0; i < contours.size(); i++) {
+        let cnt = contours.get(i);
+        let area = cv.contourArea(cnt);
+        if (area > minContourArea) {
+          let perimeter = cv.arcLength(cnt, true);
+          let circularity = perimeter === 0 ? 0 : 4 * Math.PI * area / (perimeter * perimeter);
+          if (circularity >= minCircularity) {
+            let rect = cv.boundingRect(cnt);
+            let centerX = rect.x + rect.width / 2;
+            let centerY = rect.y + rect.height / 2;
+            let radius = Math.round(Math.min(rect.width, rect.height) / 2);
+            detectedCircles.push({cx: centerX, cy: centerY, radius: radius});
+            cv.circle(detectionMat, new cv.Point(centerX, centerY), radius, new cv.Scalar(0,255,0,255), 2);
+          }
+        }
+        cnt.delete();
+      }
+      
+      // --- Square Detection ---
+      // Get interactive square detection parameters.
+      let minSquareArea = parseInt(document.getElementById('minSquareArea').value);
+      let maxSquareCosine = parseFloat(document.getElementById('maxSquareCosine').value);
+      let squares = detectSquares(binary, minSquareArea, maxSquareCosine);
+      drawSquares(squares, detectionMat);
+      
+      // Show final detection results (bubbles in green and squares in red)
+      cv.imshow('contourCanvas', detectionMat);
+      
+      // Transcribe detected bubbles into answers.
+      let answers = transcribeResults(detectedCircles);
+      let transcriptionText = "";
+      for (let i = 0; i < answers.length; i++) {
+        transcriptionText += (i+1) + ": " + answers[i] + "\n";
+      }
+      document.getElementById('transcription').textContent = transcriptionText;
+      
+      // Cleanup
+      src.delete(); gray.delete(); binary.delete(); detectionMat.delete();
+      contours.delete(); hierarchy.delete();
+      
+      document.getElementById('result').textContent = 'Processing complete.';
+    }
+    
+    // Transcribe bubbles into text answers based on assumed layout.
+    function transcribeResults(circles) {
+      let answers = new Array(20).fill("Blank");
+      const leftLetterPositions = [32, 96, 160, 224, 288];    // Expected centers for left column (A–E)
+      const rightLetterPositions = [352, 416, 480, 544, 608];  // Expected centers for right column (A–E)
+      const rowHeight = 480 / 10; // 48 pixels per row
+      circles.forEach(circle => {
+        if (circle.cx < 320) {
+          let row = Math.floor(circle.cy / rowHeight);
+          let questionNum = row + 1;
+          let bestIdx = 0, bestDiff = Math.abs(circle.cx - leftLetterPositions[0]);
+          for (let i = 1; i < leftLetterPositions.length; i++) {
+            let diff = Math.abs(circle.cx - leftLetterPositions[i]);
+            if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+          }
+          answers[questionNum - 1] = String.fromCharCode("A".charCodeAt(0) + bestIdx);
+        } else {
+          let row = Math.floor(circle.cy / rowHeight);
+          let questionNum = row + 11;
+          let bestIdx = 0, bestDiff = Math.abs(circle.cx - rightLetterPositions[0]);
+          for (let i = 1; i < rightLetterPositions.length; i++) {
+            let diff = Math.abs(circle.cx - rightLetterPositions[i]);
+            if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+          }
+          answers[questionNum - 1] = String.fromCharCode("A".charCodeAt(0) + bestIdx);
+        }
+      });
+      return answers;
+    }
+    
+    // Update threshold UI visibility and reprocess if an image exists.
+    function updateThresholdUI() {
+      const useAdaptive = document.getElementById('adaptiveCheckbox').checked;
+      document.getElementById('adaptiveGroup').style.display = useAdaptive ? 'block' : 'none';
+      document.getElementById('fixedThresholdGroup').style.display = useAdaptive ? 'none' : 'block';
+      if (document.getElementById('captureCanvas').getContext('2d').getImageData(0,0,1,1).data[3] !== 0) {
+        processImage();
+      }
+    }
+    
+    // Event listeners for interactive controls.
+    document.getElementById('adaptiveCheckbox').addEventListener('change', updateThresholdUI);
+    document.getElementById('fixedThreshold').addEventListener('input', function() {
+      document.getElementById('fixedThresholdValue').textContent = this.value;
+      processImage();
+    });
+    document.getElementById('adaptiveBlockSize').addEventListener('input', function() {
+      document.getElementById('adaptiveBlockSizeValue').textContent = this.value;
+      processImage();
+    });
+    document.getElementById('adaptiveConstant').addEventListener('input', function() {
+      document.getElementById('adaptiveConstantValue').textContent = this.value;
+      processImage();
+    });
+    document.getElementById('minContourArea').addEventListener('input', function() {
+      document.getElementById('minContourAreaValue').textContent = this.value;
+      processImage();
+    });
+    document.getElementById('minCircularity').addEventListener('input', function() {
+      document.getElementById('minCircularityValue').textContent = parseFloat(this.value).toFixed(2);
+      processImage();
+    });
+    document.getElementById('minSquareArea').addEventListener('input', function() {
+      document.getElementById('minSquareAreaValue').textContent = this.value;
+      processImage();
+    });
+    document.getElementById('maxSquareCosine').addEventListener('input', function() {
+      document.getElementById('maxSquareCosineValue').textContent = parseFloat(this.value).toFixed(2);
+      processImage();
+    });
+    
+    window.addEventListener('load', initCamera);
+  </script>
+</body>
+</html>

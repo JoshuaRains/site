@@ -2,351 +2,485 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bubble Sheet Transcription with Square &amp; Bubble Detection Controls</title>
+  <title>Bubble Sheet OMR with Camera & File Input (Responsive Layout)</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    video, canvas { border: 1px solid #ccc; margin-top: 10px; }
-    #controls { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
-    .control-group { margin-bottom: 10px; }
-    label { margin-right: 10px; }
-    pre { background: #f9f9f9; padding: 10px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      text-align: center;
+    }
+    /* Container for global controls */
+    #globalControls {
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin: 10px auto;
+      max-width: 300px;
+    }
+    /* Flex container for images */
+    #imagesContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    /* Each image container */
+    .image-container {
+      border: 1px solid #ccc;
+      padding: 10px;
+      max-width: 300px;
+      flex: 1 1 auto;
+    }
+    .image-container h3 {
+      margin-bottom: 10px;
+    }
+    /* Make canvases responsive */
+    canvas {
+      width: 100%;
+      height: auto;
+      border: 1px solid #999;
+    }
+    /* Container for sliders under each image */
+    .sliders {
+      margin-top: 10px;
+    }
+    .sliders .input-group {
+      text-align: center;
+    }
+    /* Output transcription */
+    #output {
+      background: #f0f0f0;
+      padding: 10px;
+      display: inline-block;
+      text-align: left;
+      margin-top: 20px;
+    }
+    /* Source selection styling */
+    #sourceSelection {
+      margin-bottom: 20px;
+    }
+    #cameraContainer, #fileContainer {
+      margin-bottom: 20px;
+    }
+    /* Hide the hidden capture canvas */
+    #captureCanvas {
+      display: none;
+    }
   </style>
   <!-- Load OpenCV.js version 3.4.0 -->
-  <script async src="https://docs.opencv.org/3.4.0/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+  <script async src="https://docs.opencv.org/3.4.0/opencv.js" 
+          onload="onOpenCvReady();" type="text/javascript"></script>
 </head>
 <body>
-  <h1>Bubble Sheet Transcription with Square &amp; Bubble Detection Controls</h1>
+  <h1>Bubble Sheet OMR with Camera & File Input (Responsive Layout)</h1>
   
-  <!-- Camera and Capture Section -->
-  <div id="camera-section">
-    <label for="cameraSelect">Choose Camera:</label>
-    <select id="cameraSelect"></select>
-    <br/><br/>
-    <video id="video" autoplay playsinline width="640" height="480"></video>
-    <br/><br/>
-    <button id="captureButton">Capture Image</button>
+  <!-- Source Selection: Choose between Camera and Import Image -->
+  <div id="sourceSelection" class="input-group">
+    <label><input type="radio" name="source" value="camera" id="sourceCamera"> Use Camera</label>
+    &nbsp;&nbsp;
+    <label><input type="radio" name="source" value="file" id="sourceFile" checked> Import Image</label>
   </div>
   
-  <!-- Interactive Controls -->
-  <div id="controls">
-    <h2>Adjust Processing Parameters</h2>
-    <!-- Thresholding Controls -->
-    <div class="control-group">
-      <input type="checkbox" id="adaptiveCheckbox" />
-      <label for="adaptiveCheckbox">Use Adaptive Thresholding</label>
-    </div>
-    <div class="control-group" id="fixedThresholdGroup">
-      <label for="fixedThreshold">Fixed Threshold: <span id="fixedThresholdValue">128</span></label>
-      <input type="range" id="fixedThreshold" min="0" max="255" value="128">
-    </div>
-    <div class="control-group" id="adaptiveGroup" style="display: none;">
-      <label for="adaptiveBlockSize">Adaptive Block Size (odd): <span id="adaptiveBlockSizeValue">11</span></label>
-      <input type="range" id="adaptiveBlockSize" min="3" max="31" value="11" step="2">
-      <br/>
-      <label for="adaptiveConstant">Adaptive Constant: <span id="adaptiveConstantValue">2</span></label>
-      <input type="range" id="adaptiveConstant" min="0" max="10" value="2">
-    </div>
-    <!-- Bubble Detection Controls -->
-    <div class="control-group">
-      <label for="minContourArea">Minimum Contour Area (Bubbles): <span id="minContourAreaValue">77</span></label>
-      <input type="range" id="minContourArea" min="0" max="1000" value="77">
-    </div>
-    <div class="control-group">
-      <label for="minCircularity">Minimum Circularity (Bubbles): <span id="minCircularityValue">0.84</span></label>
-      <input type="range" id="minCircularity" min="0.5" max="1.0" value="0.84" step="0.01">
-    </div>
-    <!-- Square (Fiducial) Detection Controls -->
-    <div class="control-group">
-      <label for="minSquareArea">Minimum Square Area: <span id="minSquareAreaValue">5000</span></label>
-      <input type="range" id="minSquareArea" min="0" max="1000" value="1000" step="1">
-    </div>
-    <div class="control-group">
-      <label for="maxSquareCosine">Max Square Cosine: <span id="maxSquareCosineValue">0.3</span></label>
-      <input type="range" id="maxSquareCosine" min="0.1" max="0.5" value="0.3" step="0.01">
+  <!-- Camera Container -->
+  <div id="cameraContainer" style="display: none;" class="input-group">
+    <video id="videoSource" autoplay playsinline width="600" height="800"></video>
+    <br>
+    <button id="captureFromCameraButton">Capture from Camera</button>
+  </div>
+  
+  <!-- File Container -->
+  <div id="fileContainer" class="input-group">
+    <input type="file" id="fileInput" accept="image/*">
+  </div>
+  
+  <!-- Global Controls -->
+  <div id="globalControls">
+    <!-- Global slider: Number of rows per column (each column's rows) -->
+    <div class="input-group">
+      <label for="numQuestions">Rows per Column: <span id="numQuestionsValue">10</span></label>
+      <input type="range" id="numQuestions" min="5" max="30" value="10">
     </div>
   </div>
   
-  <!-- Display Processed Images -->
-  <h2>Grayscale Image</h2>
-  <canvas id="grayCanvas" width="640" height="480"></canvas>
-  <h2>Binary (Thresholded) Image</h2>
-  <canvas id="binaryCanvas" width="640" height="480"></canvas>
-  <h2>Detection Results (Green Circles &amp; Red Squares)</h2>
-  <canvas id="contourCanvas" width="640" height="480"></canvas>
+  <!-- Images container -->
+  <div id="imagesContainer">
+    <!-- Original Image Container -->
+    <div class="image-container">
+      <h3>Original</h3>
+      <canvas id="originalCanvas" width="600" height="800"></canvas>
+    </div>
+    <!-- Warped Image Container -->
+    <div class="image-container">
+      <h3>Warped</h3>
+      <canvas id="warpedCanvas" width="600" height="800"></canvas>
+    </div>
+    <!-- Threshold Image Container -->
+    <div class="image-container">
+      <h3>Threshold</h3>
+      <canvas id="threshCanvas" width="600" height="800"></canvas>
+      <div class="sliders">
+        <div class="input-group">
+          <input type="checkbox" id="manualThresholdCheckbox">
+          <label for="manualThresholdCheckbox">Manual Threshold</label>
+        </div>
+        <div class="input-group" id="manualThresholdGroup" style="display: none;">
+          <label for="thresholdValue">Threshold: <span id="thresholdValueDisplay">128</span></label>
+          <input type="range" id="thresholdValue" min="0" max="255" value="128">
+        </div>
+      </div>
+    </div>
+    <!-- Detection Image Container -->
+    <div class="image-container">
+      <h3>Detection</h3>
+      <canvas id="detectionCanvas" width="600" height="800"></canvas>
+      <div class="sliders">
+        <div class="input-group">
+          <label for="minBubbleSize">Min Bubble Size: <span id="minBubbleSizeValue">10</span></label>
+          <input type="range" id="minBubbleSize" min="5" max="50" value="10" step="1">
+        </div>
+        <div class="input-group">
+          <label for="minCircularityDet">Min Circularity: <span id="minCircularityDetValue">0.60</span></label>
+          <input type="range" id="minCircularityDet" min="0.5" max="1.0" value="0.60" step="0.01">
+        </div>
+        <div class="input-group">
+          <label for="fillThreshold">Fill Threshold: <span id="fillThresholdValue">150</span></label>
+          <input type="range" id="fillThreshold" min="0" max="300" value="150" step="1">
+        </div>
+      </div>
+    </div>
+  </div>
   
-  <h2>Transcribed Results</h2>
-  <pre id="transcription">No transcription yet.</pre>
+  <h2>Transcribed Answers</h2>
+  <pre id="output">No transcription yet.</pre>
   
-  <div id="result"></div>
-  
-  <!-- Hidden Canvas to Store the Captured Image -->
-  <canvas id="captureCanvas" width="640" height="480" style="display:none;"></canvas>
+  <!-- Hidden canvas for image capture (not displayed) -->
+  <canvas id="captureCanvas" width="600" height="800"></canvas>
   
   <script>
-    let cvReady = false;
-    function onOpenCvReady() {
-      cvReady = true;
-      document.getElementById('result').textContent = 'OpenCV.js is ready.';
-    }
-    
-    // Initialize camera and populate camera selection
-    async function initCamera() {
-      const video = document.getElementById('video');
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        const cameraSelect = document.getElementById('cameraSelect');
-        cameraSelect.innerHTML = '';
-        videoDevices.forEach(device => {
-          const option = document.createElement('option');
-          option.value = device.deviceId;
-          option.text = device.label || `Camera ${cameraSelect.length + 1}`;
-          cameraSelect.appendChild(option);
-        });
-      } catch (err) {
-        console.error('Error accessing camera:', err);
-      }
-    }
-    
-    // Switch to a selected camera
-    async function switchCamera(deviceId) {
-      const video = document.getElementById('video');
-      if (video.srcObject) {
-        video.srcObject.getTracks().forEach(track => track.stop());
-      }
-      try {
-        const constraints = { video: { deviceId: { exact: deviceId } } };
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        video.srcObject = stream;
-      } catch (err) {
-        console.error('Error switching camera:', err);
-      }
-    }
-    
-    document.getElementById('cameraSelect').addEventListener('change', function(e) {
-      switchCamera(e.target.value);
-    });
-    
-    // Capture the current frame from the video stream
-    document.getElementById('captureButton').addEventListener('click', function() {
-      const video = document.getElementById('video');
-      const captureCanvas = document.getElementById('captureCanvas');
-      const ctx = captureCanvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
-      processImage();
-    });
-    
-    // Helper: compute the cosine of the angle between vectors (pt0->pt1) and (pt0->pt2)
-    function angle(pt1, pt2, pt0) {
-      let dx1 = pt1.x - pt0.x, dy1 = pt1.y - pt0.y;
-      let dx2 = pt2.x - pt0.x, dy2 = pt2.y - pt0.y;
-      let numerator = dx1 * dx2 + dy1 * dy2;
-      let denominator = Math.sqrt((dx1*dx1+dy1*dy1)*(dx2*dx2+dy2*dy2)) + 1e-10;
-      return Math.abs(numerator / denominator);
-    }
-    
-    // Detect squares using contour approximation with interactive parameters.
-    function detectSquares(srcMat, minArea = 5000, maxCosineThreshold = 0.3) {
-      let squares = [];
-      let contours = new cv.MatVector();
-      let hierarchy = new cv.Mat();
-      cv.findContours(srcMat, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
-      for (let i = 0; i < contours.size(); i++) {
-        let contour = contours.get(i);
-        let approx = new cv.Mat();
-        cv.approxPolyDP(contour, approx, 0.02 * cv.arcLength(contour, true), true);
-        // Check for quadrilateral: exactly 4 vertices, sufficient area, and convex.
-        if (approx.rows === 4 && cv.contourArea(approx) > minArea && cv.isContourConvex(approx)) {
-          let maxCosine = 0;
-          let pts = [];
-          for (let j = 0; j < 4; j++) {
-            pts.push(new cv.Point(approx.data32S[j*2], approx.data32S[j*2+1]));
-          }
-          for (let j = 0; j < 4; j++) {
-            let cosine = angle(pts[(j+1)%4], pts[(j+3)%4], pts[j]);
-            maxCosine = Math.max(maxCosine, cosine);
-          }
-          if (maxCosine < maxCosineThreshold) {
-            squares.push(pts);
-          }
-        }
-        approx.delete();
-        contour.delete();
-      }
-      hierarchy.delete();
-      contours.delete();
-      return squares;
-    }
-    
-    // Draw squares on the given mat in red.
-    function drawSquares(squares, mat) {
-      squares.forEach(pts => {
-        for (let j = 0; j < 4; j++) {
-          let pt1 = pts[j], pt2 = pts[(j+1)%4];
-          cv.line(mat, pt1, pt2, new cv.Scalar(255, 0, 0, 255), 2);
+    document.addEventListener("DOMContentLoaded", function() {
+      let cvReady = false;
+      window.onOpenCvReady = function() {
+        cvReady = true;
+        console.log("OpenCV.js is ready");
+      };
+      
+      // Toggle source display based on radio button selection.
+      document.getElementById("sourceCamera").addEventListener("change", function() {
+        if (this.checked) {
+          document.getElementById("cameraContainer").style.display = "block";
+          document.getElementById("fileContainer").style.display = "none";
+          startCamera();
         }
       });
-    }
-    
-    // Process the captured image: threshold, detect bubbles and squares, then transcribe.
-    function processImage() {
-      const captureCanvas = document.getElementById('captureCanvas');
-      if (captureCanvas.getContext('2d').getImageData(0,0,1,1).data[3] === 0) {
-        document.getElementById('result').textContent = 'Please capture an image first.';
-        return;
-      }
-      
-      let src = cv.imread(captureCanvas);
-      let gray = new cv.Mat();
-      cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-      
-      // Create binary image using inverted thresholding.
-      let binary = new cv.Mat();
-      const useAdaptive = document.getElementById('adaptiveCheckbox').checked;
-      if (useAdaptive) {
-        let blockSize = parseInt(document.getElementById('adaptiveBlockSize').value);
-        if (blockSize % 2 === 0) blockSize++;
-        let adaptiveConstant = parseInt(document.getElementById('adaptiveConstant').value);
-        cv.adaptiveThreshold(gray, binary, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, 
-                             cv.THRESH_BINARY_INV, blockSize, adaptiveConstant);
-      } else {
-        let fixedThreshold = parseInt(document.getElementById('fixedThreshold').value);
-        cv.threshold(gray, binary, fixedThreshold, 255, cv.THRESH_BINARY_INV);
-      }
-      
-      // Show grayscale and binary images.
-      cv.imshow('grayCanvas', gray);
-      cv.imshow('binaryCanvas', binary);
-      
-      // Prepare a color image for drawing detections.
-      let detectionMat = new cv.Mat();
-      cv.cvtColor(binary, detectionMat, cv.COLOR_GRAY2RGBA);
-      
-      // --- Bubble Detection ---
-      let contours = new cv.MatVector();
-      let hierarchy = new cv.Mat();
-      cv.findContours(binary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-      let minContourArea = parseInt(document.getElementById('minContourArea').value);
-      let minCircularity = parseFloat(document.getElementById('minCircularity').value);
-      let detectedCircles = [];
-      for (let i = 0; i < contours.size(); i++) {
-        let cnt = contours.get(i);
-        let area = cv.contourArea(cnt);
-        if (area > minContourArea) {
-          let perimeter = cv.arcLength(cnt, true);
-          let circularity = perimeter === 0 ? 0 : 4 * Math.PI * area / (perimeter * perimeter);
-          if (circularity >= minCircularity) {
-            let rect = cv.boundingRect(cnt);
-            let centerX = rect.x + rect.width / 2;
-            let centerY = rect.y + rect.height / 2;
-            let radius = Math.round(Math.min(rect.width, rect.height) / 2);
-            detectedCircles.push({cx: centerX, cy: centerY, radius: radius});
-            cv.circle(detectionMat, new cv.Point(centerX, centerY), radius, new cv.Scalar(0,255,0,255), 2);
-          }
-        }
-        cnt.delete();
-      }
-      
-      // --- Square Detection ---
-      // Get interactive square detection parameters.
-      let minSquareArea = parseInt(document.getElementById('minSquareArea').value);
-      let maxSquareCosine = parseFloat(document.getElementById('maxSquareCosine').value);
-      let squares = detectSquares(binary, minSquareArea, maxSquareCosine);
-      drawSquares(squares, detectionMat);
-      
-      // Show final detection results (bubbles in green and squares in red)
-      cv.imshow('contourCanvas', detectionMat);
-      
-      // Transcribe detected bubbles into answers.
-      let answers = transcribeResults(detectedCircles);
-      let transcriptionText = "";
-      for (let i = 0; i < answers.length; i++) {
-        transcriptionText += (i+1) + ": " + answers[i] + "\n";
-      }
-      document.getElementById('transcription').textContent = transcriptionText;
-      
-      // Cleanup
-      src.delete(); gray.delete(); binary.delete(); detectionMat.delete();
-      contours.delete(); hierarchy.delete();
-      
-      document.getElementById('result').textContent = 'Processing complete.';
-    }
-    
-    // Transcribe bubbles into text answers based on assumed layout.
-    function transcribeResults(circles) {
-      let answers = new Array(20).fill("Blank");
-      const leftLetterPositions = [32, 96, 160, 224, 288];    // Expected centers for left column (A–E)
-      const rightLetterPositions = [352, 416, 480, 544, 608];  // Expected centers for right column (A–E)
-      const rowHeight = 480 / 10; // 48 pixels per row
-      circles.forEach(circle => {
-        if (circle.cx < 320) {
-          let row = Math.floor(circle.cy / rowHeight);
-          let questionNum = row + 1;
-          let bestIdx = 0, bestDiff = Math.abs(circle.cx - leftLetterPositions[0]);
-          for (let i = 1; i < leftLetterPositions.length; i++) {
-            let diff = Math.abs(circle.cx - leftLetterPositions[i]);
-            if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
-          }
-          answers[questionNum - 1] = String.fromCharCode("A".charCodeAt(0) + bestIdx);
-        } else {
-          let row = Math.floor(circle.cy / rowHeight);
-          let questionNum = row + 11;
-          let bestIdx = 0, bestDiff = Math.abs(circle.cx - rightLetterPositions[0]);
-          for (let i = 1; i < rightLetterPositions.length; i++) {
-            let diff = Math.abs(circle.cx - rightLetterPositions[i]);
-            if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
-          }
-          answers[questionNum - 1] = String.fromCharCode("A".charCodeAt(0) + bestIdx);
+      document.getElementById("sourceFile").addEventListener("change", function() {
+        if (this.checked) {
+          document.getElementById("cameraContainer").style.display = "none";
+          document.getElementById("fileContainer").style.display = "block";
+          stopCamera();
         }
       });
-      return answers;
-    }
-    
-    // Update threshold UI visibility and reprocess if an image exists.
-    function updateThresholdUI() {
-      const useAdaptive = document.getElementById('adaptiveCheckbox').checked;
-      document.getElementById('adaptiveGroup').style.display = useAdaptive ? 'block' : 'none';
-      document.getElementById('fixedThresholdGroup').style.display = useAdaptive ? 'none' : 'block';
-      if (document.getElementById('captureCanvas').getContext('2d').getImageData(0,0,1,1).data[3] !== 0) {
+      
+      // Start the camera stream.
+      let videoStream = null;
+      function startCamera() {
+        const video = document.getElementById("videoSource");
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+              videoStream = stream;
+              video.srcObject = stream;
+              video.play();
+            })
+            .catch(function(err) {
+              console.error("Error accessing camera: " + err);
+            });
+        }
+      }
+      
+      // Stop the camera stream.
+      function stopCamera() {
+        if (videoStream) {
+          videoStream.getTracks().forEach(track => track.stop());
+          videoStream = null;
+        }
+      }
+      
+      // Capture frame from camera.
+      document.getElementById("captureFromCameraButton").addEventListener("click", function() {
+        const video = document.getElementById("videoSource");
+        const captureCanvas = document.getElementById("captureCanvas");
+        const ctx = captureCanvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
         processImage();
+      });
+      
+      // Main processing function.
+      function processImage() {
+        if (!cvReady) {
+          alert("OpenCV.js is not ready yet.");
+          return;
+        }
+        
+        // Determine source: camera or file.
+        let source;
+        if (document.getElementById("sourceCamera").checked) {
+          source = document.getElementById("captureCanvas");
+        } else {
+          let fileInput = document.getElementById("fileInput");
+          if (fileInput.files.length === 0) {
+            alert("Please choose an image file.");
+            return;
+          }
+          let file = fileInput.files[0];
+          let img = new Image();
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            img.onload = function() {
+              let captureCanvas = document.getElementById("captureCanvas");
+              let ctx = captureCanvas.getContext("2d");
+              ctx.clearRect(0, 0, captureCanvas.width, captureCanvas.height);
+              ctx.drawImage(img, 0, 0, captureCanvas.width, captureCanvas.height);
+              runPipeline();
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+          return;
+        }
+        runPipeline();
       }
-    }
-    
-    // Event listeners for interactive controls.
-    document.getElementById('adaptiveCheckbox').addEventListener('change', updateThresholdUI);
-    document.getElementById('fixedThreshold').addEventListener('input', function() {
-      document.getElementById('fixedThresholdValue').textContent = this.value;
-      processImage();
+      
+      // The processing pipeline (runs on the image in captureCanvas).
+      function runPipeline() {
+        let captureCanvas = document.getElementById("captureCanvas");
+        let src = cv.imread(captureCanvas);
+        
+        // Step 1: Preprocess the image.
+        let gray = new cv.Mat();
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+        let blurred = new cv.Mat();
+        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+        let edged = new cv.Mat();
+        cv.Canny(blurred, edged, 75, 200);
+        
+        // Step 2: Find the bubble sheet contour (largest 4-point contour).
+        let contours = new cv.MatVector();
+        let hierarchy = new cv.Mat();
+        cv.findContours(edged, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+        console.log("Contours found: " + contours.size());
+        let contourArray = [];
+        for (let i = 0; i < contours.size(); i++) {
+          contourArray.push(contours.get(i));
+        }
+        contourArray.sort((a, b) => cv.contourArea(b) - cv.contourArea(a));
+        
+        let sheetContour = null;
+        for (let i = 0; i < contourArray.length; i++) {
+          let peri = cv.arcLength(contourArray[i], true);
+          let approx = new cv.Mat();
+          cv.approxPolyDP(contourArray[i], approx, 0.04 * peri, true);
+          if (approx.rows === 4) {
+            sheetContour = approx;
+            break;
+          }
+          approx.delete();
+        }
+        
+        if (sheetContour === null) {
+          document.getElementById("output").textContent = "Could not find bubble sheet contour.";
+          src.delete(); gray.delete(); blurred.delete(); edged.delete();
+          contours.delete(); hierarchy.delete();
+          contourArray.forEach(c => c.delete());
+          return;
+        }
+        
+        // Extract the 4 points.
+        let pts = [];
+        for (let i = 0; i < 4; i++) {
+          pts.push({ x: sheetContour.intAt(i, 0), y: sheetContour.intAt(i, 1) });
+        }
+        sheetContour.delete();
+        contours.delete(); hierarchy.delete();
+        gray.delete(); blurred.delete(); edged.delete();
+        contourArray.forEach(c => c.delete());
+        
+        // Step 3: Perspective transform.
+        let warped = fourPointTransform(src, pts);
+        src.delete();
+        cv.imshow("warpedCanvas", warped);
+        
+        // Step 4: Threshold the warped image.
+        let warpedGray = new cv.Mat();
+        cv.cvtColor(warped, warpedGray, cv.COLOR_RGBA2GRAY);
+        let thresh = new cv.Mat();
+        let useManual = document.getElementById("manualThresholdCheckbox").checked;
+        if (useManual) {
+          let threshVal = parseInt(document.getElementById("thresholdValue").value);
+          cv.threshold(warpedGray, thresh, threshVal, 255, cv.THRESH_BINARY_INV);
+        } else {
+          cv.threshold(warpedGray, thresh, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU);
+        }
+        cv.imshow("threshCanvas", thresh);
+        
+        // Step 5: Bubble Detection.
+        let minBubbleSize = parseInt(document.getElementById("minBubbleSize").value);
+        let minCircularity = parseFloat(document.getElementById("minCircularityDet").value);
+        let numRows = parseInt(document.getElementById("numQuestions").value);
+        let bubblesPerQuestion = 5; // Assuming answers A-E.
+        let fillThreshold = parseInt(document.getElementById("fillThreshold").value);
+        
+        let bubbleContours = new cv.MatVector();
+        let bubbleHierarchy = new cv.Mat();
+        cv.findContours(thresh, bubbleContours, bubbleHierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+        let bubbleList = [];
+        for (let i = 0; i < bubbleContours.size(); i++) {
+          let cnt = bubbleContours.get(i);
+          let rect = cv.boundingRect(cnt);
+          if (rect.width >= minBubbleSize && rect.height >= minBubbleSize) {
+            let area = cv.contourArea(cnt);
+            let perimeter = cv.arcLength(cnt, true);
+            let circularity = perimeter === 0 ? 0 : (4 * Math.PI * area) / (perimeter * perimeter);
+            if (circularity >= minCircularity) {
+              bubbleList.push({ cnt: cnt, rect: rect });
+            } else {
+              cnt.delete();
+            }
+          } else {
+            cnt.delete();
+          }
+        }
+        bubbleHierarchy.delete();
+        bubbleContours.delete();
+        
+        // Separate bubbles into two columns based on warped image width.
+        let leftBubbles = [];
+        let rightBubbles = [];
+        let halfWidth = warped.cols / 2;
+        bubbleList.forEach(obj => {
+          let centerX = obj.rect.x + obj.rect.width / 2;
+          if (centerX < halfWidth) {
+            leftBubbles.push(obj);
+          } else {
+            rightBubbles.push(obj);
+          }
+        });
+        
+        // Sort each column top-to-bottom.
+        leftBubbles.sort((a, b) => a.rect.y - b.rect.y);
+        rightBubbles.sort((a, b) => a.rect.y - b.rect.y);
+        
+        // Prepare a color copy of thresh for drawing detections.
+        let detectionMat = new cv.Mat();
+        cv.cvtColor(thresh, detectionMat, cv.COLOR_GRAY2RGBA);
+        bubbleList.forEach(obj => {
+          let r = Math.round(Math.min(obj.rect.width, obj.rect.height) / 2);
+          let centerX = obj.rect.x + obj.rect.width / 2;
+          let centerY = obj.rect.y + obj.rect.height / 2;
+          cv.circle(detectionMat, new cv.Point(centerX, centerY), r, new cv.Scalar(0, 255, 0, 255), 2);
+        });
+        cv.imshow("detectionCanvas", detectionMat);
+        
+        // Step 6: Group bubbles and transcribe answers.
+        // Expected count per column = numRows * bubblesPerQuestion.
+        let expectedCountPerColumn = numRows * bubblesPerQuestion;
+        let answers = [];
+        if (leftBubbles.length === expectedCountPerColumn && rightBubbles.length === expectedCountPerColumn) {
+          // Process left column (questions 1 to numRows)
+          for (let r = 0; r < numRows; r++) {
+            let row = leftBubbles.slice(r * bubblesPerQuestion, (r + 1) * bubblesPerQuestion);
+            row.sort((a, b) => a.rect.x - b.rect.x);
+            let bubbled = -1;
+            let maxNonZero = 0;
+            for (let i = 0; i < row.length; i++) {
+              let mask = new cv.Mat.zeros(thresh.rows, thresh.cols, cv.CV_8UC1);
+              let contourVec = new cv.MatVector();
+              contourVec.push_back(row[i].cnt);
+              cv.drawContours(mask, contourVec, 0, new cv.Scalar(255), -1);
+              contourVec.delete();
+              let masked = new cv.Mat();
+              cv.bitwise_and(thresh, thresh, masked, mask);
+              let total = cv.countNonZero(masked);
+              if (total > maxNonZero) {
+                maxNonZero = total;
+                bubbled = i;
+              }
+              mask.delete(); masked.delete();
+            }
+            let answer = (bubbled !== -1 && maxNonZero >= fillThreshold) ? String.fromCharCode(65 + bubbled) : "No Response";
+            answers.push(answer);
+          }
+          // Process right column (questions numRows+1 to 2*numRows)
+          for (let r = 0; r < numRows; r++) {
+            let row = rightBubbles.slice(r * bubblesPerQuestion, (r + 1) * bubblesPerQuestion);
+            row.sort((a, b) => a.rect.x - b.rect.x);
+            let bubbled = -1;
+            let maxNonZero = 0;
+            for (let i = 0; i < row.length; i++) {
+              let mask = new cv.Mat.zeros(thresh.rows, thresh.cols, cv.CV_8UC1);
+              let contourVec = new cv.MatVector();
+              contourVec.push_back(row[i].cnt);
+              cv.drawContours(mask, contourVec, 0, new cv.Scalar(255), -1);
+              contourVec.delete();
+              let masked = new cv.Mat();
+              cv.bitwise_and(thresh, thresh, masked, mask);
+              let total = cv.countNonZero(masked);
+              if (total > maxNonZero) {
+                maxNonZero = total;
+                bubbled = i;
+              }
+              mask.delete(); masked.delete();
+            }
+            let answer = (bubbled !== -1 && maxNonZero >= fillThreshold) ? String.fromCharCode(65 + bubbled) : "No Response";
+            answers.push(answer);
+          }
+        } else {
+          answers.push("Error: Detected bubbles do not match expected counts.\nLeft: " + leftBubbles.length + " Right: " + rightBubbles.length);
+        }
+        
+        let outputText = "";
+        for (let i = 0; i < answers.length; i++) {
+          outputText += (i + 1) + ": " + answers[i] + "\n";
+        }
+        document.getElementById("output").textContent = outputText;
+        
+        bubbleList.forEach(obj => { obj.cnt.delete(); });
+        detectionMat.delete(); warped.delete(); warpedGray.delete(); thresh.delete();
+      }
+      
+      // Update controls to re-run processing.
+      document.getElementById("numQuestions").addEventListener("input", function() {
+        document.getElementById("numQuestionsValue").textContent = this.value;
+        if (cvReady) { processImage(); }
+      });
+      
+      document.getElementById("manualThresholdCheckbox").addEventListener("change", function() {
+        let group = document.getElementById("manualThresholdGroup");
+        group.style.display = this.checked ? "block" : "none";
+        if (cvReady) { processImage(); }
+      });
+      
+      document.getElementById("thresholdValue").addEventListener("input", function() {
+        document.getElementById("thresholdValueDisplay").textContent = this.value;
+        if (cvReady) { processImage(); }
+      });
+      
+      document.getElementById("minBubbleSize").addEventListener("input", function() {
+        document.getElementById("minBubbleSizeValue").textContent = this.value;
+        if (cvReady) { processImage(); }
+      });
+      
+      document.getElementById("minCircularityDet").addEventListener("input", function() {
+        document.getElementById("minCircularityDetValue").textContent = parseFloat(this.value).toFixed(2);
+        if (cvReady) { processImage(); }
+      });
+      
+      document.getElementById("fillThreshold").addEventListener("input", function() {
+        document.getElementById("fillThresholdValue").textContent = this.value;
+        if (cvReady) { processImage(); }
+      });
+      
+      document.getElementById("processButton").addEventListener("click", processImage);
     });
-    document.getElementById('adaptiveBlockSize').addEventListener('input', function() {
-      document.getElementById('adaptiveBlockSizeValue').textContent = this.value;
-      processImage();
-    });
-    document.getElementById('adaptiveConstant').addEventListener('input', function() {
-      document.getElementById('adaptiveConstantValue').textContent = this.value;
-      processImage();
-    });
-    document.getElementById('minContourArea').addEventListener('input', function() {
-      document.getElementById('minContourAreaValue').textContent = this.value;
-      processImage();
-    });
-    document.getElementById('minCircularity').addEventListener('input', function() {
-      document.getElementById('minCircularityValue').textContent = parseFloat(this.value).toFixed(2);
-      processImage();
-    });
-    document.getElementById('minSquareArea').addEventListener('input', function() {
-      document.getElementById('minSquareAreaValue').textContent = this.value;
-      processImage();
-    });
-    document.getElementById('maxSquareCosine').addEventListener('input', function() {
-      document.getElementById('maxSquareCosineValue').textContent = parseFloat(this.value).toFixed(2);
-      processImage();
-    });
-    
-    window.addEventListener('load', initCamera);
   </script>
 </body>
 </html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bubble Sheet Grid</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    /* Grid container to arrange 4 sheets in a 2×2 grid */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    /* Overall bubble sheet container */
+    .bubble-sheet {
+      padding: 10px;
+      border: 1px solid #ccc;
+      max-width: 350px;
+      margin: 0 auto;
+      font-family: Arial, sans-serif;
+    }
+    /* Header area styling */
+    .header-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #aaa;
+      margin-bottom: 20px;
+    }
+    .header-area label {
+      font-weight: bold;
+      margin-right: 5px;
+      font-size: 11px;
+    }
+    /* Text inputs: no full outline, only a bottom border */
+    .header-area input {
+      border: none;
+      border-bottom: 1px solid #333;
+      outline: none;
+      padding: 4px;
+      font-size: 1em;
+      background: transparent;
+    }
+    /* Larger input for the Name field */
+    .header-area input.large {
+      width: 220px;
+      font-size: 1.2em;
+    }
+    /* Smaller inputs for Date and Class fields */
+    .header-area input.small {
+      width: 50px;
+      font-size: 0.9em;
+    }
+    /* Two-column layout for questions */
+    .columns {
+      display: flex;
+      gap: 20px;
+    }
+    .column {
+      flex: 1;
+    }
+    /* Question styling */
+    .question {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .question-num {
+      width: 30px;
+      text-align: right;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    /* Bubble container for answer options */
+    .bubble-container {
+      display: flex;
+      gap: 5px;
+    }
+    .bubble-container input[type="radio"] {
+      display: none;
+    }
+    .bubble-container label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border: 1px solid #333;
+      border-radius: 50%;
+      font-size: 0.7em;
+      cursor: pointer;
+    }
+    .bubble-container input[type="radio"]:checked + label {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    (function() {
+      // Create the grid container that will hold 4 bubble sheets
+      const gridContainer = document.createElement('div');
+      gridContainer.className = 'grid-container';
+      
+      // Configuration
+      const totalSheets = 4;            // Total number of bubble sheets
+      const totalQuestions = 20;          // Each sheet has 20 questions
+      const questionsPerColumn = totalQuestions / 2;  // 10 questions per column
+      const bubbleOptions = ['A', 'B', 'C', 'D', 'E'];
+      
+      // Function to create one bubble sheet element
+      function createBubbleSheet() {
+        const bubbleSheet = document.createElement('div');
+        bubbleSheet.className = 'bubble-sheet';
+        
+        // Create header area with Name, Date, and Class fields
+        const headerArea = document.createElement('div');
+        headerArea.className = 'header-area';
+        
+        // Name field (large)
+        const nameLabel = document.createElement('label');
+        nameLabel.textContent = 'Name:';
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.name = 'name';
+        nameInput.className = 'large';
+        
+        // Date field (small)
+        const dateLabel = document.createElement('label');
+        dateLabel.textContent = 'Date:';
+        const dateInput = document.createElement('input');
+        dateInput.type = 'text';
+        dateInput.name = 'date';
+        dateInput.className = 'small';
+        
+        // Class field (small)
+        const classLabel = document.createElement('label');
+        classLabel.textContent = 'Class:';
+        const classInput = document.createElement('input');
+        classInput.type = 'text';
+        classInput.name = 'class';
+        classInput.className = 'small';
+        
+        // Append header elements in order
+        headerArea.appendChild(nameLabel);
+        headerArea.appendChild(nameInput);
+        headerArea.appendChild(dateLabel);
+        headerArea.appendChild(dateInput);
+        headerArea.appendChild(classLabel);
+        headerArea.appendChild(classInput);
+        bubbleSheet.appendChild(headerArea);
+        
+        // Create container for the two columns of questions
+        const columns = document.createElement('div');
+        columns.className = 'columns';
+        
+        // Create two columns of questions
+        for (let col = 0; col < 2; col++) {
+          const column = document.createElement('div');
+          column.className = 'column';
+          const start = col * questionsPerColumn + 1;
+          const end = start + questionsPerColumn - 1;
+          
+          for (let q = start; q <= end; q++) {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            
+            const qNumDiv = document.createElement('div');
+            qNumDiv.className = 'question-num';
+            qNumDiv.textContent = q + '.';
+            questionDiv.appendChild(qNumDiv);
+            
+            const bubbleContainer = document.createElement('div');
+            bubbleContainer.className = 'bubble-container';
+            
+            bubbleOptions.forEach(function(option) {
+              const radio = document.createElement('input');
+              radio.type = 'radio';
+              radio.id = 'q' + q + option;
+              radio.name = 'question' + q;
+              radio.value = option;
+              
+              const label = document.createElement('label');
+              label.setAttribute('for', radio.id);
+              label.textContent = option;
+              
+              bubbleContainer.appendChild(radio);
+              bubbleContainer.appendChild(label);
+            });
+            questionDiv.appendChild(bubbleContainer);
+            column.appendChild(questionDiv);
+          }
+          columns.appendChild(column);
+        }
+        bubbleSheet.appendChild(columns);
+        return bubbleSheet;
+      }
+      
+      // Generate 4 bubble sheets and append them to the grid container
+      for (let i = 0; i < totalSheets; i++) {
+        const sheet = createBubbleSheet();
+        gridContainer.appendChild(sheet);
+      }
+      
+      // Insert the grid container at the top of the document
+      document.body.prepend(gridContainer);
+    })();
+  </script>
+  
+  <!-- Additional page content -->
+</body>
+</html>

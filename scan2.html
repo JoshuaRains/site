@@ -58,11 +58,16 @@
       padding: 10px 20px;
       font-size: 16px;
     }
+    #answerKeyInput {
+      margin-top: 20px;
+    }
   </style>
   <!-- Load OpenCV.js -->
   <script async src="https://docs.opencv.org/3.4.0/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
   <!-- Load jsPDF (for PDF generation) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Load Chart.js (for graph generation) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <h1>Batch Bubble Sheet OMR & PDF Export</h1>
@@ -76,6 +81,10 @@
     <div class="input-group">
       <label for="numQuestions">Rows per Column: <span id="numQuestionsValue">10</span></label>
       <input type="range" id="numQuestions" min="5" max="30" value="10">
+    </div>
+    <div class="input-group" id="answerKeyInput">
+      <label for="answerKey">Answer Key (comma separated):</label>
+      <input type="text" id="answerKey" placeholder="e.g., A,B,C,D,E,A,B,C,D,E">
     </div>
   </div>
   
@@ -116,8 +125,8 @@
           <input type="range" id="minCircularityDet" min="0" max="1.0" value="0.60" step="0.01">
         </div>
         <div class="input-group">
-          <label for="fillThreshold">Fill Threshold: <span id="fillThresholdValue">150</span></label>
-          <input type="range" id="fillThreshold" min="0" max="300" value="150" step="1">
+          <label for="fillThreshold">Fill Threshold: <span id="fillThresholdValue">200</span></label>
+          <input type="range" id="fillThreshold" min="0" max="300" value="200" step="1">
         </div>
       </div>
     </div>
@@ -426,7 +435,6 @@
     
     // Generate a PDF with the results.
     async function generatePDF() {
-      // Using jsPDF (v2+) via the UMD module.
       const { jsPDF } = window.jspdf;
       let doc = new jsPDF();
       let y = 10;
@@ -434,6 +442,11 @@
       doc.text("Bubble Sheet OMR Results", 10, y);
       y += 10;
       doc.setFontSize(10);
+
+      let answerKey = document.getElementById("answerKey").value.split(',');
+      let numQuestions = parseInt(document.getElementById("numQuestions").value);
+      let missedCounts = new Array(numQuestions * 2).fill(0);
+
       allResults.forEach(res => {
         let lines = doc.splitTextToSize("File: " + res.filename, 180);
         doc.text(lines, 10, y);
@@ -441,13 +454,65 @@
         let transLines = doc.splitTextToSize(res.transcription, 180);
         doc.text(transLines, 10, y);
         y += transLines.length * 5 + 5;
-        // Add a page if y is too low.
+
+        let responses = res.transcription.split('\n').filter(line => line.includes(':'));
+        responses.forEach((response, index) => {
+          let answer = response.split(': ')[1].trim();
+          if (answer !== answerKey[index].trim()) {
+            missedCounts[index]++;
+          }
+        });
+
         if (y > 280) {
           doc.addPage();
           y = 10;
         }
       });
-      doc.save("OMR_Results.pdf");
+
+      // Add graph
+      let totalSheets = allResults.length;
+      let missedPercentages = missedCounts.map(count => (count / totalSheets) * 100);
+
+      // Create a canvas element for Chart.js
+      let canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 400;
+      document.body.appendChild(canvas);
+
+      // Generate the bar chart
+      let ctx = canvas.getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: missedPercentages.map((_, index) => `Q${index + 1}`),
+          datasets: [{
+            label: 'Percent Missed',
+            data: missedPercentages,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // Convert the chart to an image and add it to the PDF
+      setTimeout(() => {
+        let dataUrl = canvas.toDataURL('image/png');
+        doc.addPage();
+        doc.setFontSize(14);
+        doc.text("Percent Missed Per Question", 10, 10);
+        doc.addImage(dataUrl, 'PNG', 10, 20, 180, 90);
+        doc.save("OMR_Results.pdf");
+        document.body.removeChild(canvas); // Clean up the canvas element
+      }, 1000);
     }
     
     // Event listeners.

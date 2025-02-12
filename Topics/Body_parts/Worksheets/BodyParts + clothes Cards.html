@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Printable Spanish Conjugation Cards</title>
+    <style>
+        :root {
+            --card-width: 200px; /* Adjust the width of the cards here */
+            --card-height: 100px; /* Adjust the height of the cards here */
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card {
+            width: var(--card-width);
+            height: var(--card-height);
+            border: 2px solid black;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            page-break-inside: avoid; /* Prevent splitting cards across pages */
+            text-align: center;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        /* Ensure cards don't break between pages when printing */
+        @media print {
+            .card {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Optional: Add headers for different sections */
+        .section-header {
+            width: 100%;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Llamar Conjugations -->
+        <div class="card">pie</div>
+        <div class="card">botas</div>
+        <div class="card">chanclas</div>
+        <div class="card">zapatos</div>
+
+        <div class="card">muñeca</div>
+        <div class="card">pulseras</div>
+        <div class="card">reloj</div>
+
+        <div class="card">cuello</div>
+        <div class="card">collar</div>
+        <div class="card">corbata</div>
+
+        <div class="card">piernas</div>
+        <div class="card">pantalones</div>
+        <div class="card">los jeans</div>
+
+        <div class="card">el dedo</div>
+        <div class="card">anillo</div>
+
+        <div class="card">cuello</div>
+        <div class="card">collar</div>
+        <div class="card">corbata</div>
+
+        <div class="card">pecho</div>
+        <div class="card">camiseta</div>
+        <div class="card">suéter</div>
+
+       
+        
+    </div>
+</body>
+</html>

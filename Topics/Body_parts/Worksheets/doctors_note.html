@@ -131,7 +131,6 @@
       width: 100%;
       height: 80px;
       border: none;
-      border-bottom: 2px solid black;
       outline: none;
       font-size: 16px;
       padding: 2px;
@@ -271,7 +270,7 @@
     <!-- Reading Section -->
     <div class="section-title">Reading: The Doctor's Visit Scenario</div>
     <p>
-      Last Tuesday, I had a very unusual accident in Mexico City. While walking through a busy park, I tripped over a stray skateboard and fell into a decorative fountain. I ended up with a bruised arm, a scraped knee, a bump on my head, and even a paper cut on my finger. The injury occurred on February 8th, just a few days ago. I also have a history of allergies to pollen (el pollen). Now, I am here at the doctor's office for a checkup.
+      Last Tuesday, I had a very unusual accident while traveling in Mexico City. While walking through a busy park, I tripped over a stray skateboard and fell into a decorative fountain. I ended up with a bruised arm, a scraped knee, a bump on my head, and even a paper cut on my finger. The injury occurred on February 8th, just a few days ago. I also have a history of allergies to pollen (el pollen). Now, I am here at the doctor's office for a checkup.
     </p>
     
     <!-- Doctor's Office Form in Spanish -->
@@ -288,7 +287,7 @@
       </p>
     </div>
     <div class="question">
-      <p><b>La fecha de la lesión:</b> 
+      <p><b>La fecha del accidente:</b> 
         <input type="text" class="form-input" placeholder="Ej. 15 de mayo">
       </p>
     </div>
@@ -308,6 +307,7 @@
         <label><input type="checkbox"> El dedo</label>
         <label><input type="checkbox"> La rodilla</label>
         <label><input type="checkbox"> El dedo del pie</label>
+        <label><input type="checkbox"> El brazo</label>
       </div>
     </div>
     
@@ -319,8 +319,8 @@
         <label><input type="checkbox"> El dolor</label>
         <label><input type="checkbox"> El resfriado</label>
         <label><input type="checkbox"> La tos</label>
-        <label><input type="checkbox"> El congestionado</label>
-        <label><input type="checkbox"> El mareado</label>
+        <label><input type="checkbox"> congestionado</label>
+        <label><input type="checkbox"> mareado</label>
         <label><input type="checkbox"> La fiebre</label>
       </div>
     </div>
@@ -328,7 +328,7 @@
     <!-- Alergias Input -->
     <div class="question">
       <p><b>Las alergias:</b> 
-        <input type="text" class="form-input" placeholder="Escriba sus alergias">
+        <input type="text" class="form-input" placeholder="">
       </p>
     </div>
     
@@ -340,11 +340,11 @@
         <label><input type="radio" name="embarazada"> No</label>
       </div>
     </div>
-    
+    <div class="divider-line"></div>
     <!-- Injury Explanation -->
     <div class="question">
-      <p><b>Explique brevemente lo sucedido:</b></p>
-      <textarea class="form-textarea" placeholder="Describa lo que pasó"></textarea>
+      <p><b>Write a complete sentence saying that a particular body part is in pain.</b></p>
+      <textarea class="form-textarea" placeholder=""></textarea>
     </div>
     
     <br><br><br>

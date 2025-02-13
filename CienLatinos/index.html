@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Family Feud Teacher Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    .question-container {
+      margin-bottom: 20px;
+    }
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .answer-button {
+      padding: 15px;
+      background: #fff;
+      border: 2px solid #333;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .answer-button:hover {
+      transform: scale(1.05);
+    }
+    /* When an answer has been flipped, show a green background */
+    .answer-button.revealed {
+      background: #a6e22e;
+    }
+    /* A simple click animation */
+    .answer-button.animate {
+      animation: clickAnimation 0.5s ease;
+    }
+    @keyframes clickAnimation {
+      from { transform: scale(0.9); }
+      to { transform: scale(1); }
+    }
+    .controls {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Family Feud Teacher Control</h1>
+  <div class="question-container">
+    <h2 id="questionText"></h2>
+    <div class="answers-grid" id="answersGrid">
+      <!-- Answer buttons will be dynamically inserted here -->
+    </div>
+  </div>
+  <div class="controls">
+    <button onclick="prevQuestion()">Previous Question</button>
+    <button onclick="nextQuestion()">Next Question</button>
+    <button onclick="resetQuestion()">Reset Question</button>
+  </div>
+
+  <script>
+    let boardWindow;
+    window.onload = function() {
+      // Open the student board window.
+      boardWindow = window.open("board.html", "boardWindow", "width=800,height=600");
+      loadQuestion();
+    };
+
+    // An array of questions. Each question contains 8 answers that total 100 points.
+    // Each answer also has a "revealed" flag.
+    const questions = [
+      {
+        question: "Name something you might eat for breakfast.",
+        answers: [
+          { text: "Eggs",      points: 30, revealed: false },
+          { text: "Pancakes",  points: 20, revealed: false },
+          { text: "Cereal",    points: 15, revealed: false },
+          { text: "Toast",     points: 10, revealed: false },
+          { text: "Bacon",     points: 10, revealed: false },
+          { text: "Fruit",     points: 5,  revealed: false },
+          { text: "Oatmeal",   points: 5,  revealed: false },
+          { text: "Coffee",    points: 5,  revealed: false }
+        ]
+      },
+      {
+        question: "Name a popular vacation destination.",
+        answers: [
+          { text: "Beach",       points: 25, revealed: false },
+          { text: "Mountains",   points: 20, revealed: false },
+          { text: "City",        points: 20, revealed: false },
+          { text: "Resort",      points: 15, revealed: false },
+          { text: "Theme Park",  points: 10, revealed: false },
+          { text: "Cruise",      points: 5,  revealed: false },
+          { text: "Countryside", points: 3,  revealed: false },
+          { text: "Skiing",      points: 2,  revealed: false }
+        ]
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    // loadQuestion() updates the teacher’s UI and notifies the board.
+    function loadQuestion() {
+      const questionData = questions[currentQuestionIndex];
+      // Sort answers by point value (highest first)
+      const sortedAnswers = questionData.answers.slice().sort((a, b) => b.points - a.points);
+      // Rearrange into a 2×4 grid in column-major order:
+      // Row 0: sorted[0], sorted[2], sorted[4], sorted[6]
+      // Row 1: sorted[1], sorted[3], sorted[5], sorted[7]
+      const numRows = 2, numCols = 4;
+      const displayAnswers = [];
+      for (let r = 0; r < numRows; r++) {
+        for (let c = 0; c < numCols; c++) {
+          let idx = numRows * c + r;
+          displayAnswers.push(sortedAnswers[idx]);
+        }
+      }
+      // Save this order so both teacher and board use the same ordering.
+      questionData.displayAnswers = displayAnswers;
+
+      // Update question text.
+      document.getElementById("questionText").textContent = questionData.question;
+
+      // Build the answer grid. On the teacher side, all answers are visible.
+      const grid = document.getElementById("answersGrid");
+      grid.innerHTML = "";
+      displayAnswers.forEach((ans, index) => {
+        const btn = document.createElement("div");
+        btn.className = "answer-button";
+        btn.id = "answerBtn" + index;
+        // Always show the answer text and its point value.
+        btn.innerHTML = `<strong>${ans.text}</strong><br>${ans.points}`;
+        // If the answer has already been flipped, add the revealed (green) style.
+        if (ans.revealed) {
+          btn.classList.add("revealed");
+        }
+        // Clicking an answer will reveal it if not already revealed.
+        btn.onclick = function() {
+          if (!ans.revealed) {
+            revealAnswer(index);
+          }
+        };
+        grid.appendChild(btn);
+      });
+
+      // Send the complete question data to the student board.
+      sendUpdateToBoard();
+    }
+
+    // When an answer is clicked, mark it as revealed, animate the teacher’s button,
+    // change its background to green, and notify the board.
+    function revealAnswer(index) {
+      const questionData = questions[currentQuestionIndex];
+      questionData.displayAnswers[index].revealed = true;
+      
+      // Animate the teacher button.
+      const btn = document.getElementById("answerBtn" + index);
+      btn.classList.add("animate");
+      setTimeout(() => {
+        btn.classList.remove("animate");
+      }, 500);
+      
+      // Turn the answer green.
+      btn.classList.add("revealed");
+      
+      // Notify the student board.
+      boardWindow.postMessage({ 
+        type: "reveal", 
+        questionIndex: currentQuestionIndex, 
+        questionData: questionData 
+      }, "*");
+    }
+
+    // Reset the current question so that all answers are hidden.
+    function resetQuestion() {
+      const questionData = questions[currentQuestionIndex];
+      questionData.answers.forEach(ans => ans.revealed = false);
+      loadQuestion();
+    }
+
+    // Navigation functions.
+    function nextQuestion() {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+
+    // Send an "update" message to the board with the current question data.
+    function sendUpdateToBoard() {
+      const questionData = questions[currentQuestionIndex];
+      boardWindow.postMessage({ 
+        type: "update", 
+        questionIndex: currentQuestionIndex, 
+        questionData: questionData 
+      }, "*");
+    }
+  </script>
+</body>
+</html>

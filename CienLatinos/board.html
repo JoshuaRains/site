@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Family Feud Board</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: #fff;
+      padding: 20px;
+    }
+    .question-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .answer-box {
+      background: #444;
+      padding: 15px;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.3;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    /* When an answer is revealed on the board, animate and show full opacity. */
+    .answer-box.revealed {
+      opacity: 1;
+      animation: revealAnimation 0.5s ease;
+    }
+    @keyframes revealAnimation {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="question-container">
+    <h1 id="questionText">Waiting for question...</h1>
+  </div>
+  <div class="answers-grid" id="answersGrid">
+    <!-- Answer boxes will be dynamically inserted here -->
+  </div>
+
+  <script>
+    let currentQuestionIndex = null;
+    let questionData = null;
+
+    // Listen for messages from the teacher window.
+    window.addEventListener("message", function(event) {
+      const data = event.data;
+      if (data.type === "update" || data.type === "reveal") {
+        currentQuestionIndex = data.questionIndex;
+        questionData = data.questionData;
+        updateBoard();
+      }
+    });
+
+    // updateBoard() updates the student board display.
+    function updateBoard() {
+      if (!questionData) return;
+      document.getElementById("questionText").textContent = questionData.question;
+      const grid = document.getElementById("answersGrid");
+      grid.innerHTML = "";
+      // Use the same displayAnswers order.
+      questionData.displayAnswers.forEach((ans, index) => {
+        const box = document.createElement("div");
+        box.className = "answer-box";
+        if (ans.revealed) {
+          box.classList.add("revealed");
+          box.innerHTML = `<strong>${ans.text}</strong><br>${ans.points}`;
+        } else {
+          box.textContent = "-----";
+        }
+        grid.appendChild(box);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -22,6 +22,13 @@
       max-width: 80%;
       max-height: 80%;
     }
+    .auto-score {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+      width: 100%;
+    }
     .question-container {
       text-align: center;
       margin-bottom: 20px;
@@ -56,9 +63,9 @@
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
-    /* Score display row */
+    /* Score display row centered under grid */
     .score-display {
-      margin-top: 20px;
+      margin: 20px auto 0 auto;
       width: 100%;
       max-width: 600px;
       display: flex;
@@ -84,8 +91,8 @@
       z-index: 1000;
     }
     #imageOverlay img {
-      width: 100px;
-      height: 100px;
+      width: 200px;
+      height: 200px;
       object-fit: cover;
     }
   </style>
@@ -93,13 +100,14 @@
 <body>
   <!-- Initially show a placeholder image until the game starts -->
   <img id="placeholder" src="https://via.placeholder.com/400?text=Family+Feud+Game" alt="Placeholder">
-
   <div id="gameContent" style="display: none; width: 100%;">
+    <!-- Automatic score display -->
+    <div class="auto-score" id="autoScore">0</div>
     <div class="question-container">
       <h1 id="questionText">Waiting for question...</h1>
     </div>
     <div class="answers-grid" id="answersGrid">
-      <!-- Answer boxes will be inserted here -->
+      <!-- Answer boxes inserted here -->
     </div>
     <!-- Score display row -->
     <div class="score-display" id="scoreDisplay">
@@ -107,7 +115,6 @@
       <div id="teamB"></div>
     </div>
   </div>
-
   <script>
     let currentQuestionIndex = null;
     let questionData = null;
@@ -137,16 +144,20 @@
       }
     });
 
-    // Shows the game grid and hides the placeholder image.
     function showGameContent() {
       document.getElementById("placeholder").style.display = "none";
       document.getElementById("gameContent").style.display = "block";
     }
 
-    // updateBoard optionally accepts newlyRevealedIndex.
     function updateBoard(newlyRevealedIndex) {
       const grid = document.getElementById("answersGrid");
       document.getElementById("questionText").textContent = questionData.question;
+      // Compute auto score
+      let autoScore = 0;
+      if (questionData.displayAnswers) {
+        questionData.displayAnswers.forEach(ans => { if (ans.revealed) { autoScore += ans.points; } });
+      }
+      document.getElementById("autoScore").textContent = autoScore;
       if (newlyRevealedIndex === undefined) {
         grid.innerHTML = "";
         questionData.displayAnswers.forEach((ans, index) => {
@@ -174,7 +185,6 @@
       }
     }
 
-    // Updates the score display row with team names and scores.
     function updateScoreDisplay(data) {
       const teamA = data.teamA;
       const teamB = data.teamB;
@@ -182,27 +192,18 @@
       document.getElementById("teamB").innerHTML = `<div>${teamB.name}</div><div>${teamB.score}</div>`;
     }
 
-    // Creates a centered overlay containing count placeholder images for 2 seconds.
     function displayOverlayImages(count) {
-      // Remove any existing overlay.
       let overlay = document.getElementById("imageOverlay");
-      if (overlay) {
-        overlay.remove();
-      }
-      // Create a new overlay container.
+      if (overlay) { overlay.remove(); }
       overlay = document.createElement("div");
       overlay.id = "imageOverlay";
-      // Create count number of images.
       for (let i = 0; i < count; i++) {
         const img = document.createElement("img");
-        img.src = "https://via.placeholder.com/100?text=Image";
+        img.src = "../assets/x.png";
         overlay.appendChild(img);
       }
       document.body.appendChild(overlay);
-      // Remove the overlay after 2 seconds.
-      setTimeout(() => {
-        overlay.remove();
-      }, 2000);
+      setTimeout(() => { overlay.remove(); }, 2000);
     }
   </script>
 </body>

@@ -30,11 +30,9 @@
     .answer-button:hover {
       transform: scale(1.05);
     }
-    /* When an answer is flipped, it turns green */
     .answer-button.revealed {
       background: #a6e22e;
     }
-    /* A simple click animation */
     .answer-button.animate {
       animation: clickAnimation 0.5s ease;
     }
@@ -50,7 +48,6 @@
       margin-right: 10px;
       font-size: 16px;
     }
-    /* Styles for the questions text area */
     #questionsInput {
       width: 100%;
       height: 250px;
@@ -61,7 +58,7 @@
       border-radius: 5px;
       box-sizing: border-box;
     }
-    /* Styles for score input section */
+    /* Score input section centered */
     .score-section {
       margin: 20px auto;
       padding: 10px;
@@ -81,9 +78,15 @@
       margin-top: 5px;
       font-size: 16px;
       box-sizing: border-box;
+      display: block;
       margin-left: auto;
       margin-right: auto;
-      display: block;
+    }
+    .score-buttons {
+      margin-top: 10px;
+    }
+    .score-buttons button {
+      margin: 5px;
     }
   </style>
 </head>
@@ -95,21 +98,19 @@
     <button onclick="nextQuestion()">Next Question</button>
     <button onclick="resetQuestion()">Reset Question</button>
     <button onclick="makeStudentFullScreen()">Full Screen Student</button>
-    <!-- New buttons for displaying overlay images on board -->
+    <!-- New buttons for overlay images -->
     <button onclick="showOverlayImages(1)">Show 1 Image</button>
     <button onclick="showOverlayImages(2)">Show 2 Images</button>
     <button onclick="showOverlayImages(3)">Show 3 Images</button>
   </div>
 
-  <!-- Container for the game (question text and answers grid) -->
+  <!-- Game container -->
   <div class="question-container" id="gameContainer">
     <h2 id="questionText"></h2>
-    <div class="answers-grid" id="answersGrid">
-      <!-- Answer buttons inserted here -->
-    </div>
+    <div class="answers-grid" id="answersGrid"></div>
   </div>
 
-  <!-- Score input section for two teams -->
+  <!-- Score input section -->
   <div class="score-section">
     <h3>Team Scores</h3>
     <div>
@@ -124,10 +125,14 @@
       <label for="teamBScore">Team B Points:</label>
       <input type="number" id="teamBScore" placeholder="0" />
     </div>
-    <button style="margin-top:10px;" onclick="updateScores()">Update Scores</button>
+    <div class="score-buttons">
+      <button onclick="awardPointsTo('A')">Award to Team A</button>
+      <button onclick="awardPointsTo('B')">Award to Team B</button>
+      <button onclick="updateScores()">Update Scores</button>
+    </div>
   </div>
 
-  <!-- Text area for pasting questions, pre-populated with two sample questions -->
+  <!-- Pre-populated questions text area -->
   <textarea id="questionsInput">
 Name something you might eat for breakfast.
 Eggs / 30
@@ -136,8 +141,6 @@ Cereal / 15
 Toast / 10
 Bacon / 10
 Fruit / 5
-Oatmeal / 5
-Coffee / 5
 
 Name a popular vacation destination.
 Beach / 25
@@ -156,7 +159,6 @@ Skiing / 2
     let currentQuestionIndex = 0;
 
     window.onload = function() {
-      // Open the student board window.
       boardWindow = window.open("board.html", "boardWindow", "width=800,height=600");
     };
 
@@ -174,92 +176,54 @@ Skiing / 2
     }
 
     // Parses the pasted text into an array of question objects.
-    // It first checks for blank lines to separate blocks.
-    // Each block must have a question (first line) and exactly 8 answer lines.
+    // Each block: first line = question; subsequent non-empty lines = answers ("Answer / point").
+    // Only up to 8 answers per question are used.
     function parseQuestions(text) {
       let qArray = [];
-      if(text.indexOf("\n\n") !== -1) {
-        // Use blank-line separation.
-        const blocks = text.split(/\n\s*\n/).map(block => block.trim()).filter(block => block !== "");
-        blocks.forEach((block, blockIndex) => {
-          const lines = block.split("\n").map(line => line.trim()).filter(line => line !== "");
-          if (lines.length < 9) {
-            alert("Error in question block " + (blockIndex+1) + ": Incomplete question. Need 1 question and 8 answers.");
-            return; // skip this block
-          }
-          const questionText = lines[0];
-          let answers = [];
-          let validBlock = true;
-          for (let i = 1; i <= 8; i++) {
-            const parts = lines[i].split("/");
-            if (parts.length < 2) {
-              alert("Error in question block " + (blockIndex+1) + ": Answer line " + i + " is not in 'Answer / point' format.");
-              validBlock = false;
-              break;
-            }
-            const answerText = parts[0].trim();
-            const points = parseInt(parts[1].trim(), 10);
-            if (isNaN(points)) {
-              alert("Error in question block " + (blockIndex+1) + ": Invalid point value for answer '" + answerText + "'.");
-              validBlock = false;
-              break;
-            }
-            answers.push({ text: answerText, points: points, revealed: false });
-          }
-          if (validBlock) {
-            qArray.push({ question: questionText, answers: answers });
-          }
-        });
-      } else {
-        // Assume sequential blocks of 9 lines.
-        const lines = text.split("\n").map(line => line.trim()).filter(line => line !== "");
-        if (lines.length % 9 !== 0) {
-          alert("The input text does not contain a multiple of 9 non-empty lines. Please check your format.");
-          return [];
+      // Split text into blocks using blank lines.
+      const blocks = text.split(/\n\s*\n/).map(block => block.trim()).filter(block => block !== "");
+      blocks.forEach((block, blockIndex) => {
+        const lines = block.split("\n").map(line => line.trim()).filter(line => line !== "");
+        if (lines.length < 2) {
+          alert("Error in question block " + (blockIndex + 1) + ": Must have a question and at least one answer.");
+          return;
         }
-        for (let i = 0; i < lines.length; i += 9) {
-          const questionText = lines[i];
-          let answers = [];
-          let validBlock = true;
-          for (let j = 1; j < 9; j++) {
-            const parts = lines[i + j].split("/");
-            if (parts.length < 2) {
-              alert("Error in question block starting at line " + (i+1) + ": Answer line " + j + " is not in 'Answer / point' format.");
-              validBlock = false;
-              break;
-            }
-            const answerText = parts[0].trim();
-            const points = parseInt(parts[1].trim(), 10);
-            if (isNaN(points)) {
-              alert("Error in question block starting at line " + (i+1) + ": Invalid point value for answer '" + answerText + "'.");
-              validBlock = false;
-              break;
-            }
-            answers.push({ text: answerText, points: points, revealed: false });
+        const questionText = lines[0];
+        let answers = [];
+        // Use at most 8 answers.
+        for (let i = 1; i < lines.length && i <= 8; i++) {
+          const parts = lines[i].split("/");
+          if (parts.length < 2) {
+            alert("Error in question block " + (blockIndex + 1) + ": Answer line " + i + " is not in 'Answer / point' format.");
+            return;
           }
-          if (validBlock) {
-            qArray.push({ question: questionText, answers: answers });
+          const answerText = parts[0].trim();
+          const points = parseInt(parts[1].trim(), 10);
+          if (isNaN(points)) {
+            alert("Error in question block " + (blockIndex + 1) + ": Invalid point value for answer '" + answerText + "'.");
+            return;
           }
+          answers.push({ text: answerText, points: points, revealed: false });
         }
-      }
+        qArray.push({ question: questionText, answers: answers });
+      });
       return qArray;
     }
 
-    // loadQuestion() sorts the answers (by descending points), then arranges them in a 2‑column, 4‑row grid.
+    // loadQuestion() sorts answers descending by points and arranges them in a 2‑column grid.
     function loadQuestion() {
       const questionData = questions[currentQuestionIndex];
-      // Sort answers descending by points.
       const sortedAnswers = questionData.answers.slice().sort((a, b) => b.points - a.points);
-      // For two columns, four rows, split sorted answers into two groups and interleave.
-      const leftColumn = sortedAnswers.slice(0, 4);
-      const rightColumn = sortedAnswers.slice(4, 8);
-      const displayAnswers = [];
-      for (let i = 0; i < 4; i++) {
-        displayAnswers.push(leftColumn[i]);
-        displayAnswers.push(rightColumn[i]);
+      const n = sortedAnswers.length;
+      const rows = Math.ceil(n / 2);
+      const leftColumn = sortedAnswers.slice(0, rows);
+      const rightColumn = sortedAnswers.slice(rows);
+      let displayAnswers = [];
+      for (let i = 0; i < rows; i++) {
+        if (leftColumn[i]) { displayAnswers.push(leftColumn[i]); }
+        if (rightColumn[i]) { displayAnswers.push(rightColumn[i]); }
       }
       questionData.displayAnswers = displayAnswers;
-
       document.getElementById("questionText").textContent = questionData.question;
       const grid = document.getElementById("answersGrid");
       grid.innerHTML = "";
@@ -272,9 +236,7 @@ Skiing / 2
           btn.classList.add("revealed");
         }
         btn.onclick = function() {
-          if (!ans.revealed) {
-            revealAnswer(index);
-          }
+          if (!ans.revealed) { revealAnswer(index); }
         };
         grid.appendChild(btn);
       });
@@ -284,19 +246,15 @@ Skiing / 2
     function revealAnswer(index) {
       const questionData = questions[currentQuestionIndex];
       questionData.displayAnswers[index].revealed = true;
-      
       const btn = document.getElementById("answerBtn" + index);
       btn.classList.add("animate");
-      setTimeout(() => {
-        btn.classList.remove("animate");
-      }, 500);
+      setTimeout(() => { btn.classList.remove("animate"); }, 500);
       btn.classList.add("revealed");
-      
-      boardWindow.postMessage({ 
-        type: "reveal", 
-        questionIndex: currentQuestionIndex, 
+      boardWindow.postMessage({
+        type: "reveal",
+        questionIndex: currentQuestionIndex,
         revealedIndex: index,
-        questionData: questionData 
+        questionData: questionData
       }, "*");
     }
 
@@ -326,10 +284,10 @@ Skiing / 2
 
     function sendUpdateToBoard() {
       const questionData = questions[currentQuestionIndex];
-      boardWindow.postMessage({ 
-        type: "update", 
-        questionIndex: currentQuestionIndex, 
-        questionData: questionData 
+      boardWindow.postMessage({
+        type: "update",
+        questionIndex: currentQuestionIndex,
+        questionData: questionData
       }, "*");
     }
 
@@ -337,7 +295,6 @@ Skiing / 2
       boardWindow.postMessage({ type: "fullscreen" }, "*");
     }
 
-    // Sends team score updates to the board.
     function updateScores() {
       const teamAName = document.getElementById("teamAName").value || "Team A";
       const teamAScore = document.getElementById("teamAScore").value || "0";
@@ -350,7 +307,35 @@ Skiing / 2
       }, "*");
     }
 
-    // New function to send a command to display overlay images.
+    // Compute the automatic score (sum of revealed answers) for the current question.
+    function computeAutoScore() {
+      const questionData = questions[currentQuestionIndex];
+      let total = 0;
+      if (questionData.displayAnswers) {
+        questionData.displayAnswers.forEach(ans => {
+          if (ans.revealed) { total += ans.points; }
+        });
+      }
+      return total;
+    }
+
+    // Award auto score to a team and update scores.
+    function awardPointsTo(team) {
+      const autoScore = computeAutoScore();
+      if (autoScore === 0) {
+        alert("No points to award (no answers revealed).");
+        return;
+      }
+      if (team === 'A') {
+        const current = parseInt(document.getElementById("teamAScore").value || "0", 10);
+        document.getElementById("teamAScore").value = current + autoScore;
+      } else if (team === 'B') {
+        const current = parseInt(document.getElementById("teamBScore").value || "0", 10);
+        document.getElementById("teamBScore").value = current + autoScore;
+      }
+      updateScores();
+    }
+
     function showOverlayImages(count) {
       boardWindow.postMessage({
         type: "displayImages",

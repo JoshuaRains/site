@@ -13,8 +13,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
+      position: relative;
     }
     /* Placeholder image centered when game hasn't started */
     #placeholder {
@@ -31,6 +32,7 @@
       gap: 10px;
       width: 100%;
       max-width: 600px;
+      margin: 0 auto;
     }
     .answer-box {
       background: #444;
@@ -54,6 +56,38 @@
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
+    /* Score display row */
+    .score-display {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      border-top: 2px solid #fff;
+    }
+    .score-display > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    /* Overlay container for placeholder images */
+    #imageOverlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+    #imageOverlay img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
@@ -66,6 +100,11 @@
     </div>
     <div class="answers-grid" id="answersGrid">
       <!-- Answer boxes will be inserted here -->
+    </div>
+    <!-- Score display row -->
+    <div class="score-display" id="scoreDisplay">
+      <div id="teamA"></div>
+      <div id="teamB"></div>
     </div>
   </div>
 
@@ -85,6 +124,10 @@
         questionData = data.questionData;
         showGameContent();
         updateBoard(data.revealedIndex);
+      } else if (data.type === "score") {
+        updateScoreDisplay(data);
+      } else if (data.type === "displayImages") {
+        displayOverlayImages(data.count);
       } else if (data.type === "fullscreen") {
         if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen().catch(err => {
@@ -129,6 +172,37 @@
           }, 500);
         }
       }
+    }
+
+    // Updates the score display row with team names and scores.
+    function updateScoreDisplay(data) {
+      const teamA = data.teamA;
+      const teamB = data.teamB;
+      document.getElementById("teamA").innerHTML = `<div>${teamA.name}</div><div>${teamA.score}</div>`;
+      document.getElementById("teamB").innerHTML = `<div>${teamB.name}</div><div>${teamB.score}</div>`;
+    }
+
+    // Creates a centered overlay containing count placeholder images for 2 seconds.
+    function displayOverlayImages(count) {
+      // Remove any existing overlay.
+      let overlay = document.getElementById("imageOverlay");
+      if (overlay) {
+        overlay.remove();
+      }
+      // Create a new overlay container.
+      overlay = document.createElement("div");
+      overlay.id = "imageOverlay";
+      // Create count number of images.
+      for (let i = 0; i < count; i++) {
+        const img = document.createElement("img");
+        img.src = "https://via.placeholder.com/100?text=Image";
+        overlay.appendChild(img);
+      }
+      document.body.appendChild(overlay);
+      // Remove the overlay after 2 seconds.
+      setTimeout(() => {
+        overlay.remove();
+      }, 2000);
     }
   </script>
 </body>

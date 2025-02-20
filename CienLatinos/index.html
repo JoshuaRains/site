@@ -61,6 +61,30 @@
       border-radius: 5px;
       box-sizing: border-box;
     }
+    /* Styles for score input section */
+    .score-section {
+      margin: 20px auto;
+      padding: 10px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background: #fff;
+      max-width: 500px;
+      text-align: center;
+    }
+    .score-section label {
+      display: block;
+      margin-top: 5px;
+    }
+    .score-section input {
+      width: 90%;
+      padding: 5px;
+      margin-top: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -71,6 +95,10 @@
     <button onclick="nextQuestion()">Next Question</button>
     <button onclick="resetQuestion()">Reset Question</button>
     <button onclick="makeStudentFullScreen()">Full Screen Student</button>
+    <!-- New buttons for displaying overlay images on board -->
+    <button onclick="showOverlayImages(1)">Show 1 Image</button>
+    <button onclick="showOverlayImages(2)">Show 2 Images</button>
+    <button onclick="showOverlayImages(3)">Show 3 Images</button>
   </div>
 
   <!-- Container for the game (question text and answers grid) -->
@@ -79,6 +107,24 @@
     <div class="answers-grid" id="answersGrid">
       <!-- Answer buttons inserted here -->
     </div>
+  </div>
+
+  <!-- Score input section for two teams -->
+  <div class="score-section">
+    <h3>Team Scores</h3>
+    <div>
+      <label for="teamAName">Team A Name:</label>
+      <input type="text" id="teamAName" placeholder="Team A" />
+      <label for="teamAScore">Team A Points:</label>
+      <input type="number" id="teamAScore" placeholder="0" />
+    </div>
+    <div style="margin-top: 10px;">
+      <label for="teamBName">Team B Name:</label>
+      <input type="text" id="teamBName" placeholder="Team B" />
+      <label for="teamBScore">Team B Points:</label>
+      <input type="number" id="teamBScore" placeholder="0" />
+    </div>
+    <button style="margin-top:10px;" onclick="updateScores()">Update Scores</button>
   </div>
 
   <!-- Text area for pasting questions, pre-populated with two sample questions -->
@@ -289,6 +335,27 @@ Skiing / 2
 
     function makeStudentFullScreen() {
       boardWindow.postMessage({ type: "fullscreen" }, "*");
+    }
+
+    // Sends team score updates to the board.
+    function updateScores() {
+      const teamAName = document.getElementById("teamAName").value || "Team A";
+      const teamAScore = document.getElementById("teamAScore").value || "0";
+      const teamBName = document.getElementById("teamBName").value || "Team B";
+      const teamBScore = document.getElementById("teamBScore").value || "0";
+      boardWindow.postMessage({
+        type: "score",
+        teamA: { name: teamAName, score: teamAScore },
+        teamB: { name: teamBName, score: teamBScore }
+      }, "*");
+    }
+
+    // New function to send a command to display overlay images.
+    function showOverlayImages(count) {
+      boardWindow.postMessage({
+        type: "displayImages",
+        count: count
+      }, "*");
     }
   </script>
 </body>

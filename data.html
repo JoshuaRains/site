@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Data Chart</title>
+  <!-- Include Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Include PapaParse for CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    #chart-container {
+      width: 80%;
+      margin: 0 auto;
+    }
+    canvas {
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz Data Chart</h1>
+  <div id="chart-container">
+    <canvas id="myChart"></canvas>
+  </div>
+
+  <script>
+    // Sample CSV data. Replace this string with your actual CSV content.
+    // The CSV should have a header row. The first column is assumed to be a student name,
+    // and subsequent columns represent scores for each question.
+    const csvData = `Name,Question1,Question2,Question3,Question4
+Alice,4,3,5,2
+Bob,3,4,4,3
+Charlie,5,5,5,4
+David,4,3,5,2`;
+
+    // Parse CSV data using PapaParse.
+    const parsed = Papa.parse(csvData, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true
+    });
+    
+    const rows = parsed.data;
+
+    // Extract question keys (assuming first column is "Name")
+    const allKeys = Object.keys(rows[0]);
+    const questionKeys = allKeys.filter(key => key.toLowerCase() !== 'name');
+
+    // Prepare arrays to store computed averages and max scores.
+    const avgScores = [];
+    const maxScores = [];
+    const labels = [];
+
+    questionKeys.forEach(question => {
+      labels.push(question);
+      let total = 0;
+      let count = 0;
+      let max = -Infinity;
+      rows.forEach(row => {
+        const score = row[question];
+        if (typeof score === 'number') {
+          total += score;
+          count++;
+          if (score > max) {
+            max = score;
+          }
+        }
+      });
+      const avg = (count > 0) ? (total / count) : 0;
+      avgScores.push(avg);
+      maxScores.push(max);
+    });
+
+    // Create the chart.
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Total Possible Points',
+            data: maxScores,
+            backgroundColor: 'rgba(200, 200, 200, 0.5)',
+            order: 1,
+            // Make these bars full-width
+            barPercentage: 1.0,
+            categoryPercentage: 1.0,
+            borderWidth: 0
+          },
+          {
+            label: 'Average Score',
+            data: avgScores,
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            order: 2,
+            // Make the average bars narrower so they appear on top of the max bar
+            barPercentage: 0.5,
+            categoryPercentage: 1.0,
+            borderWidth: 0
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Average Score vs. Total Possible Points'
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.parsed.y;
+              }
+            }
+          }
+        },
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Points'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Questions'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Synthesis Highlighter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 16px;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    #text {
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 16px;
+      min-height: 80px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .highlight {
+      background-color: yellow;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Speech Synthesis Highlighter</h1>
+  <p>Paste your story below, then click the button to have it spoken. As the text is spoken, the current word will be highlighted.</p>
+  <textarea id="inputText" placeholder="Paste your story here..."></textarea>
+  <br>
+  <button id="speakBtn">Speak & Highlight</button>
+  <hr>
+  <div id="text"></div>
+
+  <script>
+    // Function to wrap the given text from 'from' to 'to' with a highlight span
+    function highlight(original, from, to) {
+      let before = original.slice(0, from);
+      let target = original.slice(from, to);
+      let after = original.slice(to);
+      return before + '<span class="highlight">' + target + '</span>' + after;
+    }
+
+    document.getElementById("speakBtn").addEventListener("click", () => {
+      const synth = window.speechSynthesis;
+      if (!synth) {
+        console.error('Speech synthesis not supported in this browser.');
+        return;
+      }
+      
+      // Get the text to speak
+      const inputElem = document.getElementById("inputText");
+      const originalText = inputElem.value;
+      if (!originalText.trim()) {
+        alert("Please paste your story first.");
+        return;
+      }
+      
+      // Set the display div to the original text
+      const textDisplay = document.getElementById("text");
+      textDisplay.innerHTML = originalText;
+      
+      // Create a new utterance with the text
+      const utterance = new SpeechSynthesisUtterance(originalText);
+      
+      // Listen for boundary events (these fire when the speech engine reaches a word)
+      utterance.addEventListener('boundary', event => {
+        if (event.name === "word") {  // we only care about word boundaries
+          const { charIndex, charLength } = event;
+          // Update the display with the current word highlighted
+          textDisplay.innerHTML = highlight(originalText, charIndex, charIndex + charLength);
+        }
+      });
+      
+      // Optional: Handle the end of speech to restore the original text.
+      utterance.addEventListener('end', () => {
+        textDisplay.innerHTML = originalText;
+      });
+      
+      // Start speaking
+      synth.speak(utterance);
+    });
+  </script>
+</body>
+</html>

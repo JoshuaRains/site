@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Results Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         .chart-container { width: 80%; margin: auto; }
-        select { margin: 10px; padding: 5px; }
     </style>
 </head>
 <body>
@@ -20,12 +20,12 @@
     <h2>Average Score Per Section</h2>
     <canvas id="avgScoreChart"></canvas>
     
-    <h2>Student Performance Breakdown</h2>
-    <select id="studentSelect"></select>
-    <canvas id="studentRadarChart"></canvas>
+    <h2>Average Score Per Question Word</h2>
+    <canvas id="questionWordChart"></canvas>
     
     <script>
         const labels = ["Q Words", "Convert", "Fill in QW", "MC1", "MC2", "Grammar", "Forms", "Q-A Connect", "Relevance"];
+        const questionLabels = ["Cómo", "Qué", "Dónde"];
         
         const data = [
             { name: "Student 1", scores: [8, 3, 6, 1, 1, 12, 12, 3, 3] },
@@ -54,36 +54,76 @@
             { name: "Student 24", scores: [8, 2, 6, 1, 1, 12, 10, 3, 2] }
         ];
         
-        function calculateAverages() {
-            return labels.map((_, i) => data.reduce((sum, student) => sum + student.scores[i], 0) / data.length);
+        function calculateAverages(dataSet, labels) {
+            return labels.map((_, i) => dataSet.reduce((sum, student) => sum + student.scores[i], 0) / dataSet.length);
         }
         
-        function calculateMaxScores() {
-            return labels.map((_, i) => Math.max(...data.map(student => student.scores[i])));
+        function calculateMaxScores(dataSet, labels) {
+            return labels.map((_, i) => Math.max(...dataSet.map(student => student.scores[i])));
         }
         
-        function calculateTotalScores() {
-            return data.map(student => student.scores.reduce((sum, score) => sum + score, 0));
+        function createChart(ctx, labels, averages, maxScores) {
+            return new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Average Score",
+                            data: averages,
+                            backgroundColor: "blue",
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                formatter: (value, context) => {
+                                    return ((value / maxScores[context.dataIndex]) * 100).toFixed(1) + "%";
+                                },
+                                color: 'black',
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        {
+                            label: "Max Score",
+                            data: maxScores,
+                            backgroundColor: "red",
+                            datalabels: {
+                                display: false
+                            }
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: { enabled: true },
+                        datalabels: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
         }
         
-        new Chart(document.getElementById("totalScoreChart"), {
-            type: "bar",
-            data: {
-                labels: data.map(student => student.name),
-                datasets: [{ label: "Total Score", data: calculateTotalScores(), backgroundColor: "green" }]
-            }
-        });
+        createChart(
+            document.getElementById("avgScoreChart"),
+            labels,
+            calculateAverages(data, labels),
+            calculateMaxScores(data, labels)
+        );
         
-        new Chart(document.getElementById("avgScoreChart"), {
-            type: "bar",
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: "Average Score", data: calculateAverages(), backgroundColor: "blue" },
-                    { label: "Max Score", data: calculateMaxScores(), backgroundColor: "red" }
-                ]
-            }
-        });
+        createChart(
+            document.getElementById("questionWordChart"),
+            questionLabels,
+            calculateAverages(data, questionLabels),
+            calculateMaxScores(data, questionLabels)
+        );
     </script>
 </body>
 </html>

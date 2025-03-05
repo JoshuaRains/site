@@ -187,7 +187,7 @@ Skiing / 2
     let teacherBuzzed = false;  // tracks if a team has buzzed in (teacher side)
     let soundLooping = false;   // tracks if sound is currently looping
     // Create an Audio object for the sound effect.
-    const soundEffect = new Audio("sound.mp3");
+    const soundEffect = new Audio("../assets/CienLatinosTheme.mp3");
     soundEffect.loop = false; // initially not looping
 
     window.onload = function() {
@@ -384,15 +384,17 @@ Skiing / 2
     
     // Buzzing: teacher side now handles keypresses.
     document.addEventListener("keydown", function(event) {
-      if (teacherBuzzed) return;
-      if (event.key.toLowerCase() === "a") {
-        boardWindow.postMessage({ type: "buzz", team: "A" }, "*");
-        teacherBuzzed = true;
-      } else if (event.key.toLowerCase() === "l") {
-        boardWindow.postMessage({ type: "buzz", team: "B" }, "*");
-        teacherBuzzed = true;
-      }
-    });
+	if (teacherBuzzed) return;
+
+	if (event.key.toLowerCase() === "a") {
+		boardWindow.postMessage({ type: "buzz", team: "A" }, "*");
+		teacherBuzzed = true;
+	} else if (event.key === "6" || event.code === "Numpad6") {
+		boardWindow.postMessage({ type: "buzz", team: "B" }, "*");
+		teacherBuzzed = true;
+	}
+});
+
     
     function resetBuzzersTeacher() {
       teacherBuzzed = false;
@@ -401,15 +403,8 @@ Skiing / 2
     
     // NEW: Toggle Sound Effect button functionality.
     function toggleSoundEffect() {
-      if (!soundLooping) {
-        soundLooping = true;
-        soundEffect.currentTime = 0;
-        soundEffect.loop = true;
-        soundEffect.play();
-      } else {
-        soundLooping = false;
-        soundEffect.loop = false;
-      }
+      soundEffect.play();
+
     }
   </script>
 </body>

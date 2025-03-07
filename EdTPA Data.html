@@ -1,129 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Results Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .chart-container { width: 80%; margin: auto; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Spanish Quiz Performance</title>
+  <!-- Include Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Include Chart.js Data Labels Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .charts-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .chart-wrapper {
+      flex: 1;
+      margin: 10px;
+      text-align: center;
+    }
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-    <h1>Quiz Results Dashboard</h1>
-    
-    <h2>Total Scores</h2>
-    <canvas id="totalScoreChart"></canvas>
-    
-    <h2>Average Score Per Section</h2>
-    <canvas id="avgScoreChart"></canvas>
-    
-    <h2>Average Score Per Question Word</h2>
-    <canvas id="questionWordChart"></canvas>
-    
-    <script>
-        const labels = ["Q Words", "Convert", "Fill in QW", "MC1", "MC2", "Grammar", "Forms", "Q-A Connect", "Relevance"];
-        const questionLabels = ["Cómo", "Qué", "Dónde"];
-        
-        const data = [
-            { name: "Student 1", scores: [8, 3, 6, 1, 1, 12, 12, 3, 3] },
-            { name: "Student 2", scores: [6, 3, 2, 1, 1, 12, 12, 3, 1] },
-            { name: "Student 3", scores: [8, 2, 2, 1, 1, 10, 8, 3, 3] },
-            { name: "Student 4", scores: [8, 3, 3, 1, 1, 8, 9, 2, 3] },
-            { name: "Student 5", scores: [6, 3, 6, 1, 1, 10, 12, 3, 3] },
-            { name: "Student 6", scores: [2, 0, 1, 1, 0, 5, 9, 2, 1] },
-            { name: "Student 7", scores: [4, 1, 1, 1, 1, 10, 9, 3, 2] },
-            { name: "Student 8", scores: [8, 1, 3, 1, 1, 10, 10, 2, 3] },
-            { name: "Student 9", scores: [8, 2, 2, 1, 0, 6, 12, 3, 3] },
-            { name: "Student 10", scores: [6, 3, 1, 1, 1, 9, 6, 3, 3] },
-            { name: "Student 11", scores: [8, 3, 3, 1, 1, 10, 9, 3, 3] },
-            { name: "Student 12", scores: [8, 3, 1, 1, 1, 11, 10, 3, 3] },
-            { name: "Student 13", scores: [8, 0, 3, 1, 1, 10, 11, 2, 3] },
-            { name: "Student 14", scores: [5, 2, 2, 1, 1, 10, 10, 3, 3] },
-            { name: "Student 15", scores: [6, 1, 3, 0, 1, 9, 8, 3, 2] },
-            { name: "Student 16", scores: [8, 3, 4, 1, 1, 10, 10, 3, 3] },
-            { name: "Student 17", scores: [6, 3, 4, 1, 1, 11, 10, 3, 3] },
-            { name: "Student 18", scores: [4, 0, 6, 0, 1, 9, 11, 3, 3] },
-            { name: "Student 19", scores: [4, 2, 2, 1, 1, 7, 7, 3, 3] },
-            { name: "Student 20", scores: [3, 0, 0, 0, 1, 11, 10, 2, 0] },
-            { name: "Student 21", scores: [8, 3, 6, 1, 1, 12, 12, 3, 3] },
-            { name: "Student 22", scores: [8, 3, 4, 1, 1, 10, 9, 2, 3] },
-            { name: "Student 23", scores: [8, 3, 4, 1, 1, 9, 10, 3, 3] },
-            { name: "Student 24", scores: [8, 2, 6, 1, 1, 12, 10, 3, 2] }
-        ];
-        
-        function calculateAverages(dataSet, labels) {
-            return labels.map((_, i) => dataSet.reduce((sum, student) => sum + student.scores[i], 0) / dataSet.length);
+  <h1>Student Performance on Latest Spanish Quiz</h1>
+  <div class="charts-container">
+    <div class="chart-wrapper">
+      <h2>Quantitative Questions</h2>
+      <canvas id="quantitativeChart"></canvas>
+    </div>
+    <div class="chart-wrapper">
+      <h2>Qualitative Questions</h2>
+      <canvas id="qualitativeChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Data for the charts
+    const quantitativeLabels = [
+      "Section 1 - Question words",
+      "Section 2 - Convert question to answer",
+      "Section 3 - Fill in Question Word",
+      "Multiple Choice 1",
+      "Multiple Choice 2"
+    ];
+    const quantitativeData = [81.25, 51.04, 52.08, 87.5, 91.66];
+
+    const qualitativeLabels = [
+      "Grammar",
+      "Correct Forms of Words",
+      "Connection Between Question and Answer",
+      "Relevance"
+    ];
+    const qualitativeData = [80.9, 81.94, 91.66, 86.11];
+
+    // Common chart options: same scale from 0 to 100 and data labels settings with percent sign
+    const commonOptions = {
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'end',
+          formatter: function(value) {
+            return Math.round(value) + '%';
+          },
+          font: {
+            weight: 'bold'
+          }
         }
-        
-        function calculateMaxScores(dataSet, labels) {
-            return labels.map((_, i) => Math.max(...dataSet.map(student => student.scores[i])));
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 10
+          },
+          title: {
+            display: true,
+            text: 'Percentage'
+          }
         }
-        
-        function createChart(ctx, labels, averages, maxScores) {
-            return new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: "Average Score",
-                            data: averages,
-                            backgroundColor: "blue",
-                            datalabels: {
-                                anchor: 'end',
-                                align: 'top',
-                                formatter: (value, context) => {
-                                    return ((value / maxScores[context.dataIndex]) * 100).toFixed(1) + "%";
-                                },
-                                color: 'black',
-                                font: { weight: 'bold' }
-                            }
-                        },
-                        {
-                            label: "Max Score",
-                            data: maxScores,
-                            backgroundColor: "red",
-                            datalabels: {
-                                display: false
-                            }
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true },
-                        tooltip: { enabled: true },
-                        datalabels: {
-                            display: true
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
+      }
+    };
+
+    // Create Quantitative Chart
+    const ctxQuant = document.getElementById('quantitativeChart').getContext('2d');
+    const quantitativeChart = new Chart(ctxQuant, {
+      type: 'bar',
+      data: {
+        labels: quantitativeLabels,
+        datasets: [{
+          label: 'Score',
+          data: quantitativeData,
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          ...commonOptions.plugins,
+          legend: { display: false }
         }
-        
-        createChart(
-            document.getElementById("avgScoreChart"),
-            labels,
-            calculateAverages(data, labels),
-            calculateMaxScores(data, labels)
-        );
-        
-        createChart(
-            document.getElementById("questionWordChart"),
-            questionLabels,
-            calculateAverages(data, questionLabels),
-            calculateMaxScores(data, questionLabels)
-        );
-    </script>
+      },
+      plugins: [ChartDataLabels]
+    });
+
+    // Create Qualitative Chart
+    const ctxQual = document.getElementById('qualitativeChart').getContext('2d');
+    const qualitativeChart = new Chart(ctxQual, {
+      type: 'bar',
+      data: {
+        labels: qualitativeLabels,
+        datasets: [{
+          label: 'Score',
+          data: qualitativeData,
+          backgroundColor: 'rgba(255, 159, 64, 0.7)',
+          borderColor: 'rgba(255, 159, 64, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          ...commonOptions.plugins,
+          legend: { display: false }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+  </script>
 </body>
 </html>

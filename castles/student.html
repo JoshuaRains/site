@@ -84,12 +84,10 @@
         justify-content: center;
         align-items: center;
       }
-      /* Grid styling */
+      /* Grid styling – the JS will update the grid-template properties dynamically */
       #gridContainer {
         margin: 20px auto;
         display: grid;
-        grid-template-columns: repeat(15, 1fr);
-        grid-template-rows: repeat(15, 1fr);
         gap: 1px;
       }
       .grid-cell {
@@ -152,7 +150,7 @@
 
     <!-- Grid Section -->
     <div id="gridSection" style="display: none;">
-      <h2>Select a tile to capture</h2>
+      <h2>Select a tile to capture or fortify</h2>
       <div id="gridContainer"></div>
     </div>
 
@@ -168,7 +166,7 @@
         apiKey: "AIzaSyBP4-umlnVxOkvHiUCj6MDVa4Z3452BML0",
         authDomain: "castles-64558.firebaseapp.com",
         projectId: "castles-64558",
-        storageBucket: "castles-64558.firebasestorage.app",
+        storageBucket: "castles-64558.appspot.com",
         messagingSenderId: "450284390955",
         appId: "1:450284390955:web:7e9e30ed7834635755f86e",
         measurementId: "G-EFJJGH1GDK"
@@ -179,7 +177,8 @@
       let gameCode = "";
       let studentRef = null;
       let studentTeam = "";
-      const gridRows = 15, gridCols = 15;
+      // Default grid size (will be updated once game starts)
+      let gridRows = 15, gridCols = 15;
       let grid = {};
       let questions = [];
       let unseenQuestions = [];
@@ -248,16 +247,22 @@
         db.ref("games/" + gameCode + "/state").on("value", snapshot => {
           const state = snapshot.val();
           if (state === "started") {
-            // When game starts or restarts, hide waiting and game over.
             waitingSection.style.display = "none";
             studentGameOver.style.display = "none";
-            db.ref("games/" + gameCode + "/questions").once("value").then(snap => {
-              questions = snap.val() || [];
-              if (!Array.isArray(questions)) {
-                questions = Object.values(questions);
-              }
-              unseenQuestions = questions.map((q, idx) => idx);
-              showNextQuestion();
+            // Read the grid size from Firebase and update local gridRows and gridCols
+            db.ref("games/" + gameCode + "/gridSize").once("value").then(snap => {
+              const gridSize = parseInt(snap.val()) || 15;
+              gridRows = gridSize;
+              gridCols = gridSize;
+              // Then load questions and show next question.
+              db.ref("games/" + gameCode + "/questions").once("value").then(snap => {
+                questions = snap.val() || [];
+                if (!Array.isArray(questions)) {
+                  questions = Object.values(questions);
+                }
+                unseenQuestions = questions.map((q, idx) => idx);
+                showNextQuestion();
+              });
             });
           } else if (state === "over") {
             studentGameOver.style.display = "block";
@@ -306,7 +311,6 @@
       }
 
       function showNextQuestion() {
-        // Hide grid so that only the question area is visible.
         gridSection.style.display = "none";
         if (!questions || questions.length === 0) {
           questionText.innerText = "No questions available. Please wait for the teacher to update them.";
@@ -337,7 +341,6 @@
 
       function checkAnswer(e, selectedOption) {
         const isCorrect = (selectedOption.trim().toLowerCase() === currentQuestion.answer.trim().toLowerCase());
-        // Record student's response.
         const responseData = {
           question: currentQuestion.question,
           selected: selectedOption,
@@ -346,18 +349,17 @@
           timestamp: firebase.database.ServerValue.TIMESTAMP
         };
         db.ref("games/" + gameCode + "/players/" + studentRef.key + "/responses").push(responseData);
-        // Record overall performance.
         recordQuestionPerformance(currentQuestion.question, isCorrect);
         if (isCorrect) {
           questionSection.style.display = "none";
           gridSection.style.display = "flex";
           renderGrid();
         } else {
-          e.target.style.backgroundColor = "#ff6b6b"; // red shade
+          e.target.style.backgroundColor = "#ff6b6b";
           const buttons = optionsContainer.getElementsByTagName("button");
           for (let btn of buttons) {
             if (btn.innerText.trim().toLowerCase() === currentQuestion.answer.trim().toLowerCase()) {
-              btn.style.backgroundColor = "#51cf66"; // green shade
+              btn.style.backgroundColor = "#51cf66";
             }
           }
           setTimeout(() => {
@@ -396,16 +398,18 @@
       }
 
       function renderGrid() {
-        // Ensure the question area is hidden.
         questionSection.style.display = "none";
         gridContainer.innerHTML = "";
+        // Update grid-template properties dynamically based on gridRows and gridCols.
+        gridContainer.style.gridTemplateColumns = "repeat(" + gridCols + ", 1fr)";
+        gridContainer.style.gridTemplateRows = "repeat(" + gridRows + ", 1fr)";
         const tileSize = computeTileSize();
         gridContainer.style.width = (tileSize * gridCols) + "px";
         gridContainer.style.height = (tileSize * gridRows) + "px";
         for (let r = 0; r < gridRows; r++) {
           for (let c = 0; c < gridCols; c++) {
             const key = r + "_" + c;
-            const cell = grid[key] || { team: null };
+            const cell = grid[key] || { team: null, fort: 0 };
             const cellDiv = document.createElement("div");
             cellDiv.className = "grid-cell";
             cellDiv.style.width = tileSize + "px";
@@ -415,21 +419,57 @@
             } else if (cell.team === "blue") {
               cellDiv.style.backgroundColor = "#4dabf7";
             }
-            // Overlay capital indicator if cell is a capital.
             if (cell.capital) {
               const indicator = document.createElement("div");
               indicator.className = "capital-indicator";
               cellDiv.appendChild(indicator);
             }
-            // Do not allow clicking if the cell is a home base.
-            if (!cell.capital && ((!cell || cell.team !== studentTeam) && isValidMove(r, c))) {
+            if (cell.fort && cell.fort > 0) {
+              const fortDiv = document.createElement("div");
+              fortDiv.style.position = "absolute";
+              fortDiv.style.bottom = "2px";
+              fortDiv.style.right = "2px";
+              fortDiv.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+              fortDiv.style.color = "#fff";
+              fortDiv.style.padding = "2px";
+              fortDiv.style.borderRadius = "3px";
+              fortDiv.style.fontSize = "10px";
+              fortDiv.innerText = cell.fort;
+              cellDiv.appendChild(fortDiv);
+            }
+            // Only allow clicks on non-capital cells.
+            if (!cell.capital) {
+          // If it's your own tile and it can be fortified (fort < 5)
+          if (cell.team === studentTeam) {
+            if (cell.fort < 5) {
               cellDiv.style.cursor = "pointer";
               cellDiv.addEventListener("click", () => {
-                db.ref("games/" + gameCode + "/grid/" + key).set({ team: studentTeam });
+                db.ref("games/" + gameCode + "/grid/" + key + "/fort").set(cell.fort + 1);
                 gridSection.style.display = "none";
                 showNextQuestion();
               });
+            } else {
+              cellDiv.style.cursor = "not-allowed";
             }
+          }
+          // For tiles not owned by you, allow capture or lowering enemy fortifications if valid.
+          else if (isValidMove(r, c)) {
+            cellDiv.style.cursor = "pointer";
+            cellDiv.addEventListener("click", () => {
+              if (cell.fort && cell.fort > 0) {
+                db.ref("games/" + gameCode + "/grid/" + key + "/fort").set(cell.fort - 1);
+              } else {
+                db.ref("games/" + gameCode + "/grid/" + key).set({ team: studentTeam, fort: 0 });
+              }
+              gridSection.style.display = "none";
+              showNextQuestion();
+            });
+          } else {
+            // When the move is not valid.
+            cellDiv.style.cursor = "not-allowed";
+          }
+        }
+
             gridContainer.appendChild(cellDiv);
           }
         }

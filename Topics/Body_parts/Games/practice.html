@@ -126,7 +126,7 @@
     // Vocabulary list with terms and their translations
     const vocabularyList = [
     { term: "caer", translation: ["to fall", "fall"], times_seen: 0, times_correct: 0 },
-    { term: "doler", translation: ["to hurt", "hurt"], times_seen: 0, times_correct: 0 },
+    { term: "doler", translation: ["to hurt", "hurt", "to ache", "ache", "to pain"], times_seen: 0, times_correct: 0 },
     { term: "estornudar", translation: ["to sneeze", "sneeze"], times_seen: 0, times_correct: 0 },
     { term: "prohibir", translation: ["to prohibit", "prohibit"], times_seen: 0, times_correct: 0 },
     { term: "romperse", translation: ["to break", "break"], times_seen: 0, times_correct: 0 },
@@ -134,7 +134,7 @@
     { term: "torcerse", translation: ["to twist", "twist", "to sprain", "sprain"], times_seen: 0, times_correct: 0 },
     { term: "dañar", translation: ["to damage", "damage"], times_seen: 0, times_correct: 0 },
     { term: "enfermarse", translation: ["to get sick", "get sick"], times_seen: 0, times_correct: 0 },
-    { term: "lastimarse", translation: ["to hurt oneself", "hurt oneself", "to hurt yourself", "hurt yourself"], times_seen: 0, times_correct: 0 },
+    { term: "lastimarse", translation: ["to hurt oneself", "hurt oneself", "to hurt yourself", "hurt yourself", "to injure", "injure"], times_seen: 0, times_correct: 0 },
     { term: "romper", translation: ["to break", "break"], times_seen: 0, times_correct: 0 },
     { term: "ser alérgico/a", translation: ["to be allergic", "be allergic", "to be allergic to", "be allergic to"], times_seen: 0, times_correct: 0 },
     { term: "tener fiebre", translation: ["to have a fever", "have a fever", "to have fever", "have fever"], times_seen: 0, times_correct: 0 },
@@ -142,11 +142,11 @@
     { term: "embarazada", translation: ["pregnant"], times_seen: 0, times_correct: 0 },
     { term: "saludable", translation: ["healthy"], times_seen: 0, times_correct: 0 },
     { term: "congestionado/a", translation: ["congested"], times_seen: 0, times_correct: 0 },
-    { term: "grave", translation: ["serious"], times_seen: 0, times_correct: 0 },
+    { term: "grave", translation: ["serious", "grave"], times_seen: 0, times_correct: 0 },
     { term: "a menudo", translation: ["often"], times_seen: 0, times_correct: 0 },
-    { term: "además (de)", translation: ["besides", "in addition to"], times_seen: 0, times_correct: 0 },
+    { term: "además (de)", translation: ["besides", "in addition to", "in addition"], times_seen: 0, times_correct: 0 },
     { term: "casi", translation: ["almost"], times_seen: 0, times_correct: 0 },
-    { term: "despacio", translation: ["slowly"], times_seen: 0, times_correct: 0 },
+    { term: "despacio", translation: ["slowly", "slow"], times_seen: 0, times_correct: 0 },
     { term: "un poco", translation: ["a little"], times_seen: 0, times_correct: 0 },
     { term: "a veces", translation: ["sometimes"], times_seen: 0, times_correct: 0 },
     { term: "bastante", translation: ["enough", "rather"], times_seen: 0, times_correct: 0 },
@@ -203,17 +203,29 @@
     const timerDisplay = document.getElementById("timerDisplay");
 
     function startGame() {
-        roundCount = 0;
-        timerDisplay.textContent = "";
-        restartButton.style.display = "none";
-        answerDisplay.textContent = "";
-        startTime = new Date();
-        answerInput.value = "";
-        answerInput.disabled = false;
-        answerInput.classList.remove("correct");
-        answerInput.focus();
-        nextQuestion();
-    }
+    // Reset vocabulary progress
+    vocabularyList.forEach(word => {
+        word.times_seen = 0;
+        word.times_correct = 0;
+    });
+
+    // Reset total correct points and update the progress bar
+    totalCorrectPoints = 0;
+    updateProgressBar();
+
+    roundCount = 0;
+    timerDisplay.textContent = "";
+    restartButton.style.display = "none";
+    answerDisplay.textContent = "";
+    startTime = new Date();
+    answerInput.value = "";
+    answerInput.disabled = false;
+    answerInput.classList.remove("correct");
+    answerInput.focus();
+    nextQuestion();
+}
+
+
 
     function nextQuestion() {
         const remainingTerms = vocabularyList.filter(term => term.times_correct < CorrectTimesRequired);

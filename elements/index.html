@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Infinite Craft Demo with Translation Button</title>
+  <!-- Include Material Symbols for the Google Translate icon -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      user-select: none;
+      overflow: hidden;
+    }
+    /* Translation Container in the top left corner */
+    #translate-container {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      z-index: 100;
+      padding: 5px 5px;
+    }
+    #translate-button {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    #translate-button:hover {
+      background-color: #b9b3b343;
+    }
+    #translate-button.active .material-symbols-outlined {
+      color: #1a73e8; /* Blue when active */
+      font-size: 40px;
+    }
+    #translate-button.inactive .material-symbols-outlined {
+      color: #9aa0a6; /* Grey when inactive */
+      font-size: 40px;
+    }
+    #translate-label {
+      margin-left: 10px;
+      color: #000;
+      font-size: 18px;
+      white-space: nowrap;
+    }
+    /* Container with two columns */
+    #container {
+      display: flex;
+      height: 100vh;
+    }
+    /* Work area */
+    #work-area {
+      flex: 1;
+      position: relative;
+      background: #f0f0f0;
+      border-right: 2px solid #ccc;
+    }
+    /* Discovered list on the right */
+    #discovered-list {
+      width: 250px;
+      overflow-y: auto;
+      background: #fff;
+      border-left: 2px solid #ccc;
+      padding: 10px;
+    }
+    #discovered-list h3 {
+      text-align: center;
+    }
+    /* Style for each discovered item */
+    .discovered-item {
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      padding: 5px;
+      margin: 5px 0;
+      text-align: center;
+      cursor: pointer;
+      background: #e9e9e9;
+    }
+    /* Draggable items */
+    .draggable {
+      position: absolute;
+      text-align: center;
+      width: 60px;
+    }
+    .draggable .label {
+      font-size: 14px;
+      background: rgba(255,255,255,0.8);
+      display: block;
+    }
+    /* Removed spinner styles since we're now using the progress cursor */
+    /* Shake animation */
+    .shake {
+      animation: shake 0.4s;
+    }
+    @keyframes shake {
+      0% { transform: translate(0px, 0px); }
+      20% { transform: translate(-5px, 0px); }
+      40% { transform: translate(5px, 0px); }
+      60% { transform: translate(-5px, 0px); }
+      80% { transform: translate(5px, 0px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    /* Emoji container */
+    .emoji-container {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .main-emoji {
+      font-size: 32px;
+      line-height: 1;
+    }
+    .corner-emoji {
+      position: absolute;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .top-left {
+      top: -5px;
+      left: -5px;
+    }
+    .top-right {
+      top: -5px;
+      right: -5px;
+    }
+    .bottom-left {
+      bottom: -5px;
+      left: -5px;
+    }
+    .bottom-right {
+      bottom: -5px;
+      right: -5px;
+    }
+    /* The mouse div for dragging */
+    #mouse-div {
+      position: absolute;
+      pointer-events: none;
+      z-index: 2000;
+      display: none;
+    }
+  </style>
+  <!-- Firebase Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <!-- Translation Container -->
+  <div id="translate-container">
+    <div id="translate-button" class="inactive">
+      <span class="material-symbols-outlined">g_translate</span>
+    </div>
+    <div id="translate-label"></div>
+  </div>
+  <div id="container">
+    <div id="work-area"></div>
+    <div id="discovered-list">
+      <h3>Descubiertos</h3>
+      <!-- Discovered items will be added here -->
+    </div>
+  </div>
+  <!-- The mouse div for dragging -->
+  <div id="mouse-div"></div>
+
+  <script>
+    // ---------------- Firebase Initialization ----------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyDq-b_xWTeE10sLWS26_ImW0GvDwDxAukY",
+      authDomain: "infinite-craft-60b68.firebaseapp.com",
+      databaseURL: "https://infinite-craft-60b68-default-rtdb.firebaseio.com",
+      projectId: "infinite-craft-60b68",
+      storageBucket: "infinite-craft-60b68.firebasestorage.app",
+      messagingSenderId: "687412887577",
+      appId: "1:687412887577:web:8b329108a7ab4e83766a88",
+      measurementId: "G-FQE1ZKTJGQ"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // ---------------- Data Definitions ----------------
+    const initialItems = [
+      { key: "libro", label: "Libro", emoji: "📖" },
+      { key: "lápiz", label: "Lápiz", emoji: "✏️" },
+      { key: "silla", label: "Silla", emoji: "🪑" },
+      { key: "borrador", label: "Borrador", emoji: "🧽" },
+      { key: "rojo", label: "Rojo", emoji: "🟥" },
+      { key: "azul", label: "Azul", emoji: "🟦" },
+      { key: "verde", label: "Verde", emoji: "🟩" },
+      { key: "grande", label: "Grande", emoji: "🔶" },
+      { key: "pequeño", label: "Pequeño", emoji: "🔸" },
+      { key: "leer", label: "Leer", emoji: "📚" },
+      { key: "escribir", label: "Escribir", emoji: "✍️" },
+      { key: "dibujar", label: "Dibujar", emoji: "🎨" },
+      { key: "persona", label: "Persona", emoji: "🧑" },
+      { key: "edificio", label: "Edificio", emoji: "🏢" }
+    ];
+    let validItems = {};
+    let recipeToItem = {};
+
+    // Global variable to track the last clicked item.
+    let lastClickedItem = null;
+
+    // ---------------- DOM References ----------------
+    const workArea = document.getElementById("work-area");
+    const discoveredList = document.getElementById("discovered-list");
+    const translateButton = document.getElementById("translate-button");
+    const translateLabel = document.getElementById("translate-label");
+    const mouseDiv = document.getElementById("mouse-div");
+    const discoveredItems = {};
+
+    // ---------------- Firebase Helper Functions ----------------
+    async function loadItemsFromFirebase() {
+      try {
+        const snapshot = await db.collection("items").get();
+        snapshot.forEach((doc) => {
+          validItems[doc.id] = doc.data();
+          (doc.data().recipes || []).forEach(recipe => {
+            recipeToItem[recipe] = { label: doc.id, emoji: doc.data().emoji };
+          });
+        });
+        console.log("Loaded items from Firebase:", validItems);
+      } catch (error) {
+        console.error("Error loading items:", error);
+      }
+    }
+    async function updateItemInFirebase(label, itemData) {
+      try {
+        await db.collection("items").doc(label).update(itemData);
+        console.log("Updated item in Firebase:", label, itemData);
+      } catch (error) {
+        console.error("Error updating item:", error);
+      }
+    }
+    async function createItemInFirebase(label, itemData) {
+      try {
+        await db.collection("items").doc(label).set(itemData);
+        console.log("Created item in Firebase:", label, itemData);
+      } catch (error) {
+        console.error("Error creating item:", error);
+      }
+    }
+
+    // ---------------- Utility: generateEmojiHTML ----------------
+    function generateEmojiHTML(emojiStr) {
+      const emojis = Array.from(emojiStr.trim());
+      if (emojis.length === 0) return "";
+      const mainEmoji = emojis[0];
+      const extras = emojis.slice(1, 5);
+      return `
+        <div class="emoji-container">
+          <span class="main-emoji">${mainEmoji}</span>
+          ${ extras[0] ? `<span class="corner-emoji top-left">${extras[0]}</span>` : "" }
+          ${ extras[1] ? `<span class="corner-emoji top-right">${extras[1]}</span>` : "" }
+          ${ extras[2] ? `<span class="corner-emoji bottom-left">${extras[2]}</span>` : "" }
+          ${ extras[3] ? `<span class="corner-emoji bottom-right">${extras[3]}</span>` : "" }
+        </div>
+      `;
+    }
+
+    // ---------------- Utility Functions ----------------
+    function createWorkAreaElement(data, position) {
+      const div = document.createElement("div");
+      div.classList.add("draggable");
+      div.setAttribute("data-key", data.label);
+      div.innerHTML = generateEmojiHTML(data.emoji) + `<span class="label">${data.label}</span>`;
+      div.style.left = position.x + "px";
+      div.style.top = position.y + "px";
+      makeDraggable(div);
+      // Update last clicked item when clicked.
+      div.addEventListener("click", () => {
+        lastClickedItem = data;
+        updateTranslateDisplay();
+      });
+      return div;
+    }
+    function createDiscoveredListItem(data) {
+      const div = document.createElement("div");
+      div.classList.add("discovered-item");
+      const identifier = data.key || data.label;
+      div.setAttribute("data-key", identifier);
+      div.innerHTML = generateEmojiHTML(data.emoji) + " " + data.label;
+      div.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        startMouseDrag(data, e);
+      });
+      div.addEventListener("click", () => {
+        lastClickedItem = data;
+        updateTranslateDisplay();
+      });
+      return div;
+    }
+    function addToDiscovered(data) {
+      const identifier = data.key || data.label;
+      if (discoveredItems[identifier]) return;
+      discoveredItems[identifier] = data;
+      const item = createDiscoveredListItem(data);
+      discoveredList.appendChild(item);
+    }
+
+    // ---------------- Mouse Drag for Discovered Items ----------------
+    let isMouseDragging = false;
+    let draggedData = null;
+    function startMouseDrag(data, e) {
+      isMouseDragging = true;
+      draggedData = data;
+      mouseDiv.innerHTML = `<div style="display: inline-block; text-align: center;">
+                              ${generateEmojiHTML(data.emoji)}
+                              <span class="label" style="font-size: 14px; background: rgba(255,255,255,0.8);">${data.label}</span>
+                            </div>`;
+      mouseDiv.style.display = "block";
+      updateMouseDivPosition(e.pageX, e.pageY);
+    }
+    function updateMouseDivPosition(x, y) {
+      mouseDiv.style.left = (x - 30) + "px";
+      mouseDiv.style.top = (y - 30) + "px";
+    }
+    document.addEventListener("mousemove", (e) => {
+      if (isMouseDragging) updateMouseDivPosition(e.pageX, e.pageY);
+    });
+    document.addEventListener("mouseup", (e) => {
+      const workRect = workArea.getBoundingClientRect();
+      if (isMouseDragging) {
+        // If dropped in work area.
+        if (
+          e.clientX >= workRect.left && e.clientX <= workRect.right &&
+          e.clientY >= workRect.top && e.clientY <= workRect.bottom
+        ) {
+          const pos = {
+            x: e.clientX - workRect.left - 30,
+            y: e.clientY - workRect.top - 30
+          };
+          const newElement = createWorkAreaElement(draggedData, pos);
+          workArea.appendChild(newElement);
+          checkAndCombine(newElement);
+        }
+        isMouseDragging = false;
+        draggedData = null;
+        mouseDiv.style.display = "none";
+        mouseDiv.innerHTML = "";
+      }
+    });
+
+    // ---------------- Draggable for Items ----------------
+    let currentDrag = null;
+    let offset = { x: 0, y: 0 };
+    function makeDraggable(el) {
+      el.addEventListener("mousedown", workAreaDragStart);
+    }
+    function workAreaDragStart(e) {
+      if (isMouseDragging) return;
+      currentDrag = e.currentTarget;
+      currentDrag.style.zIndex = 1000;
+      const rect = currentDrag.getBoundingClientRect();
+      offset.x = e.clientX - rect.left;
+      offset.y = e.clientY - rect.top;
+      document.addEventListener("mousemove", workAreaDragMove);
+      document.addEventListener("mouseup", workAreaDragEnd);
+    }
+    function workAreaDragMove(e) {
+      if (!currentDrag) return;
+      const containerRect = currentDrag.parentElement.getBoundingClientRect();
+      let newX = e.clientX - containerRect.left - offset.x;
+      let newY = e.clientY - containerRect.top - offset.y;
+      newX = Math.max(0, Math.min(newX, currentDrag.parentElement.clientWidth - currentDrag.clientWidth));
+      newY = Math.max(0, Math.min(newY, currentDrag.parentElement.clientHeight - currentDrag.clientHeight));
+      currentDrag.style.left = newX + "px";
+      currentDrag.style.top = newY + "px";
+    }
+    function workAreaDragEnd(e) {
+      if (!currentDrag) return;
+      document.removeEventListener("mousemove", workAreaDragMove);
+      document.removeEventListener("mouseup", workAreaDragEnd);
+      currentDrag.style.zIndex = "";
+      if (currentDrag.parentElement.id === "work-area") {
+        checkAndCombine(currentDrag);
+      }
+      currentDrag = null;
+    }
+
+    // ---------------- Combination Logic ----------------
+    function isColliding(el1, el2) {
+      const rect1 = el1.getBoundingClientRect();
+      const rect2 = el2.getBoundingClientRect();
+      return !(rect1.right < rect2.left ||
+               rect1.left > rect2.right ||
+               rect1.bottom < rect2.top ||
+               rect1.top > rect2.bottom);
+    }
+    async function checkAndCombine(element) {
+      const draggables = Array.from(element.parentElement.getElementsByClassName("draggable"));
+      for (let other of draggables) {
+        if (other === element) continue;
+        if (isColliding(element, other)) {
+          await tryCombine(element, other);
+          break;
+        }
+      }
+    }
+
+    // ---------------- Utility: getRandomEmoji ----------------
+    function getRandomEmoji() {
+      const emojis = [
+        "😃", "😄", "😁", "😆", "😅", "😂", "😊", "😇", "🙂", "🙃",
+        "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚", "😋", "😛",
+        "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🤩", "🥳", "😏",
+        "😒", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖", "😫",
+        "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "🤯", "😳",
+        "🥵", "🥶", "😱", "😨", "😰", "😥", "😓", "🤗", "🤔", "🤭",
+        "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄", "😯", "😦", "😧"
+      ];
+      return emojis[Math.floor(Math.random() * emojis.length)];
+    }
+
+    // ---------------- Translate Button and Last Clicked Item ----------------
+    function updateTranslateDisplay() {
+      const labelElem = document.getElementById("translate-label");
+      const btn = document.getElementById("translate-button");
+      if (lastClickedItem) {
+        labelElem.textContent = lastClickedItem.label;
+        btn.classList.remove("inactive");
+        btn.classList.add("active");
+      } else {
+        labelElem.textContent = "";
+        btn.classList.remove("active");
+        btn.classList.add("inactive");
+      }
+    }
+
+    function test123() {
+	const encoded = 'c2stc3ZjYWNjdC1YaTh3M2NuVXlJM0RkNDhRMnMySU9leVhXRlJFb2xCZ1hYTmtRTXg2bHc3QVlFNUdHaUt6Q2VzalBOVVh6YS1janNPZERBSC1MMlQzQmxia0ZKNWJhVUxQZDRCMnBYemxONXFsb005YTlLMmhHUUJ1VGRzRG9jbUd1N01nNnFUcXRoMVRYU1JVT3VDd0xybzFJR2h4YmVqUEsxSUE='; // your base64-encoded key
+	return atob(encoded);
+  }
+    // ---------------- OpenAI Integration ----------------
+    async function generateCombinationResultFromOpenAI(item1, item2) {
+      const prompt = `Dadas las siguientes palabras en español: "${item1}" y "${item2}", eres un experto en combinar creativa y lógicamente conceptos simples. Cuando se te den dos palabras simples en español (que pueden representar colores, objetos o ideas), debes determinar un nuevo concepto que las unifique de forma lógica. Usa solo vocabulario muy sencillo que un estudiante de español I conocería (palabras cortas o cognados en inglés). Por ejemplo:
+- "rojo" y "azul" deben combinarse para formar "morado" con un solo emoji apropiado, por ejemplo, 🟣.
+- "coche" y "caballo" deben combinarse para formar "transporte" con un único emoji adecuado.
+- "casa" y "casa" deben combinarse para formar "barrio" con un solo emoji apropiado.
+Tu respuesta debe estar completamente en español y debe entregarse estrictamente en formato JSON, con exactamente dos claves: "label" para el nombre del nuevo concepto y "emoji" para exactamente UN emoji (si se devuelven múltiples, muestra el primero en tamaño normal y los extra, hasta 4, en las esquinas) que mejor represente el concepto. No incluyas ningún texto adicional. Combine these two emoji labels into one. Output only raw JSON with two fields: "label" and "emoji". The "emoji" must be a quoted string. Do not wrap the output in markdown or code blocks.
+`;
+
+	try {
+		
+		
+  const test1234 = test123();
+
+    
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+		const send = {
+			model: 'gpt-4o-mini',
+			messages: [{ role: 'user', content: prompt }]
+		};
+
+		const response = await fetch(apiUrl, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${test1234}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(send)
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		const data = await response.json();
+
+		if (!data.choices || data.choices.length === 0) {
+			throw new Error("No choices returned from OpenAI");
+		}
+
+		const textResponse = data.choices[0].message.content.trim();
+		console.log(textResponse);
+
+        const fixed = textResponse
+	    .replace(/^```(?:json)?\s*|\s*```$/g, '') // remove code fences
+	    .replace(/"emoji":\s*([^\s"]+)/, (match, emoji) => `"emoji": "${emoji}"`);
+
+        const result = JSON.parse(fixed);
+
+
+        return JSON.parse(fixed);
+
+	} catch (err) {
+		console.error("Error calling OpenAI:", err);
+		throw err;
+	}
+
+
+    }
+
+    // ---------------- Combination Handling with OpenAI ----------------
+async function tryCombine(el1, el2) {
+  const key1 = el1.getAttribute("data-key");
+  const key2 = el2.getAttribute("data-key");
+  let sortedKeys = (key1 === key2) ? [key1, key2] : [key1, key2].sort();
+  const recipe = sortedKeys.join("|");
+  const rect1 = el1.getBoundingClientRect();
+  const rect2 = el2.getBoundingClientRect();
+  const workRect = workArea.getBoundingClientRect();
+  const centerX = ((rect1.left + rect2.left) / 2) - workRect.left;
+  const centerY = ((rect1.top + rect2.top) / 2) - workRect.top;
+  
+  let resultItem;
+  if (recipeToItem[recipe]) {
+    resultItem = recipeToItem[recipe];
+  } else {
+    await loadItemsFromFirebase();
+    if (recipeToItem[recipe]) {
+      resultItem = recipeToItem[recipe];
+    } else {
+      try {
+        // Force progress cursor globally, even over draggable items.
+        document.body.style.setProperty('cursor', 'progress', 'important');
+        const resultFromOpenAI = await generateCombinationResultFromOpenAI(sortedKeys[0], sortedKeys[1]);
+        document.body.style.removeProperty('cursor');
+        
+        const newLabel = resultFromOpenAI.label;
+        const newEmoji = resultFromOpenAI.emoji;
+        if (validItems[newLabel]) {
+          if (!validItems[newLabel].recipes.includes(recipe)) {
+            validItems[newLabel].recipes.push(recipe);
+            await updateItemInFirebase(newLabel, { recipes: validItems[newLabel].recipes });
+          }
+        } else {
+          validItems[newLabel] = { emoji: newEmoji, recipes: [recipe] };
+          await createItemInFirebase(newLabel, validItems[newLabel]);
+        }
+        resultItem = { label: newLabel, emoji: validItems[newLabel].emoji };
+        recipeToItem[recipe] = resultItem;
+      } catch (err) {
+        document.body.style.removeProperty('cursor');
+        alert("Error getting response from OpenAI: " + err.message);
+        return;
+      }
+    }
+  }
+  
+  if (el1.parentElement === workArea) workArea.removeChild(el1);
+  if (el2.parentElement === workArea) workArea.removeChild(el2);
+  
+  const newData = { label: resultItem.label, emoji: resultItem.emoji };
+  const newEl = createWorkAreaElement(newData, { x: centerX, y: centerY });
+  workArea.appendChild(newEl);
+  addToDiscovered(newData);
+}
+
+
+    // ---------------- Initialization ----------------
+    async function init() {
+      await loadItemsFromFirebase();
+      initialItems.forEach(item => addToDiscovered(item));
+      updateTranslateDisplay();
+    }
+    init();
+
+    // ---------------- Update Translate Display ----------------
+    function updateTranslateDisplay() {
+      const labelElem = document.getElementById("translate-label");
+      const btn = document.getElementById("translate-button");
+      if (lastClickedItem) {
+        labelElem.textContent = lastClickedItem.label;
+        btn.classList.remove("inactive");
+        btn.classList.add("active");
+      } else {
+        labelElem.textContent = "";
+        btn.classList.remove("active");
+        btn.classList.add("inactive");
+      }
+    }
+    // Update lastClickedItem on click in discovered list and work area (already added).
+    // ---------------- Translate Button Click ----------------
+    translateButton.addEventListener("click", () => {
+      if (lastClickedItem) {
+        const url = "https://translate.google.com/?sl=es&tl=en&text=" + encodeURIComponent(lastClickedItem.label) + "&op=translate";
+        window.open(url, "_blank");
+      }
+    });
+  </script>
+</body>
+</html>

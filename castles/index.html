@@ -20,7 +20,7 @@
       .hidden {
         display: none;
       }
-      /* Always-visible Game Code in top left (no border, simple background) */
+      /* Always-visible Game Code in top left (simple background, no border) */
       #topLeftCode {
         position: absolute;
         top: 10px;
@@ -102,6 +102,11 @@
         border-radius: 5px;
         border: none;
         margin: 5px;
+      }
+      /* New grid header style */
+      #gridHeader {
+        font-size: 24px;
+        margin-bottom: 10px;
       }
     </style>
   </head>
@@ -309,11 +314,30 @@
           document.getElementById("waitingRoomSection").classList.add("hidden");
           document.getElementById("gameGridSection").classList.remove("hidden");
           renderGrid();
-          listenForPerformanceUpdates();
+          listenForPerformance();
         });
       });
 
-      // Render the grid (with capital and fortification indicators)
+      // End Game Early Button Handler
+      document.getElementById("endGameBtn").addEventListener("click", endGameEarly);
+      function endGameEarly() {
+        // Compute tile counts.
+        let redCount = 0, blueCount = 0;
+        for (let k in grid) {
+          const t = grid[k].team;
+          if (t === "red") redCount++;
+          else if (t === "blue") blueCount++;
+        }
+        let winner;
+        if (redCount > blueCount) winner = "red";
+        else if (blueCount > redCount) winner = "blue";
+        else winner = "Tie";
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        db.ref("games/" + gameCode).update({ state: "over" });
+        displayGameOverPopup(winner, { red: redCount, blue: blueCount }, elapsedTime);
+      }
+
+      // Render the grid (with capital indicator)
       function renderGrid() {
         const container = document.getElementById("gridContainer");
         container.innerHTML = "";
@@ -406,8 +430,9 @@
       function displayGameOverPopup(winner, tileCounts, roundTime) {
         document.getElementById("tileCounts").innerText =
           "Red Tiles: " + tileCounts.red + " | Blue Tiles: " + tileCounts.blue;
+        let winText = winner === "Tie" ? "Tie" : (winner === "red" ? "Red" : "Blue");
         document.getElementById("winnerText").innerText =
-          "Winner: " + (winner === "red" ? "Red" : "Blue");
+          "Winner: " + winText;
         document.getElementById("roundTime").innerText =
           "Round Time: " + roundTime + " seconds";
         document.getElementById("gameOverPopup").classList.remove("hidden");

@@ -1,216 +1,228 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Battleship Review Game</title>
-    <!-- Firebase CDN (using compat libraries for plain JS) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-    <style>
-      /* Global Styles */
-      body {
-        background-color: #2e2e2e;
-        color: #f1f1f1;
-        font-family: sans-serif;
-        text-align: center;
-        padding: 20px;
-      }
-      .hidden {
-        display: none;
-      }
-      button {
-        background-color: #444;
-        color: #f1f1f1;
-        border: none;
-        padding: 10px 20px;
-        margin: 5px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      button:disabled {
-        background-color: #777;
-        cursor: not-allowed;
-      }
-      input {
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        border: none;
-        margin: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Battleship Review Game</h1>
-
-    <!-- Home Screen: choose to create or join a game -->
-    <div id="homeScreen">
-      <button id="createGameBtn">Create Game</button>
-      <button id="joinGameBtn">Join Game</button>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Battleship Review Game</title>
+  <!-- Firebase CDN (using compat libraries for plain JS) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <style>
+    /* Full viewport and basic reset */
+    html, body {
+      height: 100vh;
+      margin: 0;
+    }
+    /* Three-section layout: top (header), middle (content) and bottom (footer) */
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .top {
+      background-color: lightblue;
+      padding: 10px;
+      text-align: center;
+    }
+    .middle {
+      background-color: lightgreen;
+      flex: 1;
+      padding: 10px;
+      overflow: auto;
+    }
+    .bottom {
+      background-color: lightcoral;
+      padding: 10px;
+      text-align: center;
+    }
+    /* Utility class to hide screens */
+    .hidden { display: none; }
+    /* Button styling from your reference */
+    button {
+      background-color: #444;
+      color: #f1f1f1;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    /* Input styling */
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Top section: Header -->
+    <div class="top">
+      <h1>Battleship Review Game</h1>
     </div>
-
-    <!-- Create Game Screen (visible to game creator) -->
-    <div id="createGameScreen" class="hidden">
-      <h2>Game Created</h2>
-      <p>Your Game Code: <span id="gameCodeDisplay"></span></p>
-      <p>Waiting for another player to join...</p>
-      <button id="startGameBtn" disabled>Start Game</button>
+    <!-- Middle section: Screens will be shown here -->
+    <div class="middle">
+      <!-- Home Screen: Prompt with two buttons -->
+      <div id="homeScreen">
+        <button id="createGameBtn">Create Game</button>
+        <button id="joinGameBtn">Join Game</button>
+      </div>
+      
+      <!-- Create Game Screen -->
+      <div id="createGameScreen" class="hidden">
+        <h2>Game Created</h2>
+        <p>Your Game Code: <span id="gameCodeDisplay"></span></p>
+        <p>Waiting for another player to join...</p>
+        <button id="startGameBtn" disabled>Start Game</button>
+      </div>
+      
+      <!-- Join Game Screen -->
+      <div id="joinGameScreen" class="hidden">
+        <h2>Join Game</h2>
+        <input type="text" id="joinGameCodeInput" placeholder="Enter game code">
+        <button id="confirmJoinBtn">Join</button>
+        <p id="joinError" style="color: red;"></p>
+      </div>
+      
+      <!-- Waiting Screen -->
+      <div id="waitingScreen" class="hidden">
+        <h2>Waiting for the game to start...</h2>
+      </div>
     </div>
-
-    <!-- Join Game Screen (enter code) -->
-    <div id="joinGameScreen" class="hidden">
-      <h2>Join Game</h2>
-      <input type="text" id="joinGameCodeInput" placeholder="Enter game code">
-      <button id="confirmJoinBtn">Join</button>
-      <p id="joinError" style="color: red;"></p>
+    <!-- Bottom section: Footer -->
+    <div class="bottom">
+      Footer content goes here.
     </div>
+  </div>
 
-    <!-- Waiting Screen (after joining or after starting) -->
-    <div id="waitingScreen" class="hidden">
-      <h2>Waiting for the game to start...</h2>
-    </div>
+  <script>
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBP4-umlnVxOkvHiUCj6MDVa4Z3452BML0",
+      authDomain: "castles-64558.firebaseapp.com",
+      projectId: "castles-64558",
+      storageBucket: "castles-64558.appspot.com",
+      messagingSenderId: "450284390955",
+      appId: "1:450284390955:web:7e9e30ed7834635755f86e",
+      measurementId: "G-EFJJGH1GDK"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    <script>
-      // --- Firebase Configuration (replace with your actual config if needed) ---
-      const firebaseConfig = {
-        apiKey: "AIzaSyBP4-umlnVxOkvHiUCj6MDVa4Z3452BML0",
-        authDomain: "castles-64558.firebaseapp.com",
-        projectId: "castles-64558",
-        storageBucket: "castles-64558.appspot.com",
-        messagingSenderId: "450284390955",
-        appId: "1:450284390955:web:7e9e30ed7834635755f86e",
-        measurementId: "G-EFJJGH1GDK"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
+    // --- Global Variables ---
+    let gameCode = "";
+    let playerKey = "";
+    let isCreator = false;
 
-      // Global Variables
-      let gameCode = "";
-      let playerKey = "";
-      let isCreator = false;
+    // --- DOM Elements ---
+    const homeScreen = document.getElementById("homeScreen");
+    const createGameScreen = document.getElementById("createGameScreen");
+    const joinGameScreen = document.getElementById("joinGameScreen");
+    const waitingScreen = document.getElementById("waitingScreen");
 
-      // DOM Elements
-      const homeScreen = document.getElementById("homeScreen");
-      const createGameScreen = document.getElementById("createGameScreen");
-      const joinGameScreen = document.getElementById("joinGameScreen");
-      const waitingScreen = document.getElementById("waitingScreen");
+    const createGameBtn = document.getElementById("createGameBtn");
+    const joinGameBtn = document.getElementById("joinGameBtn");
+    const startGameBtn = document.getElementById("startGameBtn");
+    const gameCodeDisplay = document.getElementById("gameCodeDisplay");
 
-      const createGameBtn = document.getElementById("createGameBtn");
-      const joinGameBtn = document.getElementById("joinGameBtn");
-      const startGameBtn = document.getElementById("startGameBtn");
+    const joinGameCodeInput = document.getElementById("joinGameCodeInput");
+    const confirmJoinBtn = document.getElementById("confirmJoinBtn");
+    const joinError = document.getElementById("joinError");
 
-      const gameCodeDisplay = document.getElementById("gameCodeDisplay");
-      const joinGameCodeInput = document.getElementById("joinGameCodeInput");
-      const confirmJoinBtn = document.getElementById("confirmJoinBtn");
-      const joinError = document.getElementById("joinError");
+    // --- Create Game Handler ---
+    createGameBtn.addEventListener("click", () => {
+      isCreator = true;
+      gameCode = generateGameCode();
+      db.ref("games/" + gameCode).set({
+        state: "waiting",
+        players: {}
+      }).then(() => {
+        const playerRef = db.ref("games/" + gameCode + "/players").push();
+        playerKey = playerRef.key;
+        playerRef.set({ creator: true, joinedAt: firebase.database.ServerValue.TIMESTAMP });
+        homeScreen.classList.add("hidden");
+        createGameScreen.classList.remove("hidden");
+        gameCodeDisplay.innerText = gameCode;
+        listenForPlayers();
+      });
+    });
 
-      // Utility: Generate a random game code
-      function generateGameCode(length = 6) {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        let code = "";
-        for (let i = 0; i < length; i++) {
-          code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
-      }
+    // --- Join Game Handler ---
+    joinGameBtn.addEventListener("click", () => {
+      homeScreen.classList.add("hidden");
+      joinGameScreen.classList.remove("hidden");
+    });
 
-      // Create Game Button Handler
-      createGameBtn.addEventListener("click", function() {
-        isCreator = true;
-        gameCode = generateGameCode();
-        // Initialize game in Firebase with waiting state and empty players list
-        db.ref("games/" + gameCode).set({
-          state: "waiting",
-          players: {}
-        }).then(() => {
-          // Add creator as a player (with a flag to denote creator)
+    confirmJoinBtn.addEventListener("click", () => {
+      const code = joinGameCodeInput.value.trim();
+      if (!code) return;
+      db.ref("games/" + code).once("value").then(snapshot => {
+        if (snapshot.exists()) {
+          gameCode = code;
           const playerRef = db.ref("games/" + gameCode + "/players").push();
           playerKey = playerRef.key;
-          playerRef.set({ creator: true, joinedAt: firebase.database.ServerValue.TIMESTAMP });
-          // Switch screens: hide home, show create game screen
-          homeScreen.classList.add("hidden");
-          createGameScreen.classList.remove("hidden");
-          gameCodeDisplay.innerText = gameCode;
-          // Listen for new players joining to enable the Start Game button
-          listenForPlayers();
-        });
-      });
-
-      // Join Game Button Handler (from Home Screen)
-      joinGameBtn.addEventListener("click", function() {
-        homeScreen.classList.add("hidden");
-        joinGameScreen.classList.remove("hidden");
-      });
-
-      // Confirm Join Button Handler (after entering game code)
-      confirmJoinBtn.addEventListener("click", function() {
-        const code = joinGameCodeInput.value.trim();
-        if (!code) return;
-        // Check if game exists
-        db.ref("games/" + code).once("value").then(snapshot => {
-          if (snapshot.exists()) {
-            gameCode = code;
-            // Add joiner as a player
-            const playerRef = db.ref("games/" + gameCode + "/players").push();
-            playerKey = playerRef.key;
-            playerRef.set({ creator: false, joinedAt: firebase.database.ServerValue.TIMESTAMP });
-            // Switch to waiting screen
-            joinGameScreen.classList.add("hidden");
-            waitingScreen.classList.remove("hidden");
-            listenForGameState();
-          } else {
-            joinError.innerText = "Game code not found. Please try again.";
-          }
-        });
-      });
-
-      // Listen for changes to players in the game (for the creator)
-      function listenForPlayers() {
-        db.ref("games/" + gameCode + "/players").on("value", snapshot => {
-          const players = snapshot.val() || {};
-          const count = Object.keys(players).length;
-          // Enable Start Game button if a second player has joined
-          if (isCreator && count >= 2) {
-            startGameBtn.disabled = false;
-          } else {
-            startGameBtn.disabled = true;
-          }
-        });
-      }
-
-      // Start Game Button Handler (only available for the creator)
-      startGameBtn.addEventListener("click", function() {
-        if (startGameBtn.disabled) return;
-        // Change game state to "started"
-        db.ref("games/" + gameCode).update({ state: "started" }).then(() => {
-          createGameScreen.classList.add("hidden");
+          playerRef.set({ creator: false, joinedAt: firebase.database.ServerValue.TIMESTAMP });
+          joinGameScreen.classList.add("hidden");
           waitingScreen.classList.remove("hidden");
           listenForGameState();
-        });
-      });
-
-      // Listen for game state changes for all players
-      function listenForGameState() {
-        db.ref("games/" + gameCode + "/state").on("value", snapshot => {
-          const state = snapshot.val();
-          if (state === "started") {
-            waitingScreen.innerHTML = "<h2>Game has started!</h2>";
-            // Here is where you would transition to the actual game view.
-          }
-        });
-      }
-
-      // Clean up on unload: remove player entry and, if creator, remove the game.
-      window.addEventListener("beforeunload", function() {
-        if (gameCode) {
-          if (playerKey) {
-            db.ref("games/" + gameCode + "/players/" + playerKey).remove();
-          }
-          if (isCreator) {
-            db.ref("games/" + gameCode).remove();
-          }
+        } else {
+          joinError.innerText = "Game code not found. Please try again.";
         }
       });
-    </script>
-  </body>
+    });
+
+    // --- Start Game Handler (only available for the creator) ---
+    startGameBtn.addEventListener("click", () => {
+      if (startGameBtn.disabled) return;
+      db.ref("games/" + gameCode).update({ state: "started" });
+      createGameScreen.classList.add("hidden");
+      waitingScreen.classList.remove("hidden");
+      listenForGameState();
+    });
+
+    // --- Listen for Players Joining (to enable Start Game) ---
+    function listenForPlayers() {
+      db.ref("games/" + gameCode + "/players").on("value", snapshot => {
+        const players = snapshot.val() || {};
+        const count = Object.keys(players).length;
+        startGameBtn.disabled = !(isCreator && count >= 2);
+      });
+    }
+
+    // --- Listen for Game State Changes ---
+    function listenForGameState() {
+      db.ref("games/" + gameCode + "/state").on("value", snapshot => {
+        const state = snapshot.val();
+        if (state === "started") {
+          // Game has started. Transition to game view (not implemented in this snippet).
+          alert("Game Started!");
+        }
+      });
+    }
+
+    // --- Utility: Generate a random game code ---
+    function generateGameCode(length = 6) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let code = "";
+      for (let i = 0; i < length; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    }
+
+    // --- Clean up on window unload ---
+    window.addEventListener("beforeunload", () => {
+      if (gameCode) {
+        if (playerKey) {
+          db.ref("games/" + gameCode + "/players/" + playerKey).remove();
+        }
+        if (isCreator) {
+          db.ref("games/" + gameCode).remove();
+        }
+      }
+    });
+  </script>
+</body>
 </html>

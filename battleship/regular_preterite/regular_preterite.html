@@ -195,10 +195,22 @@
         color: #fff;
         z-index: 2000;
       }
+
+      #fixedSquare {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 50px;
+        height: 100px;
+        background: linear-gradient(to right, #FFA500, rgba(255,87,51,0));
+        z-index: 9999;
+      }
     </style>
   </head>
   <body>
     <!-- Non-game screens -->
+    <div id="fixedSquare"></div>
+
     <div id="homeScreen">
       <button id="createGameBtn">Create Game</button>
       <button id="joinGameBtn">Join Game</button>
@@ -267,7 +279,7 @@
       let attackDots = {}; // key: "row_col" => isHit (true/false)
 
       // Conjugation game arrays.
-      const spanishVerbs = ["hablar", "comer", "vivir", "estudiar", "leer", "escribir", "correr", "saltar", "nadar", "dormir", "soñar", "trabajar", "bailar", "cantar", "pensar"];
+      const spanishVerbs = ["hablar", "comer", "vivir", "estudiar","escribir", "correr", "saltar", "nadar", "soñar", "trabajar", "bailar", "cantar", "pensar"];
       const pronouns = ["yo", "tú", "él/ella/Ud.", "nosotros", "vosotros", "ellos/Uds."];
       let gridRows = spanishVerbs.length;
       let gridCols = pronouns.length;
@@ -279,12 +291,10 @@
         "comer":     ["comí", "comiste", "comió", "comimos", "comisteis", "comieron"],
         "vivir":     ["viví", "viviste", "vivió", "vivimos", "vivisteis", "vivieron"],
         "estudiar":  ["estudié", "estudiaste", "estudió", "estudiamos", "estudiasteis", "estudiaron"],
-        "leer":      ["leí", "leíste", "leyó", "leímos", "leísteis", "leyeron"],
         "escribir":  ["escribí", "escribiste", "escribió", "escribimos", "escribisteis", "escribieron"],
         "correr":    ["corrí", "corriste", "corrió", "corrimos", "corristeis", "corrieron"],
         "saltar":    ["salté", "saltaste", "saltó", "saltamos", "saltasteis", "saltaron"],
         "nadar":     ["nadé", "nadaste", "nadó", "nadamos", "nadasteis", "nadaron"],
-        "dormir":    ["dormí", "dormiste", "durmió", "dormimos", "dormisteis", "durmieron"],
         "soñar":     ["soñé", "soñaste", "soñó", "soñamos", "soñasteis", "soñaron"],
         "trabajar":  ["trabajé", "trabajaste", "trabajó", "trabajamos", "trabajasteis", "trabajaron"],
         "bailar":    ["bailé", "bailaste", "bailó", "bailamos", "bailasteis", "bailaron"],

@@ -112,138 +112,145 @@
 </div>
 
 <script>
-const regularPreteriteVerbs = [
-	"hablar", "caminar", "mirar", "tocar", "usar", "sacar", "buscar", "comer", "beber", "vivir", "escribir", "abrir"
-];
-
-const subjects = [
-	{ pronoun: "yo", endings: { ar: "é", er: "í", ir: "í" } },
-	{ pronoun: "tú", endings: { ar: "aste", er: "iste", ir: "iste" } },
-	{ pronoun: "él/ella/usted", endings: { ar: "ó", er: "ió", ir: "ió" } },
-	{ pronoun: "nosotros", endings: { ar: "amos", er: "imos", ir: "imos" } },
-	{ pronoun: "ellos/ellas/ustedes", endings: { ar: "aron", er: "ieron", ir: "ieron" } },
-];
-
-const questions = [];
-regularPreteriteVerbs.forEach(verb => {
-	const stem = verb.slice(0, -2);
-	const endingType = verb.endsWith("ar") ? "ar" : verb.endsWith("er") ? "er" : "ir";
-	subjects.forEach(subject => {
-		questions.push({
-			verb: verb,
-			subject: subject.pronoun,
-			answer: stem + subject.endings[endingType],
+	const regularPreteriteVerbs = [
+		"hablar", "caminar", "mirar", "usar", "comer", "beber", "vivir", "escribir", "abrir"
+	];
+	
+	const subjects = [
+		{ pronoun: "yo", endings: { ar: "é", er: "í", ir: "í" } },
+		{ pronoun: "tú", endings: { ar: "aste", er: "iste", ir: "iste" } },
+		{ pronoun: "él/ella/usted", endings: { ar: "ó", er: "ió", ir: "ió" } },
+		{ pronoun: "nosotros", endings: { ar: "amos", er: "imos", ir: "imos" } },
+		{ pronoun: "ellos/ellas/ustedes", endings: { ar: "aron", er: "ieron", ir: "ieron" } },
+	];
+	
+	const allQuestions = [];
+	regularPreteriteVerbs.forEach(verb => {
+		const stem = verb.slice(0, -2);
+		const endingType = verb.endsWith("ar") ? "ar" : verb.endsWith("er") ? "er" : "ir";
+		subjects.forEach(subject => {
+			allQuestions.push({
+				verb: verb,
+				subject: subject.pronoun,
+				answer: stem + subject.endings[endingType],
+			});
 		});
 	});
-});
-
-let currentQuestionIndex = -1;
-let totalCorrect = 0;
-const totalRequired = questions.length;
-let startTime;
-let hintTimer;
-let hintCounter = 5;
-let hintUsed = false;
-
-const prompt = document.getElementById("prompt");
-const input = document.getElementById("answerInput");
-const progressBar = document.getElementById("progressBar");
-const hint = document.getElementById("hint");
-const answerDisplay = document.getElementById("answerDisplay");
-const restartButton = document.getElementById("restartButton");
-const timerDisplay = document.getElementById("timerDisplay");
-
-function normalize(text) {
-	return text.toLowerCase().trim();
-}
-
-
-function insertAccent(char) {
-	const start = input.selectionStart;
-	const end = input.selectionEnd;
-	input.value = input.value.slice(0, start) + char + input.value.slice(end);
-	input.focus();
-	input.setSelectionRange(start + 1, start + 1);
-}
-
-function updateProgressBar() {
-	const percent = (totalCorrect / totalRequired) * 100;
-	progressBar.style.width = `${percent}%`;
-}
-
-function showQuestion() {
-	currentQuestionIndex++;
-	if (currentQuestionIndex >= questions.length) {
-		const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
-		timerDisplay.textContent = `Round completed in ${timeTaken} seconds!`;
-		restartButton.style.display = "block";
-		input.disabled = true;
-		return;
+	
+	let selectedQuestions = [];
+	let currentQuestionIndex = -1;
+	let totalCorrect = 0;
+	const roundSize = 15;
+	let startTime;
+	let hintTimer;
+	let hintCounter = 5;
+	let hintUsed = false;
+	
+	const prompt = document.getElementById("prompt");
+	const input = document.getElementById("answerInput");
+	const progressBar = document.getElementById("progressBar");
+	const hint = document.getElementById("hint");
+	const answerDisplay = document.getElementById("answerDisplay");
+	const restartButton = document.getElementById("restartButton");
+	const timerDisplay = document.getElementById("timerDisplay");
+	
+	function normalize(text) {
+		return text.toLowerCase().trim();
 	}
-
-	const q = questions[currentQuestionIndex];
-	prompt.textContent = `Conjugate "${q.verb}" for "${q.subject}"`;
-	input.value = "";
-	input.disabled = false;
-	input.classList.remove("correct");
-	answerDisplay.textContent = "";
-	input.focus();
-	hintUsed = false;
-	startHintCountdown();
-}
-
-function startHintCountdown() {
-	clearInterval(hintTimer);
-	hintCounter = 5;
-	hint.textContent = `Hint: (in ${hintCounter} seconds)`;
-	hintTimer = setInterval(() => {
-		hintCounter--;
-		if (hintCounter > 0) {
-			hint.textContent = `Hint: (in ${hintCounter} seconds)`;
-		} else {
-			hint.textContent = `Hint: (press enter)`;
-			clearInterval(hintTimer);
+	
+	function insertAccent(char) {
+		const start = input.selectionStart;
+		const end = input.selectionEnd;
+		input.value = input.value.slice(0, start) + char + input.value.slice(end);
+		input.focus();
+		input.setSelectionRange(start + 1, start + 1);
+		checkAnswer(); // Trigger answer checking after accent insert
+	}
+	
+	function updateProgressBar() {
+		const percent = (totalCorrect / roundSize) * 100;
+		progressBar.style.width = `${percent}%`;
+	}
+	
+	function showQuestion() {
+		currentQuestionIndex++;
+		if (currentQuestionIndex >= roundSize) {
+			const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
+			timerDisplay.textContent = `Round completed in ${timeTaken} seconds!`;
+			restartButton.style.display = "block";
+			input.disabled = true;
+			return;
 		}
-	}, 1000);
-}
-
-input.addEventListener("input", () => {
-	const q = questions[currentQuestionIndex];
-	if (normalize(input.value) === normalize(q.answer)) {
-		input.classList.add("correct");
-		input.disabled = true;
-		if (!hintUsed) totalCorrect++;
-		updateProgressBar();
+	
+		const q = selectedQuestions[currentQuestionIndex];
+		prompt.textContent = `Conjugate "${q.verb}" for "${q.subject}"`;
+		input.value = "";
+		input.disabled = false;
+		input.classList.remove("correct");
+		answerDisplay.textContent = "";
+		input.focus();
+		hintUsed = false;
+		startHintCountdown();
+	}
+	
+	function startHintCountdown() {
 		clearInterval(hintTimer);
-		setTimeout(showQuestion, 1000);
+		hintCounter = 5;
+		hint.textContent = `Hint: (in ${hintCounter} seconds)`;
+		hintTimer = setInterval(() => {
+			hintCounter--;
+			if (hintCounter > 0) {
+				hint.textContent = `Hint: (in ${hintCounter} seconds)`;
+			} else {
+				hint.textContent = `Hint: (press enter)`;
+				clearInterval(hintTimer);
+			}
+		}, 1000);
 	}
-});
-
-input.addEventListener("keydown", e => {
-	if (e.key === "Enter" && hintCounter <= 0) {
-		answerDisplay.textContent = `Correct answer: ${questions[currentQuestionIndex].answer}`;
-		hintUsed = true;
+	
+	function checkAnswer() {
+		const q = selectedQuestions[currentQuestionIndex];
+		if (normalize(input.value) === normalize(q.answer)) {
+			input.classList.add("correct");
+			input.disabled = true;
+			if (!hintUsed) totalCorrect++;
+			updateProgressBar();
+			clearInterval(hintTimer);
+			setTimeout(showQuestion, 1000);
+		}
 	}
-});
-
-restartButton.addEventListener("click", startGame);
-
-function startGame() {
-	// Shuffle questions
-	for (let i = questions.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[questions[i], questions[j]] = [questions[j], questions[i]];
+	
+	input.addEventListener("input", checkAnswer);
+	
+	input.addEventListener("keydown", e => {
+		if (e.key === "Enter" && hintCounter <= 0) {
+			answerDisplay.textContent = `Correct answer: ${selectedQuestions[currentQuestionIndex].answer}`;
+			hintUsed = true;
+		}
+	});
+	
+	restartButton.addEventListener("click", startGame);
+	
+	function startGame() {
+		// Shuffle and select 15 random questions
+		const shuffled = [...allQuestions];
+		for (let i = shuffled.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+		}
+		selectedQuestions = shuffled.slice(0, roundSize);
+	
+		currentQuestionIndex = -1;
+		totalCorrect = 0;
+		updateProgressBar();
+		timerDisplay.textContent = "";
+		restartButton.style.display = "none";
+		startTime = Date.now();
+		showQuestion();
 	}
-	currentQuestionIndex = -1;
-	totalCorrect = 0;
-	updateProgressBar();
-	timerDisplay.textContent = "";
-	restartButton.style.display = "none";
-	startTime = Date.now();
-	showQuestion();
-}
-
-startGame();
-</script>
+	
+	startGame();
+	</script>
+	
 </body>
 </html>

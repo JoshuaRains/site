@@ -281,8 +281,9 @@
         const cellIndex = r * gridCols + c;
         const cellElem = container.children[cellIndex];
         if (cellElem) {
-          cellElem.style.transition = "background-color 0.5s ease-out";
-          cellElem.style.backgroundColor = "#000"; // highlight color
+          cellElem.style.transition = "opacity 0.5s ease-out";
+          cellElem.style.opacity = "0.3";
+
         }
       }
     }

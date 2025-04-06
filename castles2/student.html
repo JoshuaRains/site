@@ -184,19 +184,22 @@
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
 
+      // Global variables.
       let gameCode = "";
       let studentRef = null;
       let studentTeam = "";
-      let bombMode = false; // Flag for bomb placement mode
-      // Default grid size (will be updated once game starts)
+      let bombMode = false; // True when the student is placing a bomb.
       let gridRows = 15, gridCols = 15;
       let grid = {};
       let questions = [];
       let unseenQuestions = [];
       let currentQuestion = null;
-      let currentChallengeMode = false; // Whether this question is in challenge mode
+      let currentChallengeMode = false; // Whether the current question is in challenge mode.
 
-      // DOM Elements
+      // Global variable for bomb cursor indicator.
+      let bombCursorIndicator = null;
+
+      // DOM Elements.
       const joinSection = document.getElementById("joinSection");
       const waitingSection = document.getElementById("waitingSection");
       const questionSection = document.getElementById("questionSection");
@@ -216,6 +219,42 @@
 
       joinGameBtn.addEventListener("click", joinGame);
 
+      // --- Bomb Mode Functions ---
+
+      // Enable bomb mode: update header text, set flag, and create bomb cursor indicator.
+      function enableBombMode() {
+        bombMode = true;
+        gridHeader.innerText = "Click to place 💣 and clear an area";
+        bombCursorIndicator = document.createElement("div");
+        bombCursorIndicator.innerText = "💣";
+        bombCursorIndicator.style.position = "fixed";
+        bombCursorIndicator.style.pointerEvents = "none";
+        bombCursorIndicator.style.fontSize = "16px"; // Adjust size as needed.
+        bombCursorIndicator.style.zIndex = "300";
+        document.body.appendChild(bombCursorIndicator);
+        gridSection.addEventListener("mousemove", updateBombIndicatorPosition);
+        renderGrid(); // Re-render grid to update cursor styles.
+      }
+
+      // Update bomb cursor indicator position.
+      function updateBombIndicatorPosition(e) {
+        bombCursorIndicator.style.left = (e.clientX - 8) + "px";
+        bombCursorIndicator.style.top = (e.clientY - 8) + "px";
+      }
+
+      // Disable bomb mode: remove bomb cursor indicator and event listener.
+      function disableBombMode() {
+        bombMode = false;
+        gridHeader.innerText = "Select a tile to capture or fortify";
+        if (bombCursorIndicator) {
+          bombCursorIndicator.remove();
+          bombCursorIndicator = null;
+        }
+        gridSection.removeEventListener("mousemove", updateBombIndicatorPosition);
+      }
+
+      // --- End Bomb Mode Functions ---
+
       function joinGame() {
         gameCode = gameCodeInput.value.trim();
         if (!gameCode) return;
@@ -232,18 +271,13 @@
                 joinedAt: firebase.database.ServerValue.TIMESTAMP
               });
               studentRef.onDisconnect().remove();
-
-              // Hide join section and show waiting.
               joinSection.style.display = "none";
               waitingSection.style.display = "block";
-
-              // Update always-visible displays.
               topLeftTeam.innerText = "Team: " + studentTeam.toUpperCase();
               topLeftTeam.style.color = (studentTeam === "red") ? "#ff6b6b" : "#4dabf7";
               topLeftTeam.style.display = "block";
               topRightCode.innerText = "Game Code: " + gameCode;
               topRightCode.style.display = "block";
-
               listenForGameState();
               listenForGridUpdates();
             });
@@ -262,12 +296,10 @@
           if (state === "started") {
             waitingSection.style.display = "none";
             studentGameOver.style.display = "none";
-            // Read the grid size from Firebase and update local gridRows and gridCols
             db.ref("games/" + gameCode + "/gridSize").once("value").then(snap => {
               const gridSize = parseInt(snap.val()) || 15;
               gridRows = gridSize;
               gridCols = gridSize;
-              // Then load questions and show next question.
               db.ref("games/" + gameCode + "/questions").once("value").then(snap => {
                 questions = snap.val() || [];
                 if (!Array.isArray(questions)) {
@@ -297,7 +329,7 @@
         });
       }
 
-      // Helper: Shuffle an array
+      // Helper: Shuffle an array.
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -306,7 +338,7 @@
         return array;
       }
 
-      // Record performance data (transactionally updating totals per question)
+      // Record performance data.
       function recordQuestionPerformance(question, isCorrect) {
         const sanitize = str => str.replace(/[.#$\[\]]/g, '_');
         const questionKey = sanitize(question);
@@ -325,10 +357,9 @@
 
       function showNextQuestion() {
         gridSection.style.display = "none";
-        // Reset header to default.
+        // Reset header and bomb mode.
         gridHeader.innerText = "Select a tile to capture or fortify";
-        bombMode = false;
-
+        disableBombMode();
         if (!questions || questions.length === 0) {
           questionText.innerText = "No questions available. Please wait for the teacher to update them.";
           optionsContainer.innerHTML = "";
@@ -344,18 +375,14 @@
         currentQuestion = questions[questionIndex];
         questionText.innerText = currentQuestion.question;
         optionsContainer.innerHTML = "";
-
-        // Randomly decide if this question will be in challenge mode (80% chance).
+        // Randomly decide challenge mode (80% chance).
         currentChallengeMode = Math.random() < 0.8;
-
         if (currentChallengeMode) {
-          // Display text input for answer and a Skip Challenge button.
           const input = document.createElement("input");
           input.type = "text";
           input.placeholder = "Type your answer here";
           input.id = "challengeInput";
           optionsContainer.appendChild(input);
-          // Prevent enter key from submitting.
           input.addEventListener("keydown", function(e) {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -363,7 +390,7 @@
           });
           input.addEventListener("input", function() {
             if (input.value.trim().toLowerCase() === currentQuestion.answer.trim().toLowerCase()) {
-              input.style.backgroundColor = "#51cf66"; // green
+              input.style.backgroundColor = "#51cf66";
               setTimeout(() => {
                 submitChallengeAnswer(true);
               }, 1000);
@@ -371,7 +398,6 @@
               input.style.backgroundColor = "";
             }
           });
-          // Skip Challenge button to show multiple choice fallback.
           const skipBtn = document.createElement("button");
           skipBtn.innerText = "Skip Challenge";
           skipBtn.addEventListener("click", function() {
@@ -379,7 +405,6 @@
           });
           optionsContainer.appendChild(skipBtn);
         } else {
-          // For normal (multiple choice) questions, render the options.
           renderMultipleChoice();
         }
       }
@@ -444,9 +469,7 @@
         gridSection.style.display = "block";
         renderGrid();
         if (isCorrect) {
-          // Update header text when bomb mode is activated.
-          gridHeader.innerText = "Click to place 💣 and clear an area";
-          bombMode = true;
+          enableBombMode();
         } else {
           setTimeout(() => {
             showNextQuestion();
@@ -454,14 +477,14 @@
         }
       }
 
-      // Updated computeTileSize uses gridSection.clientHeight so that the grid scales to the remaining space.
+      // Compute tile size based on available space.
       function computeTileSize() {
         const availableWidth = window.innerWidth * 0.9;
         const availableHeight = gridSection.clientHeight;
         return Math.min(availableWidth / gridCols, availableHeight / gridRows);
       }
 
-      // A move is valid if at least one of the 8 adjacent cells (including diagonals) is occupied by the student's team.
+      // Valid move: if at least one adjacent cell is owned by the student.
       function isValidMove(r, c) {
         const directions = [
           [-1, -1], [-1, 0], [-1, 1],
@@ -480,111 +503,103 @@
         return false;
       }
 
-      // Render grid with one click event per cell.
-      // This version sets the cursor style so that cells where moves are not allowed show a "not-allowed" cursor.
+      // Render grid with appropriate cursor styles.
       function renderGrid() {
-  questionSection.style.display = "none";
-  gridContainer.innerHTML = "";
-  gridContainer.style.gridTemplateColumns = "repeat(" + gridCols + ", 1fr)";
-  gridContainer.style.gridTemplateRows = "repeat(" + gridRows + ", 1fr)";
-  const tileSize = computeTileSize();
-  gridContainer.style.width = (tileSize * gridCols) + "px";
-  gridContainer.style.height = (tileSize * gridRows) + "px";
-  for (let r = 0; r < gridRows; r++) {
-    for (let c = 0; c < gridCols; c++) {
-      const key = r + "_" + c;
-      const cell = grid[key] || { team: null, fort: 0 };
-      const cellDiv = document.createElement("div");
-      cellDiv.className = "grid-cell";
-      cellDiv.style.width = tileSize + "px";
-      cellDiv.style.height = tileSize + "px";
-      // Mark the cell's row and column.
-      cellDiv.setAttribute("data-row", r);
-      cellDiv.setAttribute("data-col", c);
-      // Mark home base cells.
-      if (cell.capital) {
-        cellDiv.setAttribute("data-capital", "true");
-      }
-      // Set the background color based on team.
-      if (cell.team === "red") {
-        cellDiv.style.backgroundColor = "#ff6b6b";
-      } else if (cell.team === "blue") {
-        cellDiv.style.backgroundColor = "#4dabf7";
-      }
-      if (cell.capital) {
-        const indicator = document.createElement("div");
-        indicator.className = "capital-indicator";
-        cellDiv.appendChild(indicator);
-      }
-      if (cell.fort && cell.fort > 0) {
-        const fortDiv = document.createElement("div");
-        fortDiv.style.position = "absolute";
-        fortDiv.style.bottom = "2px";
-        fortDiv.style.right = "2px";
-        fortDiv.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-        fortDiv.style.color = "#fff";
-        fortDiv.style.padding = "2px";
-        fortDiv.style.borderRadius = "3px";
-        fortDiv.style.fontSize = "10px";
-        fortDiv.innerText = cell.fort;
-        cellDiv.appendChild(fortDiv);
-      }
-      // Set cursor style: If in bomb mode, allow pointer everywhere.
-      if (bombMode) {
-        cellDiv.style.cursor = "pointer";
-      } else {
-        // In normal mode, only allow moves on valid (non-capital) cells.
-        if (!cell.capital) {
-          if (cell.team === studentTeam) {
-            cellDiv.style.cursor = cell.fort < 5 ? "pointer" : "not-allowed";
-          } else if (isValidMove(r, c)) {
-            cellDiv.style.cursor = "pointer";
-          } else {
-            cellDiv.style.cursor = "not-allowed";
-          }
-        } else {
-          cellDiv.style.cursor = "not-allowed";
-        }
-      }
-      // Attach click event.
-      cellDiv.onclick = function() {
-        if (bombMode) {
-          // Bomb mode: place bomb, reset header, show bomb effect, then proceed.
-          placeBomb(r, c);
-          bombMode = false;
-          gridHeader.innerText = "Select a tile to capture or fortify";
-          showBombEffect(r, c);
-          setTimeout(() => {
-            showNextQuestion();
-          }, 2000);
-        } else {
-          // Normal tile move.
-          if (!cell.capital) {
-            if (cell.team === studentTeam) {
-              if (cell.fort < 5) {
-                db.ref("games/" + gameCode + "/grid/" + key + "/fort").set(cell.fort + 1);
-                gridSection.style.display = "none";
-                showNextQuestion();
-              }
-            } else if (isValidMove(r, c)) {
-              if (cell.fort && cell.fort > 0) {
-                db.ref("games/" + gameCode + "/grid/" + key + "/fort").set(cell.fort - 1);
-              } else {
-                db.ref("games/" + gameCode + "/grid/" + key).set({ team: studentTeam, fort: 0 });
-              }
-              gridSection.style.display = "none";
-              showNextQuestion();
+        questionSection.style.display = "none";
+        gridContainer.innerHTML = "";
+        gridContainer.style.gridTemplateColumns = "repeat(" + gridCols + ", 1fr)";
+        gridContainer.style.gridTemplateRows = "repeat(" + gridRows + ", 1fr)";
+        const tileSize = computeTileSize();
+        gridContainer.style.width = (tileSize * gridCols) + "px";
+        gridContainer.style.height = (tileSize * gridRows) + "px";
+        for (let r = 0; r < gridRows; r++) {
+          for (let c = 0; c < gridCols; c++) {
+            const key = r + "_" + c;
+            const cell = grid[key] || { team: null, fort: 0 };
+            const cellDiv = document.createElement("div");
+            cellDiv.className = "grid-cell";
+            cellDiv.style.width = tileSize + "px";
+            cellDiv.style.height = tileSize + "px";
+            cellDiv.setAttribute("data-row", r);
+            cellDiv.setAttribute("data-col", c);
+            if (cell.capital) {
+              cellDiv.setAttribute("data-capital", "true");
             }
+            if (cell.team === "red") {
+              cellDiv.style.backgroundColor = "#ff6b6b";
+            } else if (cell.team === "blue") {
+              cellDiv.style.backgroundColor = "#4dabf7";
+            }
+            if (cell.capital) {
+              const indicator = document.createElement("div");
+              indicator.className = "capital-indicator";
+              cellDiv.appendChild(indicator);
+            }
+            if (cell.fort && cell.fort > 0) {
+              const fortDiv = document.createElement("div");
+              fortDiv.style.position = "absolute";
+              fortDiv.style.bottom = "2px";
+              fortDiv.style.right = "2px";
+              fortDiv.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+              fortDiv.style.color = "#fff";
+              fortDiv.style.padding = "2px";
+              fortDiv.style.borderRadius = "3px";
+              fortDiv.style.fontSize = "10px";
+              fortDiv.innerText = cell.fort;
+              cellDiv.appendChild(fortDiv);
+            }
+            // Set cursor style.
+            if (bombMode) {
+              cellDiv.style.cursor = "pointer";
+            } else {
+              if (!cell.capital) {
+                if (cell.team === studentTeam) {
+                  cellDiv.style.cursor = cell.fort < 5 ? "pointer" : "not-allowed";
+                } else if (isValidMove(r, c)) {
+                  cellDiv.style.cursor = "pointer";
+                } else {
+                  cellDiv.style.cursor = "not-allowed";
+                }
+              } else {
+                cellDiv.style.cursor = "not-allowed";
+              }
+            }
+            cellDiv.onclick = function() {
+              if (bombMode) {
+                // Bomb mode: place bomb.
+                placeBomb(r, c);
+                disableBombMode();
+                showBombEffect(r, c);
+                setTimeout(() => {
+                  showNextQuestion();
+                }, 2000);
+              } else {
+                // Normal move actions.
+                if (!cell.capital) {
+                  if (cell.team === studentTeam) {
+                    if (cell.fort < 5) {
+                      db.ref("games/" + gameCode + "/grid/" + key + "/fort").set(cell.fort + 1);
+                      gridSection.style.display = "none";
+                      showNextQuestion();
+                    }
+                  } else if (isValidMove(r, c)) {
+                    if (cell.fort && cell.fort > 0) {
+                      db.ref("games/" + gameCode + "/grid/" + key + "/fort").set(cell.fort - 1);
+                    } else {
+                      db.ref("games/" + gameCode + "/grid/" + key).set({ team: studentTeam, fort: 0 });
+                    }
+                    gridSection.style.display = "none";
+                    showNextQuestion();
+                  }
+                }
+              }
+            };
+            gridContainer.appendChild(cellDiv);
           }
         }
-      };
-      gridContainer.appendChild(cellDiv);
-    }
-  }
-}
+      }
 
-      // Show bomb effect by adding a visual class to affected tiles.
-      // If a cell is a home base (data-capital attribute is set), it is skipped.
+      // Show bomb effect by highlighting affected tiles.
       function showBombEffect(bombRow, bombCol) {
         for (let r = bombRow - 1; r <= bombRow + 1; r++) {
           for (let c = bombCol - 1; c <= bombCol + 1; c++) {

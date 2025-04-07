@@ -375,8 +375,8 @@
         currentQuestion = questions[questionIndex];
         questionText.innerText = currentQuestion.question;
         optionsContainer.innerHTML = "";
-        // Randomly decide challenge mode (80% chance).
-        currentChallengeMode = Math.random() < 0.8;
+        // Randomly decide challenge mode (10% chance).
+        currentChallengeMode = Math.random() < 0.1;
         if (currentChallengeMode) {
           const input = document.createElement("input");
           input.type = "text";
@@ -398,6 +398,31 @@
               input.style.backgroundColor = "";
             }
           });
+          // Add accent mark buttons.
+          const accentSymbols = ['á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü'];
+          const accentContainer = document.createElement("div");
+          accentContainer.style.marginTop = "10px";
+          accentSymbols.forEach(symbol => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.innerText = symbol;
+            // Prevent the input from losing focus.
+            btn.addEventListener("mousedown", function(e) {
+              e.preventDefault();
+            });
+            btn.addEventListener("click", function() {
+              const startPos = input.selectionStart;
+              const endPos = input.selectionEnd;
+              const originalText = input.value;
+              input.value = originalText.substring(0, startPos) + symbol + originalText.substring(endPos);
+              input.selectionStart = input.selectionEnd = startPos + symbol.length;
+              input.focus();
+              input.dispatchEvent(new Event('input'));
+            });
+            accentContainer.appendChild(btn);
+          });
+          optionsContainer.appendChild(accentContainer);
+          // Skip Challenge Button.
           const skipBtn = document.createElement("button");
           skipBtn.innerText = "Skip Challenge";
           skipBtn.addEventListener("click", function() {

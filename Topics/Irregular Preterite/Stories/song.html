@@ -119,7 +119,7 @@
 </head>
 <body>
     <!-- In the body, add an audio element (it can be hidden) -->
-<audio id="audioPlayer" src="../../../assets/Monsieur Périné - Nuestra canción.mp3"></audio>
+<audio id="audioPlayer" src="../../../assets/Nuestra_cancion.mp3"></audio>
 
   <!-- Fixed Header with Nav Bar Only -->
   <div id="header">
@@ -149,7 +149,7 @@
   <!-- Scrollable Area for Song Content -->
   <div id="scrollable-area">
     <!-- Title above the song -->
-    <h1 id="song-title">Actividad de Canción – Pretérito</h1>
+    <h1 id="song-title">Nuestra Canción</h1>
     <div id="song-container"></div>
     <br>
   </div>
@@ -454,7 +454,7 @@ Nuestra canción`;
         translationBox.style.top = "0px";
         var boxRect = translationBox.getBoundingClientRect();
         var left = rect.left + (rect.width / 2) - (boxRect.width / 2);
-        var top = rect.top - boxRect.height + 30;
+        var top = rect.top - boxRect.height + 0;
         translationBox.style.left = left + "px";
         translationBox.style.top = top + "px";
       });
@@ -517,7 +517,7 @@ Nuestra canción`;
           translationBox.style.top = "0px";
           var boxRect = translationBox.getBoundingClientRect();
           var left = rect.left + (rect.width / 2) - (boxRect.width / 2);
-          var top = rect.top - boxRect.height + 30;
+          var top = rect.top - boxRect.height + 0;
           translationBox.style.left = left + "px";
           translationBox.style.top = top + "px";
         }

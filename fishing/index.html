@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pixel Art Game - Debug Info</title>
+  <style>
+    /* Fill the viewport, center content, and hide overflow */
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #eee;
+      position: relative;
+    }
+    /* The fixed background container holds the world image */
+    #background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* World image centered with scaling applied */
+    #world-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(5);
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    /* Fixed canvas for the player that covers the viewport */
+    #player-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    /* Debug panel styling */
+    #debug {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background container holding the world image -->
+  <div id="background-container">
+    <img id="world-img" src="./assets/world.png" alt="World Image" onload="initGame()">
+  </div>
+  <!-- Fixed player canvas (blue circle) -->
+  <canvas id="player-canvas"></canvas>
+  <!-- Debug panel -->
+  <div id="debug">Loading debug info...</div>
+
+  <script>
+    // Global variables to track input and world position.
+    const keysPressed = {};
+    let worldOffset = { x: 0, y: 0 };
+    const speed = 100; // world pixels per second
+    let lastTimestamp = null;
+
+    // Initialize the game once the world image has loaded.
+    function initGame() {
+      // Set up the player canvas to cover the entire viewport.
+      const playerCanvas = document.getElementById('player-canvas');
+      playerCanvas.width = window.innerWidth;
+      playerCanvas.height = window.innerHeight;
+      
+      // Disable smoothing for crisp pixel art.
+      const playerCtx = playerCanvas.getContext('2d');
+      playerCtx.imageSmoothingEnabled = false;
+
+      // Listen for multiple simultaneous key presses.
+      window.addEventListener('keydown', (e) => {
+        keysPressed[e.key] = true;
+      });
+      window.addEventListener('keyup', (e) => {
+        keysPressed[e.key] = false;
+      });
+
+      // Begin the animation loop.
+      window.requestAnimationFrame(update);
+    }
+
+    // Update the CSS transform for the world background image.
+    function updateBackgroundTransform() {
+      const bgImg = document.getElementById('world-img');
+      bgImg.style.transform = `translate(calc(-50% + ${worldOffset.x}px), calc(-50% + ${worldOffset.y}px)) scale(5)`;
+    }
+
+    // Animation loop: updates world offset, draws the player, and updates the debug information.
+    function update(timestamp) {
+      // Calculate delta time for smooth movement.
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const dt = (timestamp - lastTimestamp) / 1000; // seconds
+      lastTimestamp = timestamp;
+
+      // Determine movement direction based on multiple keys being pressed.
+      let dx = 0;
+      let dy = 0;
+      if (keysPressed['w'] || keysPressed['ArrowUp'])    dy += 1;  // Move world down.
+      if (keysPressed['s'] || keysPressed['ArrowDown'])  dy -= 1;  // Move world up.
+      if (keysPressed['a'] || keysPressed['ArrowLeft'])    dx += 1;  // Move world right.
+      if (keysPressed['d'] || keysPressed['ArrowRight'])  dx -= 1;  // Move world left.
+
+      // If any movement keys are active, update the world offset.
+      if (dx !== 0 || dy !== 0) {
+        // Normalize movement for diagonal directions.
+        const magnitude = Math.sqrt(dx * dx + dy * dy);
+        dx /= magnitude;
+        dy /= magnitude;
+        worldOffset.x += dx * speed * dt;
+        worldOffset.y += dy * speed * dt;
+        updateBackgroundTransform();
+      }
+
+      // Draw the player (blue circle).
+      drawPlayer();
+
+      // Update debug info to show current world offset.
+      const debugDiv = document.getElementById('debug');
+      debugDiv.innerText = `World Offset: x: ${Math.round(worldOffset.x) / 10} y: ${Math.round(worldOffset.y) / 10}`;
+
+      window.requestAnimationFrame(update);
+    }
+
+    // Draw the blue circle centered on the player canvas.
+    function drawPlayer() {
+      const canvas = document.getElementById('player-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Determine the center of the canvas.
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 2; // Radius of our placeholder character.
+      
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'blue';
+      ctx.fill();
+    }
+  </script>
+</body>
+</html>

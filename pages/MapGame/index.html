@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spanish-Speaking Americas Map Quiz</title>
+  <style>
+    body {
+      background: #ccc;
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin: 1rem 0;
+    }
+    #map-container {
+      display: inline-block;
+      width: 80vw;
+      max-width: 800px;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+    }
+    /* default country styling */
+    svg [id] {
+      fill: #fff;
+      stroke: #000;
+      stroke-width: 0.3;
+      cursor: pointer;
+      transition: fill 0.3s;
+    }
+    /* feedback */
+    .correct {
+      fill: #4caf50 !important;
+    }
+    .incorrect {
+      fill: #f44336 !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>Click on: <span id="target-name">…</span></h1>
+  <div id="map-container"></div>
+
+  <script>
+    // Spanish-speaking Americas ISO codes & names
+    const quizList = [
+      { code: 'MX', name: 'Mexico' },
+      { code: 'GT', name: 'Guatemala' },
+      { code: 'HN', name: 'Honduras' },
+      { code: 'SV', name: 'El Salvador' },
+      { code: 'NI', name: 'Nicaragua' },
+      { code: 'CR', name: 'Costa Rica' },
+      { code: 'PA', name: 'Panama' },
+      { code: 'CU', name: 'Cuba' },
+      { code: 'DO', name: 'Dominican Republic' },
+      { code: 'PR', name: 'Puerto Rico' },
+      { code: 'CO', name: 'Colombia' },
+      { code: 'VE', name: 'Venezuela' },
+      { code: 'EC', name: 'Ecuador' },
+      { code: 'PE', name: 'Peru' },
+      { code: 'BO', name: 'Bolivia' },
+      { code: 'PY', name: 'Paraguay' },
+      { code: 'CL', name: 'Chile' },
+      { code: 'AR', name: 'Argentina' },
+      { code: 'UY', name: 'Uruguay' }
+    ];
+
+    let currentIndex = 0;
+    const targetEl = document.getElementById('target-name');
+
+    function ask() {
+      if (currentIndex < quizList.length) {
+        targetEl.textContent = quizList[currentIndex].name;
+      } else {
+        targetEl.textContent = '¡Terminado!';
+      }
+    }
+
+    // Load your local SVG file (map.svg)
+    fetch('map.svg')
+      .then(res => res.text())
+      .then(svgText => {
+        document.getElementById('map-container').innerHTML = svgText;
+        const svg = document.querySelector('#map-container svg');
+
+        svg.querySelectorAll('[id]').forEach(elem => {
+          elem.addEventListener('click', () => {
+            if (currentIndex >= quizList.length) return;
+            const correctCode = quizList[currentIndex].code.toUpperCase();
+            const clickedCode = elem.id.toUpperCase();
+            if (clickedCode === correctCode) {
+              elem.classList.add('correct');
+              currentIndex++;
+              ask();
+            } else {
+              elem.classList.add('incorrect');
+              setTimeout(() => elem.classList.remove('incorrect'), 1000);
+            }
+          });
+        });
+
+        ask();
+      })
+      .catch(err => {
+        console.error('Error loading SVG:', err);
+        alert('No se pudo cargar el mapa. ¿Está “map.svg” en la misma carpeta?');
+      });
+  </script>
+</body>
+</html>

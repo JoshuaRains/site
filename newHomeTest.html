@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <title>MrRains.org</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <!-- Google Fonts and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Doto:wght@100..900&family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&family=Silkscreen:wght@400;700&family=Noto+Serif&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background: linear-gradient(to bottom, #517860, #5c8a6d);
+      color: #ecefec;
+      min-height: 100vh;
+    }
+    .container { width: 90%; margin: 0 auto; padding: 20px; }
+
+    .welcome {
+      font-size: 60px;
+      font-family: 'Noto Serif', serif;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .greeting {
+      margin: 5px 0 100px 300px;
+      font-size: 20px;
+      animation: pulse 3s ease-in-out infinite;
+      text-align: center;
+    }
+    @keyframes pulse { 0%,100% { transform: scale(1) rotate(5deg); } 50% { transform: scale(1.1) rotate(5deg); } }
+
+    /* Juegos Carousel */
+    .juegos-header {
+      position: relative;
+      background-color: #79b791;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      padding: 10px 50px;
+      text-align: center;
+      font-family: "Silkscreen", serif;
+      font-size: 30px;
+      min-width: 400px;
+    }
+    .juegos-header .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #ecefec;
+      cursor: pointer;
+      z-index: 1;
+    }
+    .juegos-header .prev { left: 10px; }
+    .juegos-header .next { right: 10px; }
+
+    .preview-text {
+      font-size: 12px;
+      color: #ecefec;
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    .games-container {
+      background-color: #abd1b5;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      min-width: 400px;
+
+    }
+    .games-slider { display: flex; }
+    .games-slide {
+      min-width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .game-item {
+      background-color: #abd1b5;
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      border-color: #5c8a6d00;
+      text-align: center;
+      padding: 10px;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      cursor: pointer;
+    }
+    .game-item img { width: 100%; height: auto; border-radius: 10px; }
+    .game-item p { font-weight: bold; margin-top: 10px; color: #000; }
+    .game-item:hover { filter: brightness(0.9); transform: scale(1.05); }
+
+    /* Announcement Slide */
+    .announcement-box {
+  position: relative;
+  overflow: hidden;           
+  background-image: url('assets/cork.jpg');
+  background-repeat: repeat;
+  background-size: 1000px 500px;
+  border-radius: 10px;
+  width: calc(100% - 10px);
+  height: 300px;
+  margin: 5px auto;
+}
+
+
+.slip {
+  position: absolute;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 200px;            /* default width; override inline if you like */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  font-family: 'Noto Sans', sans-serif;
+}
+
+/* the push-pin graphic */
+.slip .pin {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  background: url('assets/pin.png') no-repeat center;
+  background-size: contain;
+}
+
+
+    /* Activities Section */
+    .activities {
+      margin-top: 40px;
+    }
+
+    /* Tabs */
+    .activities-tabs {
+      display: flex;
+      justify-content: space-around;
+      border-bottom: none;
+    }
+    .activities-tab {
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      font-size: 18px;
+      color: #c4c4c4;
+      border-bottom: 2px solid #c4c4c4;
+      cursor: pointer;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .activities-tab.active {
+      color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    /* Content Panes */
+    .activities-contents {
+      position: relative;
+    }
+    .activities-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .activities-content.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Reuse your existing activity styles inside each pane */
+    .activity-topic { font-size: 16px; color: #ecefec; font-family: 'Noto Sans', sans-serif; margin-bottom: 5px; }
+    .activity-button {
+      background: none; border: none; padding: 0; width: 100%; outline: none; min-width: 400px;
+    }
+    .activity-item {
+      display: flex; width: 100%;
+    }
+    .activity-icon {
+      padding: 10px; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(to right, #42E695, #3BB2B8);
+      border-top-left-radius: 10px; border-bottom-left-radius: 10px;
+    }
+    .activity-text {
+      padding: 10px; background-color: #abd1b5;
+      border-top-right-radius: 10px; border-bottom-right-radius: 10px;
+      display: flex; align-items: center; flex: 1;
+    }
+    .activity-item:hover .activity-icon,
+    .activity-item:hover .activity-text {
+      filter: brightness(0.9);
+    }
+
+    .activity-icon.package_2 {
+      background: linear-gradient(to right, #00C6FF, #0072FF); /* Bright blue gradient for "notifications" */
+    }
+
+    .activity-icon.notifications {
+        background: linear-gradient(to right, #00C6FF, #0072FF); /* Bright blue gradient for "notifications" */
+    }
+
+    .activity-icon.sports_esports {
+        background: linear-gradient(to right, #FF7EB3, #FF758C); /* Pink to soft red for "esports" */
+    }
+
+    .activity-icon.description {
+    background: linear-gradient(to right, #42E695, #3BB2B8); /* Vibrant teal gradient for "training" */
+
+    }
+
+    .activity-icon.model_training {
+    background: linear-gradient(to right, #FFD700, #FFA500); /* Golden to orange for "package" */
+
+    }
+
+    .activity-icon.smart_display {
+        background: linear-gradient(to right, #FF512F, #DD2476); /* Warm sunset gradient for "display" */
+    }
+    .activity-icon.dictionary {
+        background: linear-gradient(to right, #00C6FF, #0072FF); /* Bright blue gradient for "notifications" */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="welcome">¡Bienvenidos!</p>
+    <p class="greeting">¿Qué estudiamos hoy?</p>
+
+    <!-- Juegos Carousel Header -->
+    <div class="juegos-header">
+      <button class="arrow prev" id="prevBtn">
+        &#x25C0;
+        <div class="preview-text" id="prevPreview">Previous Slide</div>
+      </button>
+      
+      <span id="juegosTitle">Announcements</span>
+      <button class="arrow next" id="nextBtn">
+        &#x25B6;
+        <div class="preview-text" id="nextPreview">Next Slide</div>
+      </button>
+    </div>
+
+    <!-- Juegos Carousel Slides -->
+    <div class="games-container">
+      <div class="games-slider" id="slider">
+        <!-- Announcements Slide -->
+        <div class="games-slide" data-title="Anuncios">
+            <div class="announcement-box">
+                <!-- Slip #1: header + body -->
+                <div class="slip" style="top: 20px; left: 30px;">
+                  <div class="pin"></div>
+                  <h3 style="margin: 0 0 6px; font-size: 16px; color: #333;">Welcome to class!</h3>
+                  <p style="margin: 0; font-size: 14px; color: #555;">
+                    I hope you are all excited to learn Spanish this year!<br>
+                  </p>
+                </div>
+              
+                <!-- Slip #2: flag of Colombia -->
+                <div class="slip" style="top: 150px; left: 500px; width: 150px;">
+                  <div class="pin"></div>
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/1280px-Flag_of_Colombia.svg.png" alt="Colombia flag"
+                       style="display: block; width: 100%; border-radius: 4px;" />
+                </div>
+              </div>
+              
+        </div>
+        <!-- Numbers Slide -->
+        <div class="games-slide" data-title="Números">
+          <button class="game-item" onclick="location.href='pages/NumberGame/numbergame30.html'"><img src="assets/NumbersBronze.png" alt="0-30"><p>0-30</p></button>
+          <button class="game-item" onclick="location.href='pages/NumberGame/numbergame100.html'"><img src="assets/NumbersSilver.png" alt="30-100"><p>30-100</p></button>
+          <button class="game-item" onclick="location.href='pages/NumberGame/numbergame1000.html'"><img src="assets/NummbersGold.png" alt="100-1000"><p>100-1000</p></button>
+          <button class="game-item" onclick="location.href='pages/NumberGame/numbergame10000.html'"><img src="assets/NumbersDiamond.png" alt="1000-10k"><p>1000-10k</p></button>
+        </div>
+        <!-- Diversos Slide -->
+        <div class="games-slide" data-title="Herramientas">
+          <button class="game-item" onclick="location.href='CienLatinos/index.html'"><img src="assets/Cien Latinos Dijeron.png" alt="Cien Latinos"><p>Cien Latinos</p></button>
+          <button class="game-item" onclick="window.open('https://corpus.rae.es/frec/1000_formas.TXT','_blank')"><img src="assets/TopVocab.png" alt="Vocab Común"><p>Vocab Común</p></button>
+          <button class="game-item" onclick="location.href='./pages/StopMotion/index.html'"><img src="assets/stopMotion.png" alt="Stop Motion"><p>Stop Motion</p></button>
+          <button class="game-item" onclick="location.href='./gradecalculator/index.html'"><img src="assets/GradeCalc.png" alt="Grade Calculator"><p>Calculadora</p></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activities List -->
+    <div class="activities">
+        <!-- Tab Headers -->
+        <div class="activities-tabs">
+          <button class="activities-tab active" data-tab="spanish1">Spanish I</button>
+          <button class="activities-tab" data-tab="spanish2">Spanish II</button>
+        </div>
+  
+        <!-- Tab Contents -->
+        <div class="activities-contents">
+          <!-- Spanish I pane (default) -->
+          <div id="spanish1" class="activities-content active">
+            <br>
+            <br>
+            
+            <p>you're probably looking for Spanish II. →</p>
+            
+            </div>
+          <!-- Spanish II pane -->
+          <div id="spanish2" class="activities-content">
+            <p class="activity-topic">4/20</p>
+            <button class="activity-button" onclick="location.href='./Topics/Verb_Review/VerbLists/TopVerbs.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Verb Vocabulary List</div>
+              </div>
+            </button>
+      
+            <p class="activity-topic">4/15</p>
+          
+            <button class="activity-button" onclick="location.href='./assets/El Alquimista section 1.pdf'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Reading Activity</div>
+              </div>
+            </button>
+      
+            <p class="activity-topic">4/11</p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Imperfect/Games/practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Imperfect Practice Game</div>
+              </div>
+            </button>
+      
+            <button class="activity-button" onclick="location.href='./castles2/student.html'">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Imperfect Castles Game</div>
+              </div>
+            </button>
+      
+            <button class="activity-button" onclick="location.href='./Topics/Irregular Preterite/Stories/song.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Preterite Song</div>
+              </div>
+            </button>
+      
+            <p class="activity-topic">4/8</p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Irregular Preterite/Worksheets/speaking.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Preterite Speaking Activity</div>
+              </div>
+            </button>
+            
+          
+            
+            <button class="activity-button" onclick="location.href='./Topics/Irregular Preterite/complete_irregular_practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">All irregular preterite :)</div>
+              </div>
+            </button>
+          
+            <p class="activity-topic">4/7</p>
+          
+            <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Irregular Preterite quizziz</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Irregular Preterite/Stories/song.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Preterite Song</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./castles2/student.html'">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Preterite Castles Game</div>
+              </div>
+            </button>
+          
+            <p class="activity-topic">4/3</p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Games/practice2.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text"><b>Body Part &nbsp</b> Only Vocabulary Practice</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Games/practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Medical Vocabulary Practice</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./castles/student.html'">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary Game</div>
+              </div>
+            </button>
+          
+            <p class="activity-topic">4/2</p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Irregular Preterite/Worksheets/Irregular Preterite Verbs.pdf'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Irregular Preterite Verbs - Note Sheet</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Irregular Preterite/practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Irregular Preterite Practice</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Irregular Preterite quizziz</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Games/practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary Practice</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./castles/student.html'">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary Game</div>
+              </div>
+            </button>
+          
+            <p class="activity-topic">4/1</p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Preterite/games/regularpractice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Regular Preterite Practice</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Reflexives/Shorts/Shorts.html'">
+              <div class="activity-item">
+                <div class="activity-icon smart_display">
+                  <span class="material-icons">smart_display</span>
+                </div>
+                <div class="activity-text">Daily Routine Videos</div>
+              </div>
+            </button>
+          
+            <p class="activity-topic">3/31</p>
+          
+            <button class="activity-button" onclick="location.href='./battleship/regular_preterite/regular_preterite.html'">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Battleship <b>&nbsp Regular &nbsp</b> Preterite Practice</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Games/practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary Practice</div>
+              </div>
+            </button>
+          
+            <br>
+            <p class="activity-topic">  <i>Spring break!</i> </p>
+            <br>
+          
+            <p class="activity-topic">3/21 <i>Career Day!</i></p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Reflexives/Worksheets/talking_activity.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Reflexives Speaking Activity</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Shorts/medical.html'">
+              <div class="activity-item">
+                <div class="activity-icon smart_display">
+                  <span class="material-icons">smart_display</span>
+                </div>
+                <div class="activity-text">Medical Terms Videos</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/VerbSpotlights/DolerPractice.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Doler Practice</div>
+              </div>
+            </button>
+          
+            <p class="activity-topic">3/20</p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/VerbSpotlights/VerbSpotlightDoler.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Verb Spotlight - Doler</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Shorts/bodyParts1.html'">
+              <div class="activity-item">
+                <div class="activity-icon smart_display">
+                  <span class="material-icons">smart_display</span>
+                </div>
+                <div class="activity-text">Body Part Videos</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./castles/student.html'">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary Game</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Games/practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary Practice</div>
+              </div>
+            </button>
+          
+          
+            <p class="activity-topic">3/18 <i>ACT Day!</i></p>
+          
+            <p class="activity-topic">3/17</p>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Worksheets/vocabList.html'">
+              <div class="activity-item">
+                <div class="activity-icon description">
+                  <span class="material-icons">description</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary List</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Games/practice.html'">
+              <div class="activity-item">
+                <div class="activity-icon model_training">
+                  <span class="material-icons">model_training</span>
+                </div>
+                <div class="activity-text">Body Part Vocabulary Practice Game</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="location.href='./Topics/Body_parts/Shorts/bodyParts.html'">
+              <div class="activity-item">
+                <div class="activity-icon smart_display">
+                  <span class="material-icons">smart_display</span>
+                </div>
+                <div class="activity-text">Body Part Videos</div>
+              </div>
+            </button>
+          
+            <button class="activity-button" onclick="window.open('https://quizizz.com/join', '_blank')">
+              <div class="activity-item">
+                <div class="activity-icon sports_esports">
+                  <span class="material-icons">sports_esports</span>
+                </div>
+                <div class="activity-text">Body part quizziz</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const slider = document.getElementById('slider');
+      const slides = Array.from(slider.children);
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const title = document.getElementById('juegosTitle');
+      let isTransitioning = false;
+      let currentIndex = 1;
+      const slideCount = slides.length;
+
+      const firstClone = slides[0].cloneNode(true);
+      const lastClone = slides[slideCount - 1].cloneNode(true);
+      slider.appendChild(firstClone);
+      slider.insertBefore(lastClone, slider.firstChild);
+
+      const allSlides = Array.from(slider.children);
+      slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+      title.textContent = allSlides[currentIndex].dataset.title;
+
+      prevBtn.addEventListener('click', () => moveSlide(-1));
+      nextBtn.addEventListener('click', () => moveSlide(1));
+
+      function moveSlide(dir) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        currentIndex += dir;
+        slider.style.transition = 'transform 0.5s ease';
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+      }
+
+      slider.addEventListener('transitionend', () => {
+        if (currentIndex === 0) {
+          slider.style.transition = 'none';
+          currentIndex = slideCount;
+        } else if (currentIndex === slideCount + 1) {
+          slider.style.transition = 'none';
+          currentIndex = 1;
+        }
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        title.textContent = allSlides[currentIndex].dataset.title;
+       	isTransitioning = false;
+      });
+    });
+
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // … your Juegos carousel code …
+
+      // Tab‐switching for Activities
+      const tabs = document.querySelectorAll('.activities-tab');
+      const panes = document.querySelectorAll('.activities-content');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          if (tab.classList.contains('active')) return;
+          // deactivate all
+          tabs.forEach(t => t.classList.remove('active'));
+          panes.forEach(p => p.classList.remove('active'));
+          // activate this one
+          tab.classList.add('active');
+          document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

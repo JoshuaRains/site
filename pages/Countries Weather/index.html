@@ -203,8 +203,10 @@
               <div class="data">${cardinalDirection}</div>
             `;
           } catch {
-            document.getElementById('weather').textContent =
-              'Error al obtener temperatura.';
+            document.getElementById('weather').innerHTML = `
+              <img src="../../assets/errorImage.svg" alt="Error Image" style="display: block; margin: 0 auto; width: 100px; height: auto;">
+              <p>Error al obtener temperatura.</p>
+            `;
           }
         } else {
           document.getElementById('weather').textContent =

@@ -271,6 +271,12 @@ image-rendering: -webkit-optimize-contrast;
 </head>
 <body>
   <div class="container">
+    <div style="position: absolute; top: 10px; left: 10px;">
+      <button id="infoButton" style="background: none; border: none; cursor: pointer;">
+        <img src="assets/info.svg" alt="Info" style="width: 40px; height: 40px; filter: invert(100%);">
+      </button>
+    </div>
+
     <p class="welcome">¡Bienvenidos!</p>
     <p class="greeting">¿Qué estudiamos hoy?</p>
     
@@ -278,7 +284,117 @@ image-rendering: -webkit-optimize-contrast;
       <img id="flowerGif" class="flower-gif" src="assets/grass.gif" alt="Growing Flowers">
     </div>
 
+    <script>
+      // List of possible greetings with equal weights
+      const greetings = [
+        { text: "¿Qué estudiamos hoy?", weight: 1 },
+        
+        { text: "¡Bienvenidos a clase!", weight: 1 }
+      ];
+
+      // Function to get deterministic random index based on date
+      function getDailyIndex(dateStr, max) {
+        let total = 0;
+        for (let i = 0; i < dateStr.length; i++) {
+          total += dateStr.charCodeAt(i);
+        }
+        return total % max;
+      }
+
+      // Set the greeting when the page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date();
+        const dateString = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+        
+        // Calculate total weight
+        const totalWeight = greetings.reduce((sum, g) => sum + g.weight, 0);
+        
+        // Use the date to get a deterministic index
+        const dailyIndex = getDailyIndex(dateString, totalWeight);
+        
+        // Find the greeting based on the weighted index
+        let runningTotal = 0;
+        let selectedGreeting = greetings[0].text; // default
+        for (const greeting of greetings) {
+          runningTotal += greeting.weight;
+          if (dailyIndex < runningTotal) {
+            selectedGreeting = greeting.text;
+            break;
+          }
+        }
+        
+        // Update the greeting text
+        const greetingElement = document.querySelector(".greeting");
+        greetingElement.textContent = selectedGreeting;
+      });
+    </script>
+
+    <div id="info-popup" style="
+      display: none;
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -20%);
+      width: 40%;
+      background-color: #fff;
+      color: #000;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      z-index: 1000;
+      text-align: center;
+    ">
+      <h2>About this site</h2>
+      
+      <div style="margin-top: 20px;">
+        <img src="assets/no_cookies.png" alt="No Cookies" style="width: 30px; height: 30px; vertical-align: middle;">
+        <h3 style="display: inline-block; margin-left: 10px; vertical-align: middle;">No Cookies</h3>
+        <p style="margin-top: 5px;">This website doesn't use any cookies or tracking technologies.</p>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <img src="assets/flower.png" alt="No Student Data" style="width: 30px; height: 30px; vertical-align: middle;">
+        <h3 style="display: inline-block; margin-left: 10px; vertical-align: middle;">No Student Data</h3>
+        <p style="margin-top: 5px;">We don't store any personal information from students.</p>
+
+      </div>
+
+      <div style="margin-top: 20px;">
+        <img src="assets/no_data_refresh.png" alt="No Student Data" style="width: 30px; height: 30px; vertical-align: middle;">
+        <h3 style="display: inline-block; margin-left: 10px; vertical-align: middle;">Download to turn in</h3>
+        <p style="margin-top: 5px;">All data will disappear when the page is refreshed.</p>
+
+        <p style="margin-top: 5px;">All data that you want to save has to be downloaded to your computer.</p>
+      </div>
+
+      <button onclick="event.stopPropagation(); document.getElementById('info-popup').style.display='none'; document.getElementById('overlay').style.display='none';" style="
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #517860;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      ">Close</button>
+    </div>
+
+    <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;"></div>
     
+    <script>
+      const infoButton = document.getElementById('infoButton');
+      const popup = document.getElementById('info-popup');
+      const overlay = document.getElementById('overlay');
+      
+      infoButton.addEventListener('click', (e) => {
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+      });
+      
+      overlay.addEventListener('click', () => {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      });
+    </script>
 
     <!-- Juegos Carousel Header -->
     <div class="juegos-header">
@@ -330,19 +446,29 @@ image-rendering: -webkit-optimize-contrast;
           <button class="game-item" onclick="location.href='pages/Countries Weather'"><img src="assets/WeatherSymbol.png" alt="30-100"><p>Countries Weather</p></button>
 
         </div>
-        <!-- Numbers Slide -->
-        <div class="games-slide" data-title="Numbers">
+        
+        <!-- Diversos Slide -->
+        <div class="games-slide" data-title="Tools">
+          <button class="game-item" onclick="window.open('https://corpus.rae.es/frec/1000_formas.TXT','_blank')"><img src="assets/TopVocab.png" alt="Vocab Común"><p>Vocab Común</p></button>
+          <button class="game-item" onclick="location.href='./pages/StopMotion/index.html'"><img src="assets/stopMotion.png" alt="Stop Motion"><p>Stop Motion</p></button>
+          <button class="game-item" onclick="location.href='./gradecalculator/index.html'"><img src="assets/GradeCalc.png" alt="Grade Calculator"><p>Grade Calculator</p></button>
+          <button class="game-item" onclick="location.href='./Topics/Time/InteractiveClock.html'">
+            <img src="assets/InteractiveClock.png" alt="Interactive Clock">
+            <p>Interactive Clock</p>
+          </button>
+          
+        </div>
+
+        <div class="games-slide" data-title="Games">
           <button class="game-item" onclick="location.href='pages/NumberGame/numbergame30.html'"><img src="assets/NumbersBronze.png" alt="0-30"><p>0-30</p></button>
           <button class="game-item" onclick="location.href='pages/NumberGame/numbergame100.html'"><img src="assets/NumbersSilver.png" alt="30-100"><p>30-100</p></button>
           <button class="game-item" onclick="location.href='pages/NumberGame/numbergame1000.html'"><img src="assets/NummbersGold.png" alt="100-1000"><p>100-1000</p></button>
           <button class="game-item" onclick="location.href='pages/NumberGame/numbergame10000.html'"><img src="assets/NumbersDiamond.png" alt="1000-10k"><p>1000-10k</p></button>
-        </div>
-        <!-- Diversos Slide -->
-        <div class="games-slide" data-title="Tools">
           <button class="game-item" onclick="location.href='CienLatinos/index.html'"><img src="assets/Cien Latinos Dijeron.png" alt="Cien Latinos"><p>Cien Latinos</p></button>
-          <button class="game-item" onclick="window.open('https://corpus.rae.es/frec/1000_formas.TXT','_blank')"><img src="assets/TopVocab.png" alt="Vocab Común"><p>Vocab Común</p></button>
-          <button class="game-item" onclick="location.href='./pages/StopMotion/index.html'"><img src="assets/stopMotion.png" alt="Stop Motion"><p>Stop Motion</p></button>
-          <button class="game-item" onclick="location.href='./gradecalculator/index.html'"><img src="assets/GradeCalc.png" alt="Grade Calculator"><p>Calculadora</p></button>
+          <button class="game-item" onclick="location.href='./castles2/student.html'">
+            <img src="assets/TilesGame.png" alt="Tiles Game">
+            <p>Tiles Game</p>
+          </button>
         </div>
       </div>
     </div>
@@ -362,10 +488,8 @@ image-rendering: -webkit-optimize-contrast;
           <div id="spanish1" class="activities-content active">
             <br>
             <br>
-            
-            <p>you're probably looking for Spanish II. →</p>
-            
-            </div>
+            <p>you are probably looking for Spanish II →</p>
+          </div>
           <!-- Spanish II pane -->
           <div id="spanish2" class="activities-content">
             <p class="activity-topic">4/20</p>
@@ -785,7 +909,6 @@ image-rendering: -webkit-optimize-contrast;
         });
       });
     });
-
    
   </script>
 </body>

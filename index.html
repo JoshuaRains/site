@@ -267,6 +267,39 @@ image-rendering: -webkit-optimize-contrast;
 -ms-interpolation-mode: nearest-neighbor;
       image-rendering: pixelated; /* Ensure the grass texture is not blurry */
     }
+
+    img[src="assets/no_cookies.svg"],
+    img[src="assets/flower.svg"],
+    img[src="assets/no_data_refresh.svg"] {
+      filter: brightness(0) invert(0);
+    }
+
+    #info-popup img {
+      filter: invert(0%);
+    }
+
+    .special-symbols {
+      position: fixed;
+      top: 10%;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .special-symbols button {
+      padding: 10px;
+      background-color: #517860;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .special-symbols button:hover {
+      background-color: #3a5744;
+    }
   </style>
 </head>
 <body>
@@ -282,6 +315,20 @@ image-rendering: -webkit-optimize-contrast;
     
     <div class="flower-container">
       <img id="flowerGif" class="flower-gif" src="assets/grass.gif" alt="Growing Flowers">
+    </div>
+
+    <div class="special-symbols">
+      <button onclick="copyToClipboard('á')">á</button>
+      <button onclick="copyToClipboard('é')">é</button>
+      <button onclick="copyToClipboard('í')">í</button>
+      <button onclick="copyToClipboard('ó')">ó</button>
+      <button onclick="copyToClipboard('ú')">ú</button>
+      <button onclick="copyToClipboard('ñ')">ñ</button>
+      <button onclick="copyToClipboard('¡')">¡</button>
+      <button onclick="copyToClipboard('¿')">¿</button>
+      <button onclick="copyToClipboard('ü')">ü</button>
+      <button onclick="copyToClipboard('«')">«</button>
+      <button onclick="copyToClipboard('»')">»</button>
     </div>
 
     <script>
@@ -327,6 +374,12 @@ image-rendering: -webkit-optimize-contrast;
         const greetingElement = document.querySelector(".greeting");
         greetingElement.textContent = selectedGreeting;
       });
+
+      function copyToClipboard(symbol) {
+        navigator.clipboard.writeText(symbol).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      }
     </script>
 
     <div id="info-popup" style="
@@ -347,20 +400,20 @@ image-rendering: -webkit-optimize-contrast;
       <h2>About this site</h2>
       
       <div style="margin-top: 20px;">
-        <img src="assets/no_cookies.png" alt="No Cookies" style="width: 30px; height: 30px; vertical-align: middle;">
+        <img src="assets/no_cookies.svg" alt="No Cookies" style="width: 30px; height: 30px; vertical-align: middle;">
         <h3 style="display: inline-block; margin-left: 10px; vertical-align: middle;">No Cookies</h3>
         <p style="margin-top: 5px;">This website doesn't use any cookies or tracking technologies.</p>
       </div>
 
       <div style="margin-top: 20px;">
-        <img src="assets/flower.png" alt="No Student Data" style="width: 30px; height: 30px; vertical-align: middle;">
+        <img src="assets/flower.svg" alt="No Student Data" style="width: 30px; height: 30px; vertical-align: middle;">
         <h3 style="display: inline-block; margin-left: 10px; vertical-align: middle;">No Student Data</h3>
         <p style="margin-top: 5px;">We don't store any personal information from students.</p>
 
       </div>
 
       <div style="margin-top: 20px;">
-        <img src="assets/no_data_refresh.png" alt="No Student Data" style="width: 30px; height: 30px; vertical-align: middle;">
+        <img src="assets/no_data_refresh.svg" alt="No Student Data" style="width: 30px; height: 30px; vertical-align: middle;">
         <h3 style="display: inline-block; margin-left: 10px; vertical-align: middle;">Download to turn in</h3>
         <p style="margin-top: 5px;">All data will disappear when the page is refreshed.</p>
 

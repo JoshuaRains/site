@@ -317,20 +317,6 @@ image-rendering: -webkit-optimize-contrast;
       <img id="flowerGif" class="flower-gif" src="assets/grass.gif" alt="Growing Flowers">
     </div>
 
-    <div class="special-symbols">
-      <button onclick="copyToClipboard('á')">á</button>
-      <button onclick="copyToClipboard('é')">é</button>
-      <button onclick="copyToClipboard('í')">í</button>
-      <button onclick="copyToClipboard('ó')">ó</button>
-      <button onclick="copyToClipboard('ú')">ú</button>
-      <button onclick="copyToClipboard('ñ')">ñ</button>
-      <button onclick="copyToClipboard('¡')">¡</button>
-      <button onclick="copyToClipboard('¿')">¿</button>
-      <button onclick="copyToClipboard('ü')">ü</button>
-      <button onclick="copyToClipboard('«')">«</button>
-      <button onclick="copyToClipboard('»')">»</button>
-    </div>
-
     <script>
       // List of possible greetings with equal weights
       const greetings = [
@@ -536,6 +522,7 @@ image-rendering: -webkit-optimize-contrast;
           <button class="activities-tab active" data-tab="spanish1">Spanish I</button>
           <button class="activities-tab" data-tab="spanish2">Spanish II</button>
           <button class="activities-tab" data-tab="library">Biblioteca</button>
+          <button class="activities-tab" data-tab="vocab">Vocabulario</button>
         </div>
   
         <!-- Tab Contents -->
@@ -883,6 +870,64 @@ image-rendering: -webkit-optimize-contrast;
           <div id="library" class="activities-content">
             <iframe src="./pages/Library/index.html" style="width: 100%; height: 600px; border: none;"></iframe>
           </div>
+          <!-- Vocabulario pane -->
+          <div id="vocab" class="activities-content">
+        <br>
+        <p class="activity-topic">Unidad 1</p>
+        <button class="activity-button" onclick="window.open('./Topics/Senderos_vocab/Spanish 1 - List 1.pdf', '_blank')">
+          <div class="activity-item">
+            <div class="activity-icon description">
+              <span class="material-icons">description</span>
+            </div>
+            <div class="activity-text">Senderos Vocabulario - Unidad 1</div>
+          </div>
+        </button>
+        <p class="activity-topic">Unidad 2</p>
+        <button class="activity-button" onclick="window.open('./Topics/Senderos_vocab/Spanish 1 - List 2.pdf', '_blank')">
+          <div class="activity-item">
+            <div class="activity-icon description">
+              <span class="material-icons">description</span>
+            </div>
+            <div class="activity-text">Senderos Vocabulario - Unidad 2</div>
+          </div>
+        </button>
+        <p class="activity-topic">Unidad 3</p>
+        <button class="activity-button" onclick="window.open('./Topics/Senderos_vocab/Spanish 1 - List 3.pdf', '_blank')">
+          <div class="activity-item">
+            <div class="activity-icon description">
+              <span class="material-icons">description</span>
+            </div>
+            <div class="activity-text">Senderos Vocabulario - Unidad 3</div>
+          </div>
+        </button>
+        <p class="activity-topic">Unidad 4</p>
+        <button class="activity-button" onclick="window.open('./Topics/Senderos_vocab/Spanish 1 - List 4.pdf', '_blank')">
+          <div class="activity-item">
+            <div class="activity-icon description">
+              <span class="material-icons">description</span>
+            </div>
+            <div class="activity-text">Senderos Vocabulario - Unidad 4</div>
+          </div>
+        </button>
+        <p class="activity-topic">Unidad 5</p>
+        <button class="activity-button" onclick="window.open('./Topics/Senderos_vocab/Spanish 1 - List 5.pdf', '_blank')">
+          <div class="activity-item">
+            <div class="activity-icon description">
+              <span class="material-icons">description</span>
+            </div>
+            <div class="activity-text">Senderos Vocabulario - Unidad 5</div>
+          </div>
+        </button>
+        <p class="activity-topic">Unidad 6</p>
+        <button class="activity-button" onclick="window.open('./Topics/Senderos_vocab/Spanish 1 - List 6.pdf', '_blank')">
+          <div class="activity-item">
+            <div class="activity-icon description">
+              <span class="material-icons">description</span>
+            </div>
+            <div class="activity-text">Senderos Vocabulario - Unidad 6</div>
+          </div>
+        </button>
+      </div>
         </div>
 
   </div>

@@ -389,33 +389,12 @@
         } else if (action.type === 'erase') {
           // Re-add all erased strokes (with original IDs)
           await Promise.all(action.strokes.map(s => addStrokeToDB(s)));
-        } else if (action.type === 'move') {
-          // Restore previous positions
-          for (const move of action.strokes) {
-            const s = shapes.find(x => x.id === move.id);
-            if (s) {
-              s.points = move.before.map(pt => ({...pt}));
-              await set(ref(db, `whiteboards/${currentBoardId}/strokes/${s.id}`), {
-                color: s.color,
-                width: s.width,
-                points: s.points
-              });
-            }
-          }
         }
-        // Clear lasso selection after undo
-        lassoing = false;
-        lassoPath = [];
-        lassoedStrokes = [];
-        lassoBox = null;
-        isMovingLasso = false;
-        lassoMoveStart = null;
-        updateLassoUI();
-        render();
         redoStack.push(action);
       } finally {
         isUndoRedoInProgress = false;
         updateUndoRedoButtons();
+        render();
       }
     });
 
@@ -431,33 +410,12 @@
         } else if (action.type === 'erase') {
           // Remove all erased strokes again
           await Promise.all(action.strokes.map(s => removeStrokeFromDB(s.id)));
-        } else if (action.type === 'move') {
-          // Restore new positions
-          for (const move of action.strokes) {
-            const s = shapes.find(x => x.id === move.id);
-            if (s) {
-              s.points = move.after.map(pt => ({...pt}));
-              await set(ref(db, `whiteboards/${currentBoardId}/strokes/${s.id}`), {
-                color: s.color,
-                width: s.width,
-                points: s.points
-              });
-            }
-          }
         }
-        // Clear lasso selection after redo
-        lassoing = false;
-        lassoPath = [];
-        lassoedStrokes = [];
-        lassoBox = null;
-        isMovingLasso = false;
-        lassoMoveStart = null;
-        updateLassoUI();
-        render();
         undoStack.push(action);
       } finally {
         isUndoRedoInProgress = false;
         updateUndoRedoButtons();
+        render();
       }
     });
 
@@ -823,12 +781,13 @@ canvas.addEventListener('mousedown', async e => {
     currentTool = 'draw';
     updateToolSelection();
     render();
-    updateImageOverlays(); // <-- Ensure overlay is shown immediately
+    updateImageOverlays();
   }
 });
 
 function updateImageOverlays() {
   // Remove old overlays
+  if (locked) return; // Don't update overlays when locked
   document.querySelectorAll('.canvas-image-overlay').forEach(el => el.remove());
   const canvasRect = canvas.getBoundingClientRect();
   for (const imgObj of overlayImages) {
@@ -842,7 +801,7 @@ function updateImageOverlays() {
     const cy = imgObj.y * scale + translateY;
     const size = imgObj.size * scale;
     imgDiv.style.left = (canvas.offsetLeft + cx - size/2) + 'px';
-    imgDiv.style.top = (canvas.offsetTop + cy - size/2) + 'px';
+    imgDiv.style.top = (canvas.offsetTop + cy - size/2) + 'px'; // <-- fix below
     imgDiv.style.width = size + 'px';
     imgDiv.style.height = size + 'px';
     imgDiv.innerHTML = `<img src="${imgObj.url}" style="width:100%;height:100%;object-fit:contain;display:block;">`;
@@ -1001,7 +960,7 @@ trashBtn.addEventListener('click', async () => {
     updateLassoUI();
 
     // --- LASSO/COPY/PASTE INTEGRATION WITH EXISTING EVENTS ---
-    canvas.addEventListener('mousedown', e=>{
+    canvas.addEventListener('mousedown',e=>{
       if (currentTool === 'lasso' && locked) {
         const r=canvas.getBoundingClientRect();
         const x = e.clientX-r.left, y = e.clientY-r.top;
@@ -1010,8 +969,6 @@ trashBtn.addEventListener('click', async () => {
         if (lassoBox && wp.x >= lassoBox.minX && wp.x <= lassoBox.maxX && wp.y >= lassoBox.minY && wp.y <= lassoBox.maxY) {
           isMovingLasso = true;
           lassoMoveStart = { x: wp.x, y: wp.y };
-          // Save original positions for undo
-          lassoedStrokes.forEach(s => s.points.forEach((pt, i) => { pt._before = { ...pt }; }));
         } else {
           lassoing = true;
           lassoPath = [wp];
@@ -1021,7 +978,7 @@ trashBtn.addEventListener('click', async () => {
         }
       } else if (currentTool === 'paste' && pasteMode && copiedStrokes) {
         const r=canvas.getBoundingClientRect();
-        const x = e.clientX-r.left, y = e.clientY - r.top;
+        const x = e.clientX-r.left, y = e.clientY-r.top;
         const wp = toWorld(x, y);
         // Find bounding box of copiedStrokes
         const box = getBoundingBox(copiedStrokes);
@@ -1045,10 +1002,52 @@ trashBtn.addEventListener('click', async () => {
           updateToolSelection();
           updateLassoUI();
           render();
-        });      } // Removed image file paste support. Only allow image URL paste.
+        });
+      } else if (currentTool === 'pasteImage' && pasteImageMode) {
+        // Try to read image from clipboard
+        navigator.clipboard.read().then(async items => {
+          for (const item of items) {
+            for (const type of item.types) {
+              if (type.startsWith('image/')) {
+                const blob = await item.getType(type);
+                const url = URL.createObjectURL(blob);
+                const img = new window.Image();
+                img.onload = function() {
+                  const r = canvas.getBoundingClientRect();
+                  const x = e.clientX - r.left, y = e.clientY - r.top;
+                  const wp = toWorld(x, y);
+                  // Calculate target height: half the visible canvas height in world coords
+                  const visibleCanvasHeight = canvas.height;
+                  const targetHeight = (visibleCanvasHeight / scale) / 2;
+                  const aspect = img.width / img.height;
+                  const targetWidth = targetHeight * aspect;
+                  images.push({
+                    x: wp.x,
+                    y: wp.y,
+                    width: targetWidth,
+                    height: targetHeight,
+                    img: img
+                  });
+                  render();
+                  URL.revokeObjectURL(url);
+                };
+                img.src = url;
+                // Only paste the first image found
+                pasteImageMode = false;
+                currentTool = 'draw';
+                updateToolSelection();
+                return;
+              }
+            }
+          }
+          alert('No image found in clipboard!');
+        }).catch(() => {
+          alert('Clipboard access denied or not supported.');
+        });
+      }
     });
 
-    canvas.addEventListener('mousemove', e=>{
+    canvas.addEventListener('mousemove',e=>{
       if (currentTool === 'lasso' && locked) {
         const r=canvas.getBoundingClientRect();
         const x = e.clientX-r.left, y = e.clientY-r.top;
@@ -1106,7 +1105,7 @@ trashBtn.addEventListener('click', async () => {
       }
     });
 
-    window.addEventListener('mouseup', e=>{
+    window.addEventListener('mouseup',e=>{
       if (currentTool === 'lasso' && locked) {
         if (lassoing) {
           lassoing = false;
@@ -1115,21 +1114,6 @@ trashBtn.addEventListener('click', async () => {
         }
         if (isMovingLasso) {
           isMovingLasso = false;
-          // --- UNDO/REDO SUPPORT FOR LASSO MOVE ---
-          if (lassoedStrokes.length && lassoMoveStart) {
-            // Save before/after positions for undo/redo
-            const movedStrokes = lassoedStrokes.map(s => ({
-              id: s.id,
-              before: s.points.map(pt => ({...pt._before})),
-              after: s.points.map(pt => ({...pt}))
-            }));
-            pushAction({
-              type: 'move',
-              strokes: movedStrokes
-            });
-            // Remove _before temp property
-            lassoedStrokes.forEach(s => s.points.forEach(pt => { delete pt._before; }));
-          }
           lassoMoveStart = null;
         }
       }

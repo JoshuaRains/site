@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Whiteboard Viewer</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    html, body { margin:0; padding:0; width:100vw; height:100vh; overflow:hidden; }
+    body { display: flex; height: 100vh; font-family: 'Noto Sans', sans-serif; }
+    #sidebar {
+      width: 320px; min-width: 220px; max-width: 400px;
+      background: #f8f9fa;
+      border-right: 1px solid #ddd;
+      display: flex; flex-direction: column;
+      padding: 0; box-sizing: border-box;
+      z-index: 2;
+    }
+    #sidebar h2 {
+      margin: 0; padding: 18px 20px 10px 20px; font-size: 1.2em; font-weight: 600;
+      border-bottom: 1px solid #e0e0e0;
+      background: #fff;
+    }
+    #boardList {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 0 0 10px 0;
+    }
+    .board-item {
+      padding: 14px 24px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      font-size: 1.08em;
+      transition: background 0.2s;
+      display: flex; align-items: center;
+    }
+    .board-item.selected {
+      background: #e3f0ff;
+      font-weight: bold;
+    }
+    .board-item:hover {
+      background: #f0f4fa;
+    }
+    #main {
+      flex: 1 1 0%;
+      display: flex; flex-direction: column;
+      align-items: stretch;
+      background: #e5e5e5;
+      overflow: hidden;
+      position: relative;
+    }
+    #canvasContainer {
+      flex: 1 1 0%;
+      display: flex; align-items: center; justify-content: center;
+      overflow: auto;
+      background: #e5e5e5;
+      min-height: 0;
+    }
+    canvas {
+      background: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    #placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+      color: #888;
+      font-size: 1.1em;
+      pointer-events: none;
+
+    }
+    #placeholder-img-wrapper {
+      width: 250px;
+      height: 250px;
+      display: inline-block;
+      border-radius: 24px;
+      box-sizing: border-box;
+      margin-bottom: 18px;
+      background: #e5e5e5;
+      overflow: hidden;
+      padding: 0;
+    }
+    #placeholder-img-wrapper img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 0;
+      margin-bottom: 0;
+      filter: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+    <h2>Whiteboards</h2>
+    <div id="boardList"></div>
+  </div>
+  <div id="main">
+    <div id="canvasContainer">
+      <div id="placeholder">
+        <div id="placeholder-img-wrapper">
+          <img src="https://media.tenor.com/I6j5DmlTTk0AAAAM/stare.gif" alt="Whiteboard Placeholder" />
+        </div>
+        <div>Select a whiteboard from the list</div>
+      </div>
+      <canvas id="boardCanvas" style="display:none;"></canvas>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getDatabase, ref, onValue, onChildAdded, onChildRemoved } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+    // Firebase config (same as teacher whiteboard)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBBxUdOHCB1fJI9mZgYHJ0HCg6p_8R_1-s",
+      authDomain: "interactive-whiteboard-8bc1e.firebaseapp.com",
+      projectId: "interactive-whiteboard-8bc1e",
+      storageBucket: "interactive-whiteboard-8bc1e.firebasestorage.app",
+      messagingSenderId: "403793324386",
+      appId: "1:403793324386:web:c5f8da9579cd97f935a43b"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+    // DOM refs
+    const boardListDiv = document.getElementById('boardList');
+    const canvas = document.getElementById('boardCanvas');
+    const ctx = canvas.getContext('2d');
+    const placeholder = document.getElementById('placeholder');
+    let shapes = [], backgroundImage = null, unsubAdd = null, unsubRemove = null;
+    let currentBoardId = null, boardsMap = {};
+    const pageWidth = 2000, pageHeight = 2000;
+
+    // Load boards list
+    onValue(ref(db,'whiteboards'), snap => {
+      boardsMap = snap.val() || {};
+      renderBoardList();
+    });
+
+    function renderBoardList() {
+      boardListDiv.innerHTML = '';
+      for (const [id, data] of Object.entries(boardsMap)) {
+        const div = document.createElement('div');
+        div.className = 'board-item' + (id === currentBoardId ? ' selected' : '');
+        div.textContent = data.name;
+        div.dataset.id = id;
+        div.addEventListener('click', () => selectBoard(id));
+        boardListDiv.appendChild(div);
+      }
+    }
+
+    function selectBoard(id) {
+      if (id === currentBoardId) return;
+      if (unsubAdd) unsubAdd();
+      if (unsubRemove) unsubRemove();
+      currentBoardId = id;
+      shapes = [];
+      backgroundImage = null;
+      placeholder.style.display = 'none';
+      canvas.style.display = '';
+      resizeCanvas();
+      render();
+      // Listen for strokes
+      const strokesRef = ref(db, `whiteboards/${id}/strokes`);
+      unsubAdd = onChildAdded(strokesRef, s => {
+        const st = s.val(); st.id = s.key;
+        shapes.push(st); render();
+      });
+      unsubRemove = onChildRemoved(strokesRef, s => {
+        shapes = shapes.filter(x => x.id !== s.key);
+        render();
+      });
+    }
+
+    function resizeCanvas() {
+      // Only adjust the CSS size, not the actual canvas resolution
+      const container = document.getElementById('canvasContainer');
+      canvas.style.width = pageWidth + 'px';
+      canvas.style.height = pageHeight + 'px';
+      // Do not change canvas.width or canvas.height here!
+      // Just re-render to fit the new container
+      render();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Set the actual canvas size only once on load
+    canvas.width = pageWidth;
+    canvas.height = pageHeight;
+
+    function render() {
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      // Draw grid dots
+      const grid=50, dotR=2;
+      ctx.fillStyle='rgba(0,0,0,0.2)';
+      for(let x=0;x<=pageWidth;x+=grid)
+        for(let y=0;y<=pageHeight;y+=grid){
+          ctx.beginPath(); ctx.arc(x,y,dotR,0,2*Math.PI); ctx.fill();
+        }
+      // Draw strokes
+      ctx.lineCap='round'; ctx.lineJoin='round';
+      for(const s of shapes){
+        ctx.strokeStyle=s.color; ctx.lineWidth=s.width;
+        ctx.beginPath();
+        s.points.forEach((pt,i)=> i?ctx.lineTo(pt.x,pt.y):ctx.moveTo(pt.x,pt.y));
+        ctx.stroke();
+      }
+    }
+
+    // Randomly select a placeholder image from a list
+const placeholderImages = [
+  //"https://media.tenor.com/I6j5DmlTTk0AAAAM/stare.gif",
+  //"https://media.tenor.com/BiEdW2zVchkAAAAM/cat.gif",
+  //"https://media.tenor.com/xRF_8aickxwAAAAM/silly-cat-silly-car.gif",
+  "../../assets/loading-cat.gif",
+  
+  // Add more image URLs here as needed
+];
+const randomImg = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
+const placeholderImg = document.querySelector('#placeholder-img-wrapper img');
+placeholderImg.src = randomImg;
+
+    // Initial placeholder
+    resizeCanvas();
+    placeholder.style.display = '';
+    canvas.style.display = 'none';
+  </script>
+</body>
+</html>
